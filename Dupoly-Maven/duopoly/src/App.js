@@ -29,8 +29,8 @@ class App extends Component {
             <div className="container_right">
                 <PlayerTable />
                 <TransTable />
-                <UpdateDirection />
             </div>
+            <UpdateDirection />
             </>
         )
     }

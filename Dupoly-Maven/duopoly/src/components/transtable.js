@@ -9,7 +9,7 @@ const TransTable = () => {
         const loadPlayers = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`);
-                setPlayers(response.data.filter(player => player !== null).map(player => ({ userId: player.userId, cash: player.cash })));
+                setPlayers(response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash })));
             } catch (error) {
                 console.error('Error fetching players:', error);
             }
@@ -26,7 +26,7 @@ const TransTable = () => {
                     <tbody>
                         {players.map((player, index) => (
                             <tr key={index}>
-                            <td>{player.userId}</td>
+                            <td>{player.userName}</td>
                             <td>{player.cash}</td>
                             </tr>
                         ))}

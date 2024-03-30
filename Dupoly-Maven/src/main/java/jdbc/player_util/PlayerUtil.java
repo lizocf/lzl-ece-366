@@ -10,7 +10,7 @@ public class PlayerUtil implements DataTransferObject {
 
     private int userId, gameId, cash, currentPosition;
     private boolean jail, afk, dead;
-    private String currentDirection;
+    private String userName, currentDirection;
 
     public int getUserId() {
         return userId;
@@ -18,6 +18,14 @@ public class PlayerUtil implements DataTransferObject {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public int getGameId() {

@@ -12,10 +12,10 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
             super(connection);
         }
 
-    private static final String GET_ONE = "SELECT game_id, user_id, cash, current_direction, current_position, jail, afk, dead " +
+    private static final String GET_ONE = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=? AND user_id=?";
     
-    private static final String GET_GAME = "SELECT game_id, user_id, cash, current_direction, current_position, jail, afk, dead " +
+    private static final String GET_GAME = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=?";
 
     private static final String INSERT = "INSERT INTO player_in_game(game_id, user_id, user_name) SELECT ? AS game_id," + 
@@ -44,6 +44,7 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
             while(rs.next()) {
                 player.setGameId(rs.getInt("game_id"));
                 player.setUserId(rs.getInt("user_id")); // need userId as another search parameter instead
+                player.setUserName(rs.getString("user_name"));
                 player.setCash(rs.getInt("cash"));
                 player.setCurrentDirection(rs.getString("current_direction"));
                 player.setCurrentPosition(rs.getInt("current_position"));
@@ -65,23 +66,25 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
             statement.setInt(1, dto.getGameId());
             ResultSet rs = statement.executeQuery();
             int i = 0;
-            System.out.println("game_id\t\tuser_id\t\tcash\t\tcurrent_direction\t\tcurrent_position\t\tjail\t\tafk\t\tdead");
+            System.out.println("game_id\t\tuser_id\t\tuser_name\t\tcash\t\tcurrent_direction\t\tcurrent_position\t\tjail\t\tafk\t\tdead");
 
             while(rs.next()) {
                 int game_id = rs.getInt("game_id");
                 int user_id = rs.getInt("user_id");
+                String user_name = rs.getString("user_name");
                 int cash = rs.getInt("cash");
                 String cur_dir = rs.getString("current_direction");
                 int cur_pos = rs.getInt("current_position");
                 boolean jail = rs.getBoolean("jail");
                 boolean afk = rs.getBoolean("afk");
                 boolean dead = rs.getBoolean("dead");
-                System.out.println(game_id + "\t\t" + user_id + "\t\t" + cash + 
-                                   "\t\t" + cur_dir + "\t\t" + cur_pos + "\t\t" + jail + 
-                                   "\t\t" + afk + "\t\t" + dead);
+                System.out.println(game_id + "\t\t" + user_id + "\t\t" + user_name + "\t\t" + cash + 
+                                    "\t\t" + cur_dir + "\t\t" + cur_pos + "\t\t" + jail + "\t\t" + afk + "\t\t" + dead);
+                                   
                 players[i] = new PlayerUtil();
                 players[i].setGameId(game_id);
                 players[i].setUserId(user_id);
+                players[i].setUserName(user_name);
                 players[i].setCash(cash);
                 players[i].setCurrentDirection(cur_dir);
                 players[i].setCurrentPosition(cur_pos);
