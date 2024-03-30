@@ -229,6 +229,27 @@ public class Player extends Account {
         return player;
     }
 
+    @GetMapping("/getAllPlayersInGame/{gameId}")
+    public PlayerUtil[] getAllPlayersInGame(@PathVariable("gameId") int gameId) {
+        System.out.println(gameId);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        PlayerUtil player1 = new PlayerUtil();
+        PlayerUtil[] players = new PlayerUtil[10];
+        player1.setGameId(gameId);
+        try {
+            Connection connection = dcm.getConnection();
+            PlayerDAO playerDAO = new PlayerDAO(connection);
+
+            players = playerDAO.findByGameId(player1);
+            System.out.println(players);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return players;
+    }
+
     public int getGame_id() {
         return game_id;
     }

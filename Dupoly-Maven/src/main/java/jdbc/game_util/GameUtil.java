@@ -12,6 +12,31 @@ public class GameUtil implements DataTransferObject
     private int numOfPlayers;
     private boolean joinable;
 
+    private int diceRoll;
+
+    private int doublesCounter = 0;
+
+    //make a function here called DO DICE ROLL. THEN STORE IT
+
+    public int rollDice()
+    {
+        int die1 = (int) (6*Math.random()+1);
+        int die2 = (int) (6*Math.random()+1);
+
+        if(die1 == die2) {doublesCounter++;}
+
+        return die1 + die2;
+    }
+
+    public int getDiceRoll() {
+        return diceRoll;
+    }
+
+    public void setDiceRoll(int diceRoll) {
+
+        this.diceRoll = diceRoll;
+    }
+
     public int getId() {
         return gameId;
     }

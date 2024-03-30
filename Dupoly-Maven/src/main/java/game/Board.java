@@ -1,10 +1,28 @@
 package game;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jdbc.DatabaseConnectionManager;
+import jdbc.game_util.GameDAO;
+import jdbc.game_util.GameUtil;
+import jdbc.player_util.PlayerDAO;
+import jdbc.player_util.PlayerUtil;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Math.abs;
 
+@SpringBootApplication
+@RestController
+@CrossOrigin
 public class Board {
     // insert stuff here
 
@@ -102,19 +120,86 @@ public class Board {
 //        lookup.put(1,"New York City");
 //        lookup.put(9,"Seattle");
     }
-
-    private int doublesCounter = 0;
     // should be reset at the end of every player's turn
 
-    private int rollDice()
+    @PostMapping("/updateRoll")
+    public void updateRoll(@RequestBody String json) throws JsonProcessingException
     {
-        int die1 = (int) (6*Math.random()+1);
-        int die2 = (int) (6*Math.random()+1);
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        GameUtil game = new GameUtil(); //needs to be changed to whatever has game meta
+        try {
+            Connection connection = dcm.getConnection();
+            GameDAO gameDAO = new GameDAO(connection);
 
-        if(die1 == die2) {doublesCounter++;}
+            //------
+            game.setGameCode((inputMap.get("game_code")));
+            game = gameDAO.findById(game);
+            //------------
 
-        return die1 + die2;
+            gameDAO.update_dice_roll(game);
+            System.out.println(game);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    @PostMapping("/updateJoinable")
+    public void updateJoinable(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        GameUtil game = new GameUtil(); //needs to be changed to whatever has game meta
+        try {
+            Connection connection = dcm.getConnection();
+            GameDAO gameDAO = new GameDAO(connection);
+
+            //------
+            game.setGameCode((inputMap.get("game_code")));
+            game = gameDAO.findById(game);
+            //------------
+
+            gameDAO.update_joinable(game);
+            System.out.println(game);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/updateDebtPot")
+    public void updateDebtPot(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        GameUtil game = new GameUtil(); //needs to be changed to whatever has game meta
+        try {
+            Connection connection = dcm.getConnection();
+            GameDAO gameDAO = new GameDAO(connection);
+
+            //------
+            game.setGameCode((inputMap.get("game_code")));
+            game = gameDAO.findById(game);
+            //------------
+
+            gameDAO.update_debt_pot(game);
+            System.out.println(game);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     private boolean passedSpace(int prevSpaceNum, int currSpaceNum, int specialSpaceNum)
     {
         return abs(currSpaceNum - prevSpaceNum) > specialSpaceNum;
