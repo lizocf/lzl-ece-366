@@ -18,8 +18,8 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
     private static final String GET_GAME = "SELECT game_id, user_id, cash, current_direction, current_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=?";
 
-    private static final String INSERT = "INSERT INTO player_in_game(game_id, user_id)"
-            + " VALUES (?,?)";
+    private static final String INSERT = "INSERT INTO player_in_game(game_id, user_id, user_name) SELECT ? AS game_id," + 
+            "user_id, user_name FROM accounts WHERE user_id=?;";
 
     // private static final String UPDATE = "UPDATE player_in_game " + "SET ? = ? " + "WHERE ?";
     private static final String UPDATE_DEAD = "UPDATE player_in_game " + "SET dead = ? " + "WHERE user_id = ?";

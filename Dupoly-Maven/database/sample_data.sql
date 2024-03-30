@@ -11,10 +11,19 @@ VALUES ('PEPE'); -- random four letter sequence
 -- game_code should be unique tbh?
 
 -- three players join game
-INSERT INTO player_in_game(game_id, user_id)
-VALUES (1, 1), -- spiceless
-       (1, 2), -- mudkip 
-       (1, 3); -- esaya
+-- INSERT INTO player_in_game(game_id, user_id)
+-- VALUES (1, 1), -- spiceless
+--        (1, 2), -- mudkip 
+--        (1, 3); -- esaya
+INSERT INTO player_in_game(game_id, user_id, user_name)
+SELECT 
+    1 AS game_id, -- Replace 1 with your actual game_id
+    user_id,
+    user_name
+FROM 
+    accounts
+WHERE 
+    user_id IN (1, 2, 3);
 
 -- duplicate (game_id, user_id) rows will not be added
 
@@ -173,7 +182,7 @@ WHERE game_id = 1 AND user_id = 1;
 -- skull card: JAIL :(
 UPDATE player_in_game
 SET current_position = 50,
-    jail = TRUE, -- added jail bool, be used to skip their turn
+    jail = TRUE -- added jail bool, be used to skip their turn
 WHERE game_id = 1 AND user_id = 1;
 
 -- esaya's turn
