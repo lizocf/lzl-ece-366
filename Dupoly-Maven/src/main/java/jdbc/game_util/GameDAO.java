@@ -14,11 +14,12 @@ import java.sql.SQLException;
 
 public class GameDAO extends DataAccessObject<GameUtil>
 {
+
     public GameDAO(Connection connection) {
         super(connection);
     }
 
-    private static final String GET_ONE = "SELECT game_id, game_code,debt_pot " +
+    private static final String GET_ONE = "SELECT game_id, game_code,debt_pot,roll_number " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -47,6 +48,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setGameCode(rs.getString("game_code"));
 //                game.setNumOfPlayers(rs.getInt("num_players"));
                 game.setDebtPot(rs.getInt("debt_pot"));
+                game.setRecentRoll(rs.getInt("roll_number"));
 //                game.setPlayerTurn(rs.getInt("which_player_turn"));
 //                game.setJoinable(rs.getBoolean("joinable"));
             }
@@ -137,7 +139,11 @@ public class GameDAO extends DataAccessObject<GameUtil>
     public void update_dice_roll(GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_ROLL);)
         {
-            statement.setInt(1,dto.rollDice());
+
+            dto.setRecentRoll(dto.rollDice());
+
+            dto.setRecentRoll(dto.getRecentRoll());
+            statement.setInt(1,dto.getRecentRoll());
             statement.setString(2,dto.getGameCode());
             statement.execute();
 

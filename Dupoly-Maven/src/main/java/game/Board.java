@@ -32,6 +32,7 @@ public class Board {
     public Space[] gameBoard;
     public Map<Integer,String> lookup;
 
+
     public Board()
     {
         // Intiliaze the probability and its weights!

@@ -1,11 +1,15 @@
 package jdbc.player_util;
 
+import jdbc.game_util.GameUtil;
 import jdbc.jdbc_util.DataAccessObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static java.lang.Math.abs;
+
 public class PlayerDAO extends DataAccessObject<PlayerUtil>
 {
         public PlayerDAO(Connection connection) {
@@ -194,12 +198,35 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
         }
     }
     
-    public void update_position(PlayerUtil dto, int move) // update_position
+    public void update_position(PlayerUtil dto, GameUtil game_dto) // update_position
+
+            //what does int move do?
     {
          try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_POS);)
         {
             // statement.setString(1,"current_position");
-            statement.setInt(1, move);
+
+            if(dto.getCurrentDirection().equals("right"))  // Check if its suppose to be right or left lol
+            {
+                int new_pos = ((dto.getCurrentPosition() + game_dto.getRecentRoll()) % 60);
+                dto.setCurrentPosition(new_pos); // should be dice roll value not a static 7
+
+            }
+            else
+            {
+                if (dto.getCurrentPosition() > game_dto.getRecentRoll()) {
+                    dto.setCurrentPosition(dto.getCurrentPosition() - game_dto.getRecentRoll());
+                }
+                else
+                {
+                    dto.setCurrentPosition(60 - abs(game_dto.getRecentRoll() - dto.getCurrentPosition()));
+                }
+                // currPlayerTurn.currSpace = currPlayerTurn.currSpace > diceroll ? (currPlayerTurn.currSpace-diceroll) : (60 - abs(diceroll - currPlayerTurn.currSpace));
+            }
+
+
+
+            statement.setInt(1, dto.getCurrentPosition());
             statement.setInt(2,dto.getUserId());
             statement.execute();
         }catch (SQLException e){

@@ -83,3 +83,19 @@ public class DuopolyApplication {
 	public static void main(String[] args) { SpringApplication.run(DuopolyApplication.class, args); }
 
 }
+
+// Need to find a way to do this curr space stuff in springboot
+// Issue: This pulls a lot from player stuff and dice stuff.
+// Idea: we get the current roll from game doa and add that to something in the player DAO
+//
+
+// Literally This stuff working in Springboot:
+//
+//             if(currPlayerTurn.current_direction)
+//            {
+//                currPlayerTurn.currSpace = (diceroll + currPlayerTurn.currSpace) % 60;
+//            }
+//            else
+//            {
+//                currPlayerTurn.currSpace = currPlayerTurn.currSpace > diceroll ? (currPlayerTurn.currSpace-diceroll) : (60 - abs(diceroll - currPlayerTurn.currSpace));
+//            }

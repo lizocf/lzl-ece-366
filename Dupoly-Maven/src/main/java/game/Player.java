@@ -1,6 +1,8 @@
 package game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jdbc.DatabaseConnectionManager;
+import jdbc.game_util.GameDAO;
+import jdbc.game_util.GameUtil;
 import jdbc.player_util.PlayerDAO;
 import jdbc.player_util.PlayerUtil;
 
@@ -188,14 +190,22 @@ public class Player extends Account {
         DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
                 "duopoly", "postgres", "password");
         PlayerUtil player = new PlayerUtil();
+        GameUtil game = new GameUtil();
 
         try {
             Connection connection = dcm.getConnection();
             PlayerDAO playerDAO = new PlayerDAO(connection);
+            GameDAO gameDAO = new GameDAO(connection);
+            game.setGameCode((inputMap.get("game_code")));
+
             player.setUserId(Integer.valueOf(inputMap.get("user_id")));
             player.setGameId(Integer.valueOf(inputMap.get("game_id")));
             player = playerDAO.findById(player);
-            playerDAO.update_position(player, Integer.valueOf(inputMap.get("move_to")));
+            game = gameDAO.findById(game);
+            // needs to take in something extra, maybe a game DAO
+            // can change the id to the code but is that the best way to proceed
+            // why is it by code and not by id?
+            playerDAO.update_position(player, game);
             System.out.println(player);
         }
         catch(SQLException e) {
@@ -290,10 +300,6 @@ public class Player extends Account {
     public void setCurrent_direction(boolean current_direction) {
         this.current_direction = current_direction;
     }
-
-
-
-
 
 
     //    public Player(int user_id, int num_wins, int num_losses, int elo_rating, int duo_points, String[] user_name, String[] password) {

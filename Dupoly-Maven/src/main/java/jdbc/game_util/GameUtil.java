@@ -14,6 +14,18 @@ public class GameUtil implements DataTransferObject
 
     private int diceRoll;
 
+    public int getRecentRoll() {
+        return recentRoll;
+    }
+
+    public void setRecentRoll(int recentRoll) {
+        this.recentRoll = recentRoll;
+    }
+
+    private int recentRoll;
+
+
+
     private int doublesCounter = 0;
 
     //make a function here called DO DICE ROLL. THEN STORE IT
