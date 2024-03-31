@@ -7,53 +7,54 @@ import space from "./locations";
 const Roll = () => {
     const [player, setPlayer] = useState(null);
 
-    const nextPosition = async () => {
-        if (!player) return; // No player data available
-        const roll = 1; // Change roll logic if needed
-        if (player.cur_dir == "right") {
-            var next_pos = (player.cur_pos + roll) % 60;
-        } 
-        else if (player.cur_dir == "left") {
-            var next_pos = (player.cur_pos - roll) % 60;
-        } 
-
-        console.log(`Player at position ${player.cur_pos} facing ${player.cur_dir}. Moving to position ${next_pos}.`);
-
-       
+    const loadPlayer = async () => {
         try {
-            await axios.post("http://localhost:8080/updatePos", {
-                user_id: "1",
-                game_id: "1",
-                move_to: String(next_pos)
+            const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
+            setPlayer({
+                cur_pos: response.data.currentPosition,
+                cur_dir: response.data.currentDirection,
             });
-            // Assuming successful update, update the player state locally
-            setPlayer(prevPlayer => ({
-                ...prevPlayer,
-                cur_pos: next_pos
-            }));
+            console.log(`Player is at position ${response.data.currentPosition}.`);
         } catch (error) {
-            console.error('Error updating position:', error);
+            console.error('Error fetching player:', error);
         }
     };
 
+    const nextPosition = async () => {
+        try {
+            await axios.post("http://localhost:8080/updateRoll", {
+                user_id: "1",
+                game_id: "1",
+                game_code: "PEPE"
+            });
+
+            await axios.post("http://localhost:8080/updatePos", {
+                user_id: "1",
+                game_id: "1",
+                game_code: "PEPE"
+            });
+            console.log('Updated position.');
+            loadPlayer(); // Reload player data after updating position
+        } catch (error) {
+            console.error('Error updating roll number:', error);
+            console.error('Error updating position:', error);
+        }
+
+        var roll_button = document.getElementById("roll_button");
+        var roll_div = document.getElementById("roll_div");
+        var buy_div = document.getElementById("buy");
+        roll_button.style.display='none';
+        roll_div.style.display='none';
+        buy_div.style.display='block';
+    };
+
     useEffect(() => {
-        const loadPlayer = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
-                setPlayer({
-                    cur_pos: response.data.currentPosition,
-                    cur_dir: response.data.currentDirection
-                });
-            } catch (error) {
-                console.error('Error fetching player:', error);
-            }
-        };
-        loadPlayer();
+        loadPlayer(); // Load player data when the component mounts
     }, []);
 
-    const parseStyle = (styleString) => {
-        if (!styleString) return {}; // Return empty object if styleString is undefined or falsy
-    
+    // fix dictionary to style
+    const parseStyle = (styleString) => { 
+        if (!styleString) return {};
         const styleArray = styleString.split(';').map(pair => pair.split(':').map(s => s.trim()));
         const styleObject = {};
         styleArray.forEach(pair => {
@@ -68,7 +69,7 @@ const Roll = () => {
     return (
         <>
             <div className="container_board">
-                <div className="icon" id="player_icon" style={player ? parseStyle(space[player.cur_pos]) : {}}>
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(space[player.cur_pos]) : {}}>
                     <div className="eyes">
                     <div className="eye"></div>
                     <div className="eye"></div>
@@ -77,6 +78,11 @@ const Roll = () => {
                 </div>
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>
                 <button onClick={nextPosition}>Roll!</button>
+            </div>
+            <div className="center" id="buy" style={{ display: "none", margin:"auto auto", flexDirection: "column" }}>
+                <h1 style={{marginTop:"10vh"}}>Buy Property?</h1>
+                <button>Yes</button>
+                <button style={{backgroundColor: "#50514F"}}>No</button>
             </div>
         </>
         )

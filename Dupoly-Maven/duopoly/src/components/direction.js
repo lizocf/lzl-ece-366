@@ -6,6 +6,21 @@ import "./update_position";
 
 
 const UpdateDirection = () => {
+    const [player, setPlayer] = useState(null);
+
+    const loadPlayer = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
+            setPlayer({
+                cur_pos: response.data.currentPosition,
+                cur_dir: response.data.currentDirection,
+            });
+            console.log(`Player is at position ${response.data.currentPosition}.`);
+        } catch (error) {
+            console.error('Error fetching player:', error);
+        }
+    };
+
     function UpdateLeft() {
         var left_button = document.getElementById("left");
         var right_button = document.getElementById("right");
@@ -23,6 +38,7 @@ const UpdateDirection = () => {
         roll_div.style.display='block';
         direction_div.style.display='none';
         console.log(`Player has chosen to go left.`);
+        loadPlayer();
 
     }
     
@@ -43,6 +59,7 @@ const UpdateDirection = () => {
         roll_div.style.display='block';
         direction_div.style.display='none';
         console.log(`Player has chosen to go right.`);
+        loadPlayer();
     }
     
     return (
