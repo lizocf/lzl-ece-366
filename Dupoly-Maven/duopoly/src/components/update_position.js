@@ -7,6 +7,8 @@ import space from "./locations";
 const Roll = () => {
     const [player, setPlayer] = useState(null);
 
+    let not_purchaseable = [2,4,8,10,12,16,20,22,26,28,30,32,34,38,40,44,48,50,52,56,58];
+
     const loadPlayer = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
@@ -14,6 +16,7 @@ const Roll = () => {
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
             });
+            // setPlayer(response.data.filter(player => player !== null).map(player => ({ cur_pos: player.currentPosition, cur_dir: player.currentDirection })));
             console.log(`Player is at position ${response.data.currentPosition}.`);
         } catch (error) {
             console.error('Error fetching player:', error);
@@ -23,7 +26,7 @@ const Roll = () => {
     const nextPosition = async () => {
         try {
             await axios.post("http://localhost:8080/updateRoll", {
-                user_id: "1",
+                user_id: "1",           // how do we NOT hardcode?
                 game_id: "1",
                 game_code: "PEPE"
             });
@@ -45,7 +48,12 @@ const Roll = () => {
         var buy_div = document.getElementById("buy");
         roll_button.style.display='none';
         roll_div.style.display='none';
-        buy_div.style.display='block';
+        
+
+        loadPlayer()
+        if (!(not_purchaseable.includes(player.cur_pos))) {
+            buy_div.style.display='block';
+        }        
     };
 
     useEffect(() => {
