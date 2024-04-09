@@ -5,21 +5,58 @@ import PlayerTable from "./components/playertable";
 import TransTable from "./components/transtable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
-// function App() {
-//     const [data, setData] = useState([]);
-//     const loadUsers = async () => {
-//           const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`);
-//           setData(response.data)
-//         }
-//         useEffect(() => {
-//             loadUsers();
-//     }, []);
-//     if (data)
-//         return (
-//             <pre>{JSON.stringify(data, null, 2)}</pre>
-//         );
-//     return <h1>Data</h1>;
-// }
+import { Link, useNavigate } from "react-router-dom";
+import {getAuth, signOut} from 'firebase/auth';
+import useUser from "./hooks/useUser";
+
+function Home() {
+    const [data, setData] = useState(null);
+
+    const {user, isLoading} = useUser();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+
+        const loadUsers = async () => {
+            const response = await axios.get(`http://localhost:8080/api/getUsers`);
+            setData(response.data)
+        }
+        loadUsers();
+    }, [isLoading, user]);
+    if (data)
+        return (
+            <>
+                <h1>RPS</h1>
+                <nav>
+                    <Link to="/about">About</Link>
+                    <Link to="/contact">Contact</Link>
+                    <Link to="/login">Login</Link>
+                    {user
+
+? <button onClick={() => {
+
+    signOut(getAuth());
+
+}}>Log Out</button>
+
+: <button onClick={() => {
+
+    navigate('/login')
+
+}}>Log In</button>
+                    }
+                </nav>
+                {user
+                    ? <pre>{JSON.stringify(data, null, 2)}</pre>
+                    : <p>Log in to view sensitive info!</p>
+                }
+            </>
+        );
+    return <h1>Data</h1>;
+}
+
+
 
 class App extends Component {
     render() {
