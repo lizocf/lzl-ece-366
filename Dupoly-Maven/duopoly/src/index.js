@@ -29,18 +29,18 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <Routes>
-            <Route path="/" element={<App />} />
+            {/* <Route path="/" element={<App />} />
             <Route path="/about" element={<About />} />
             <Route
                 path="/contact"
                 element={<Contact />}
-            />
+            /> */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/create-account" element={<CreateAccountPage />} />
         </Routes>

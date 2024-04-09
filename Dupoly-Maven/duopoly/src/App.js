@@ -8,6 +8,9 @@ import Roll from "./components/update_position";
 import { Link, useNavigate } from "react-router-dom";
 import {getAuth, signOut} from 'firebase/auth';
 import useUser from "./hooks/useUser";
+import {useState, useEffect} from "react";
+import axios from "axios";
+
 
 function Home() {
     const [data, setData] = useState(null);
@@ -58,32 +61,32 @@ function Home() {
 
 
 
-class App extends Component {
-    render() {
-        return (
-            <>
-            {/* <Move /> */}
-            <div className="container_right">
-                <PlayerTable />
-                <TransTable />
-            </div>
-            <div className="container_middle">
-                <div className="center" id="direction_div">
-                    <h1>Choose a direction!</h1>
-                </div>
-                <div className="center" id="roll_div" style={{display: "none"}}>
-                    <h1>Click to roll:</h1>
-                </div>
-                <Roll />
-            </div>
-            <UpdateDirection />
-            </>
-        )
-    }
-}
+// class App extends Component {
+//     render() {
+//         return (
+//             <>
+//             {/* <Move /> */}
+//             <div className="container_right">
+//                 <PlayerTable />
+//                 <TransTable />
+//             </div>
+//             <div className="container_middle">
+//                 <div className="center" id="direction_div">
+//                     <h1>Choose a direction!</h1>
+//                 </div>
+//                 <div className="center" id="roll_div" style={{display: "none"}}>
+//                     <h1>Click to roll:</h1>
+//                 </div>
+//                 <Roll />
+//             </div>
+//             <UpdateDirection />
+//             </>
+//         )
+//     }
+// }
   
 
-export default App;
+// export default App;
 
 
 
