@@ -23,6 +23,31 @@ const Roll = () => {
         }
     };
 
+    const loadUpdate = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
+            setPlayer({
+                cur_pos: response.data.currentPosition,
+                cur_dir: response.data.currentDirection,
+            });
+
+            var roll_button = document.getElementById("roll_button");
+            var roll_div = document.getElementById("roll_div");
+            var buy_div = document.getElementById("buy");
+            roll_button.style.display='none';
+            roll_div.style.display='none';
+    
+            if (!(not_purchaseable.includes(response.data.currentPosition))) {
+                buy_div.style.display='block';
+            }  
+
+            // setPlayer(response.data.filter(player => player !== null).map(player => ({ cur_pos: player.currentPosition, cur_dir: player.currentDirection })));
+            console.log(`Player is at position ${response.data.currentPosition}.`);
+        } catch (error) {
+            console.error('Error fetching player:', error);
+        }
+    };
+
     const nextPosition = async () => {
         try {
             await axios.post("http://localhost:8080/updateRoll", {
@@ -36,24 +61,11 @@ const Roll = () => {
                 game_id: "1",
                 game_code: "PEPE"
             });
-            console.log('Updated position.');
-            loadPlayer(); // Reload player data after updating position
+            loadUpdate(); // Reload player data after updating position
         } catch (error) {
             console.error('Error updating roll number:', error);
             console.error('Error updating position:', error);
-        }
-
-        var roll_button = document.getElementById("roll_button");
-        var roll_div = document.getElementById("roll_div");
-        var buy_div = document.getElementById("buy");
-        roll_button.style.display='none';
-        roll_div.style.display='none';
-        
-
-        loadPlayer()
-        if (!(not_purchaseable.includes(player.cur_pos))) {
-            buy_div.style.display='block';
-        }        
+        }      
     };
 
     useEffect(() => {
