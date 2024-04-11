@@ -67,6 +67,31 @@ INSERT INTO all_property (property_name) VALUES
 ('DCA'), -- top west    (Ronald Reagan Washington National Airport)
 
 -- tax
-('Tax')
+('Tax_4'),
+('Tax_26'),
+('Tax_36'),
+('Tax_56'),
+
+-- skulls
+('SKULL_8'),
+('SKULL_28'),
+('SKULL_38'),
+('SKULL_44'),
+('SKULL_58'),
+
+-- surprise
+('SURPRISE_2'),
+('SURPRISE_16'),
+('SURPRISE_22'),
+('SURPRISE_32'),
+('SURPRISE_52'),
+
+-- 10s
+('Go'),
+('Debt Space'),
+('Free Parking'),
+('Reverse Space'),
+('Eviction Space'),
+('Jail')
 
 ;

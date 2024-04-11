@@ -6,4 +6,4 @@ CREATE TABLE all_sets (
 INSERT INTO all_sets (set_name) VALUES
 ('New York'), ('Florida'), ('Massachusetts'), ('Michigan'), ('Ohio'), ('Vermont'),
 ('California'), ('Nevada'), ('Texas'), ('Oregon'), ('Washington'), ('New Mexico'),
-('Airports');
+('Airports'), ('Utility');
