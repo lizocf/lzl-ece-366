@@ -67,27 +67,27 @@ INSERT INTO full_property (space, property_name, set_name) VALUES
 (5, 'CLE', 'Airports'), -- top east    (Cleveland Hopkins International Airport)
 (35, 'LAX', 'Airports'), -- bottom west (Los Angeles International Airport)
 (45, 'DFW', 'Airports'), -- west        (Dallas Fort Worth International Airport)
-(55, 'DCA', 'Airports') -- top west    (Ronald Reagan Washington National Airport)
+(55, 'DCA', 'Airports'), -- top west    (Ronald Reagan Washington National Airport)
 
 -- tax
 (4, 'Tax_4', NULL),
 (26,'Tax_26', NULL),
 (34,'Tax_36', NULL),
-(56,'Tax_56', NULL).
+(56,'Tax_56', NULL),
 
 -- skulls
 (8, 'SKULL_8', NULL),
 (28,'SKULL_28', NULL),
 (38, 'SKULL_38', NULL),
 (44, 'SKULL_44', NULL),
-(58, 'SKULL_58', NULL)
+(58, 'SKULL_58', NULL),
 
 -- surprise
 (2, 'SURPRISE_2', NULL),
 (16, 'SURPRISE_16', NULL),
 (22, 'SURPRISE_22', NULL),
 (32, 'SURPRISE_32', NULL),
-(52, 'SURPRISE_52', NULL)
+(52, 'SURPRISE_52', NULL),
 
 -- 10s
 (0, 'Go', NULL),

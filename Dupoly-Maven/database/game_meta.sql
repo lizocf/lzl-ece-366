@@ -8,6 +8,7 @@ CREATE TABLE game_meta (
     num_turns int DEFAULT 0, -- ????
     debt_pot int DEFAULT 0,
     roll_number int DEFAULT 0,
+    purchaseable boolean DEFAULT TRUE,
     PRIMARY KEY (game_id),
     FOREIGN KEY (which_player_turn) REFERENCES accounts(user_id)
 );

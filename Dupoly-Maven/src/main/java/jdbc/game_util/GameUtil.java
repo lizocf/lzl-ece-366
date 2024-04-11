@@ -13,6 +13,7 @@ public class GameUtil implements DataTransferObject
     private boolean joinable;
 
     private int diceRoll;
+    private boolean purchaseable;
 
     public int getRecentRoll() {
         return recentRoll;
@@ -99,6 +100,14 @@ public class GameUtil implements DataTransferObject
 
     public void setJoinable(boolean joinable) {
         this.joinable = joinable;
+    }
+
+    public boolean isPurchaseable() {
+        return purchaseable;
+    }
+
+    public void setPurchaseable(boolean purchaseable) {
+        this.purchaseable = purchaseable;
     }
 
     @Override

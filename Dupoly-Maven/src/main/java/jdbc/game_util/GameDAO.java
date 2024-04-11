@@ -19,7 +19,8 @@ public class GameDAO extends DataAccessObject<GameUtil>
         super(connection);
     }
 
-    private static final String GET_ONE = "SELECT game_id, game_code,debt_pot,roll_number " +
+    // TODO: add purchaseable boolean to findById
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -49,6 +50,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
 //                game.setNumOfPlayers(rs.getInt("num_players"));
                 game.setDebtPot(rs.getInt("debt_pot"));
                 game.setRecentRoll(rs.getInt("roll_number"));
+                game.setPurchaseable(rs.getBoolean("purchaseable"));
 //                game.setPlayerTurn(rs.getInt("which_player_turn"));
 //                game.setJoinable(rs.getBoolean("joinable"));
             }

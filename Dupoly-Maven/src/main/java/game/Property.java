@@ -54,11 +54,11 @@ class Property implements Space {
         if (occupied & !purchased)
         {
             //ask user if they want to purchase
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Would you like to purchase[Yes/No]: ");
-            String s = scanner.nextLine();
+            // Scanner scanner = new Scanner(System.in);
+            // System.out.print("Would you like to purchase[Yes/No]: ");
+            // String s = scanner.nextLine();
 
-            if (s.equals("Yes"))
+            if (true)
             {
 
                 // update database (user has purchased a valid property)
@@ -74,7 +74,10 @@ class Property implements Space {
 
             }
         }
-
+            // game = gameDAO.findbyID();
+            // purchase = game.getPurchaseable();
+            // if purchase:
+            //     xfssfsdfs
 
         if (occupied & purchased)
         {

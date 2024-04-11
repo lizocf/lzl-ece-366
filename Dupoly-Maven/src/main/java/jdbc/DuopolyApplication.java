@@ -87,25 +87,23 @@ public class DuopolyApplication {
         return property;
     }
 
-    @PostMapping("/getNames")
-    public OwnedPropertyUtil getNames(@RequestBody String json) throws JsonProcessingException
+    @GetMapping("/getNames/{gameId}/{userId}")
+    public OwnedPropertyUtil getNames(@PathVariable("gameId") int gameId,
+                                      @PathVariable("userId") int userId)
     {
-        System.out.println(json);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> inputMap = objectMapper.readValue(json, Map.class);
         DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
                 "duopoly", "postgres", "password");
 
         OwnedPropertyUtil property = new OwnedPropertyUtil();
         PlayerUtil player = new PlayerUtil();
+        player.setUserId(userId);
+        player.setGameId(gameId);
 
         try {
             Connection connection = dcm.getConnection();
             OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
             PlayerDAO playerDAO = new PlayerDAO(connection);
 
-            player.setUserId(Integer.valueOf(inputMap.get("user_id")));
-            player.setGameId(Integer.valueOf(inputMap.get("game_id")));
             player = playerDAO.findById(player);
 
             property = propertyDAO.findNames(player);
@@ -116,46 +114,6 @@ public class DuopolyApplication {
         }
         return property;
     }
-
-	@PostMapping("/purchaseProperty")
-	public OwnedPropertyUtil purchaseProperty(@RequestBody String json) throws JsonProcessingException
-    {
-        System.out.println(json);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> inputMap = objectMapper.readValue(json, Map.class);
-        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
-                "duopoly", "postgres", "password");
-
-        OwnedPropertyUtil property = new OwnedPropertyUtil();
-        PlayerUtil player = new PlayerUtil();
-
-        try {
-            Connection connection = dcm.getConnection();
-            OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
-            PlayerDAO playerDAO = new PlayerDAO(connection);
-
-            player.setUserId(Integer.valueOf(inputMap.get("user_id")));
-            player.setGameId(Integer.valueOf(inputMap.get("game_id")));
-            player = playerDAO.findById(player);
-
-			// I dont like how I did this :sob:
-			property = propertyDAO.findNames(player);
-            property.setUserId(Integer.valueOf(inputMap.get("user_id")));
-            property.setGameId(Integer.valueOf(inputMap.get("game_id")));
-        
-
-			property = propertyDAO.createInstance(property);
-
-
-            System.out.println(property);
-        }
-        catch(SQLException e) {
-            e.printStackTrace();
-        }
-        return property;
-    }
-
-
 
 	@GetMapping("/gameMove")
 	public void createOwnedProperty(@RequestBody String json) throws JsonProcessingException
