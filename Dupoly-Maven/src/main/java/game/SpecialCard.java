@@ -68,7 +68,7 @@ public class SpecialCard implements Card,Space {
     }
 
     @Override
-    public void isOccupied(boolean occupied, int userId, int gameId, Connection connection)
+    public void isOccupied(boolean occupied, int userId, int gameId, String gamecode,  Connection connection)
     {
         onUse();
     }

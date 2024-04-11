@@ -55,6 +55,7 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
 
 
 
+
     // for when a user buys property
     @Override
     public OwnedPropertyUtil createInstance(OwnedPropertyUtil dto) {
@@ -125,7 +126,8 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
     }
 
     @Override
-    public void delete(OwnedPropertyUtil dto) {
+    public void delete(OwnedPropertyUtil dto)
+    {
         try(PreparedStatement statement = this.connection.prepareStatement(DELETE);)
         {
             statement.setInt(1,dto.getGameId());
@@ -136,4 +138,6 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
             throw new RuntimeException(e);
         }
     }
+
+    // transfer property--> do a find by Id. Then you just change the owner
 }

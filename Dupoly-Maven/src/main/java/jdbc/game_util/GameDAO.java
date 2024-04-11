@@ -87,7 +87,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
             //ResultSet rs = statement.executeQuery();
             //what about ?
             statement.setInt(1,(dto.getDebtPot() + 50)); // can I get the current value then just add 50?
-            statement.setInt(2,dto.getGameId());
+            statement.setString(2,dto.getGameCode());
             statement.execute();
 
         }catch (SQLException e){
@@ -102,7 +102,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
         {
             // statement.setString(1,"debt_pot");
             statement.setInt(1,(dto.getDebtPot() + 50)); // can I get the current value then just add 50?
-            statement.setInt(2,dto.getGameId());
+            statement.setString(2,dto.getGameCode());
             statement.execute();
 
         }catch (SQLException e){
@@ -115,7 +115,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_JOIN);)
         {
             statement.setBoolean(1,false);
-            statement.setInt(2,dto.getGameId());
+            statement.setString(2,dto.getGameCode());
             statement.execute();
 
         }catch (SQLException e){
@@ -129,7 +129,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TURN);)
         {
             statement.setInt(1,dto.getId()); // this needs to be an actual player id.
-            statement.setInt(2,dto.getGameId());
+            statement.setString(2,dto.getGameCode());
             statement.execute();
 
         }catch (SQLException e){

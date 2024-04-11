@@ -127,7 +127,8 @@ public class DuopolyApplication {
 		try
 		{
 			Connection connection = dcm.getConnection();
-			gb.gameBoard[Integer.valueOf(inputMap.get("space"))].isOccupied(true,Integer.valueOf(inputMap.get("user_id")),Integer.valueOf(inputMap.get("game_id")),connection);
+			gb.gameBoard[Integer.valueOf(inputMap.get("space"))].isOccupied(true,Integer.valueOf(inputMap.get("user_id")),Integer.valueOf(inputMap.get("game_id")), inputMap.get("game_code"), connection);
+			// does game id need to be switched to game_code???
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

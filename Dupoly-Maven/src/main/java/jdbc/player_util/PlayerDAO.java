@@ -134,6 +134,20 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
         }
     }
 
+    public void update_dead(PlayerUtil dto) // updateDead
+    {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_DEAD);)
+        {
+            // statement.setString(1,"dead");
+            statement.setBoolean(1, true);
+            statement.setInt(2,dto.getUserId());
+            statement.execute();
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public void update_cash(PlayerUtil dto, int newAmount) 
     {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_CASH);)

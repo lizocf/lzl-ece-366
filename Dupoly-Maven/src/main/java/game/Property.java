@@ -48,7 +48,7 @@ class Property implements Space {
 
 
     @Override
-    public void isOccupied(boolean occupied, int userId, int gameId, Connection connection)
+    public void isOccupied(boolean occupied, int userId, int gameId, String gamecode, Connection connection)
     {
         OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
         if (occupied & !purchased)

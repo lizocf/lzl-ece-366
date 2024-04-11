@@ -69,8 +69,8 @@ public class JDBCExecutor
 
 
 
-        gb.gameBoard[4].isOccupied(true, account1.getUserId(), game1.getGameId(), connection);
-        gb.gameBoard[9].isOccupied(true, account2.getUserId(), game1.getGameId(), connection);
+        gb.gameBoard[4].isOccupied(true, account1.getUserId(), game1.getGameId(), game1.getGameCode(), connection);
+        gb.gameBoard[9].isOccupied(true, account2.getUserId(), game1.getGameId(), game1.getGameCode(), connection);
 
 
 
