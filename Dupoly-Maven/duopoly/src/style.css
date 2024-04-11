@@ -29,7 +29,7 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #222246;
-    background-image: url('images/board_canva.png');
+    background-image: url('images/board_updated.png');
     background-size: contain; /* Ensure the background image covers the entire viewport */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* Do not repeat the background image */

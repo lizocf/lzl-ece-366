@@ -1,6 +1,7 @@
 package jdbc.property_util;
 
 import jdbc.game_util.GameUtil;
+import jdbc.player_util.PlayerUtil;
 import jdbc.jdbc_util.DataAccessObject;
 
 import java.sql.Connection;
@@ -16,38 +17,38 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
         super(connection);
     }
 
-    // might need to be gameid and userid
-    private static final String GET_ONE = "SELECT game_id " +
-            "FROM owned_property WHERE game_id=?";
+    private static final String GET_ONE = "SELECT game_id, user_id, set_name, property_name, num_hotels " +
+            "FROM owned_property WHERE game_id = ? AND property_name = ?";
 
     private static final String INSERT = "INSERT INTO owned_property(game_id, user_id, set_name, property_name)"
             + " VALUES (?,?,?,?)";
+
+    // need this to find property/set names from current position
+    private static final String GET_NAMES = "SELECT property_name, set_name FROM full_property WHERE space = ?";
 
     private static final String UPDATE = "UPDATE owned_property " + "SET ? = ? " + "WHERE  game_id = ? AND user_id = ? AND property_name = ?";
 
     private static final String DELETE = "DELETE FROM owned_property " + " WHERE (game_id, property_name) = (?,?)";
 
-    // Not sure how to go about this. Property needs to take in two ids. but the findbyId only has one.
     @Override
     public OwnedPropertyUtil findById(OwnedPropertyUtil dto) {
         OwnedPropertyUtil property = new OwnedPropertyUtil();
         try(PreparedStatement statement = this.connection.prepareStatement(GET_ONE);)
         {
-            statement.setInt(1, dto.getUserId());
+            statement.setInt(1, dto.getGameId());
+            statement.setString(2, dto.getPropertyName());
             ResultSet rs = statement.executeQuery();
 
-            // Not sure what this should be
             while(rs.next()) {
                 property.setGameId(rs.getInt("game_id"));
-                property.setUserId(rs.getInt("game_code"));
-                property.setPropertyName(rs.getString("property_name"));
+                property.setUserId(rs.getInt("user_id"));
                 property.setSetName(rs.getString("set_name"));
+                property.setPropertyName(rs.getString("property_name"));
                 property.setNumOfHotels(rs.getInt("num_hotels"));
             }
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException(e);
-
         }
         return property;
     }
@@ -103,6 +104,24 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public OwnedPropertyUtil findNames(PlayerUtil player_dto) {
+       OwnedPropertyUtil property = new OwnedPropertyUtil();
+        try(PreparedStatement statement = this.connection.prepareStatement(GET_NAMES);)
+        {
+            statement.setInt(1, player_dto.getCurrentPosition());
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+                property.setPropertyName(rs.getString("property_name"));
+                property.setSetName(rs.getString("set_name"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return property;
     }
 
     @Override

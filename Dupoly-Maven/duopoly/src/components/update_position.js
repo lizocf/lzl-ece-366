@@ -6,8 +6,9 @@ import space from "./locations";
 
 const Roll = () => {
     const [player, setPlayer] = useState(null);
+    const [property, setProperty] = useState(null);
 
-    let not_purchaseable = [2,4,8,10,12,16,20,22,26,28,30,32,34,38,40,44,48,50,52,56,58];
+    let not_purchaseable = [2,4,8,10,16,20,22,26,28,30,32,34,38,40,44,50,52,56,58];
 
     const loadPlayer = async () => {
         try {
@@ -17,11 +18,26 @@ const Roll = () => {
                 cur_dir: response.data.currentDirection,
             });
             // setPlayer(response.data.filter(player => player !== null).map(player => ({ cur_pos: player.currentPosition, cur_dir: player.currentDirection })));
-            console.log(`Player is at position ${response.data.currentPosition}.`);
+            console.log(`Player is currently at position ${response.data.currentPosition}.`);
         } catch (error) {
             console.error('Error fetching player:', error);
         }
     };
+
+    const loadProperty = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/getOwn`);
+            setPlayer({
+                cur_pos: response.data.currentPosition,
+                cur_dir: response.data.currentDirection,
+            });
+            // setPlayer(response.data.filter(player => player !== null).map(player => ({ cur_pos: player.currentPosition, cur_dir: player.currentDirection })));
+            console.log(`Player is currently at position ${response.data.currentPosition}.`);
+        } catch (error) {
+            console.error('Error fetching player:', error);
+        }
+    };
+    
 
     const loadUpdate = async () => {
         try {
@@ -41,8 +57,7 @@ const Roll = () => {
                 buy_div.style.display='block';
             }  
 
-            // setPlayer(response.data.filter(player => player !== null).map(player => ({ cur_pos: player.currentPosition, cur_dir: player.currentDirection })));
-            console.log(`Player is at position ${response.data.currentPosition}.`);
+            console.log(`Player has moved to position ${response.data.currentPosition}.`);
         } catch (error) {
             console.error('Error fetching player:', error);
         }
@@ -68,23 +83,11 @@ const Roll = () => {
         }      
     };
 
+
+
     useEffect(() => {
         loadPlayer(); // Load player data when the component mounts
     }, []);
-
-    // fix dictionary to style
-    const parseStyle = (styleString) => { 
-        if (!styleString) return {};
-        const styleArray = styleString.split(';').map(pair => pair.split(':').map(s => s.trim()));
-        const styleObject = {};
-        styleArray.forEach(pair => {
-            if (pair.length === 2) {
-                styleObject[pair[0]] = pair[1];
-            }
-        });
-        return styleObject;
-    };
-
 
     return (
         <>
@@ -107,6 +110,19 @@ const Roll = () => {
         </>
         )
     };  
+
+        // fix dictionary to style
+    const parseStyle = (styleString) => { 
+        if (!styleString) return {};
+        const styleArray = styleString.split(';').map(pair => pair.split(':').map(s => s.trim()));
+        const styleObject = {};
+        styleArray.forEach(pair => {
+            if (pair.length === 2) {
+                styleObject[pair[0]] = pair[1];
+            }
+        });
+        return styleObject;
+    };
 
 
 export default Roll;

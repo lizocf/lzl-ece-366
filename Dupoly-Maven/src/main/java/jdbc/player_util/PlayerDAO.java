@@ -223,9 +223,6 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
                 }
                 // currPlayerTurn.currSpace = currPlayerTurn.currSpace > diceroll ? (currPlayerTurn.currSpace-diceroll) : (60 - abs(diceroll - currPlayerTurn.currSpace));
             }
-
-
-
             statement.setInt(1, dto.getCurrentPosition());
             statement.setInt(2,dto.getUserId());
             statement.execute();
@@ -234,6 +231,8 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
             throw new RuntimeException(e);
         }
     }
+
+
 
     @Override
     public void delete(PlayerUtil dto)

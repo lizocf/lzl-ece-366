@@ -30,6 +30,8 @@ public class Player extends Account {
         return "Player Springboot!";
     }
 
+
+
     @GetMapping("/getPlayerInGame/{gameId}/{userId}")
     public PlayerUtil getPlayerInGame(@PathVariable("gameId") int gameId,
                                       @PathVariable("userId") int userId) {
@@ -48,6 +50,7 @@ public class Player extends Account {
         }
         catch(SQLException e) {
             e.printStackTrace();
+            
         }
         return player;
     }
