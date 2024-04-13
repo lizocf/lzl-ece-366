@@ -74,6 +74,11 @@ const Roll = () => {
 
     const purchaseProperty = async () => {
         try {
+            await axios.post("http://localhost:8080/updatePurchaseable", {
+                game_code: "PEPE",
+                purchase: "true"
+            });
+
             await axios.post("http://localhost:8080/gameMove", {
                 user_id: "1",           // how do we NOT hardcode?
                 game_id: "1",
@@ -81,7 +86,7 @@ const Roll = () => {
                 space: String(player.cur_pos)
             });
 
-            // console.log(`Player has purchased ${property.property_name}!`);
+            console.log(`Player has purchased ${property.property_name}!`);
         } catch (error) {
             console.error('Error fetching player:', error);
         }
@@ -89,13 +94,19 @@ const Roll = () => {
     
     const cancelProperty = async () => {
         try {
-            const response = await axios.post(`http://localhost:8080/gameMove`, {
+            await axios.post("http://localhost:8080/updatePurchaseable", {
+                game_code: "PEPE",
+                purchase: "false"
+            });
+            
+            await axios.post("http://localhost:8080/gameMove", {
                 user_id: "1",           // how do we NOT hardcode?
                 game_id: "1",
-                game_code: "PEPE"
+                game_code: "PEPE",
+                space: String(player.cur_pos)
             });
-
-            console.log(`cancelProperty: Player has moved to position ${response.data.currentPosition}.`);
+            
+            console.log(`cancelProperty: Player will not buy ${property.property_name}.`);
         } catch (error) {
             console.error('Error fetching player:', error);
         }

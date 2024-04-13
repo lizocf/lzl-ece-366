@@ -19,6 +19,9 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
 
     private static final String GET_ONE = "SELECT game_id, user_id, set_name, property_name, num_hotels " +
             "FROM owned_property WHERE game_id = ? AND property_name = ?";
+    
+    private static final String GET_ALL = "SELECT game_id, user_id, set_name, property_name, num_hotels " +
+            "FROM owned_property WHERE game_id = ? AND user_id = ?";
 
     private static final String INSERT = "INSERT INTO owned_property(game_id, user_id, set_name, property_name)"
             + " VALUES (?,?,?,?)";
@@ -52,9 +55,6 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
         }
         return property;
     }
-
-
-
 
     // for when a user buys property
     @Override
@@ -123,6 +123,33 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
             throw new RuntimeException(e);
         }
         return property;
+    }
+
+    // added for Owned Properties table
+    public OwnedPropertyUtil[] findAllOwned(OwnedPropertyUtil dto) {
+       OwnedPropertyUtil[] properties = new OwnedPropertyUtil[40]; // max possible properties one can own
+        try(PreparedStatement statement = this.connection.prepareStatement(GET_ALL);)
+        {
+            statement.setInt(1, dto.getGameId());
+            statement.setInt(2, dto.getUserId());
+            ResultSet rs = statement.executeQuery();
+            System.out.println("game_id\t\tuser_id\t\tset_name\t\tproperty_name\t\tnum_hotels");
+            int i = 0;
+            while(rs.next()) {
+                properties[i] = new OwnedPropertyUtil();
+                properties[i].setGameId(rs.getInt("game_id"));
+                properties[i].setUserId(rs.getInt("user_id"));
+                properties[i].setSetName(rs.getString("set_name"));
+                properties[i].setPropertyName(rs.getString("property_name"));
+                properties[i].setNumOfHotels(rs.getInt("num_hotels"));
+                System.out.println(properties[i]);
+                ++i;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return properties;
     }
 
     @Override

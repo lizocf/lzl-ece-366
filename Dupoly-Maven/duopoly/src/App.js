@@ -2,9 +2,9 @@ import "./App.css";
 import "./style.css";
 import {Component } from "react";
 import PlayerTable from "./components/playertable";
-import TransTable from "./components/transtable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
+
 // function App() {
 //     const [data, setData] = useState([]);
 //     const loadUsers = async () => {
@@ -26,9 +26,8 @@ class App extends Component {
         return (
             <>
             {/* <Move /> */}
-            <div className="container_right">
+            <div className="container_right"style={{margin: "-20vh auto"}}>
                 <PlayerTable />
-                <TransTable />
             </div>
             <div className="container_middle">
                 <div className="center" id="direction_div">

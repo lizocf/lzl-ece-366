@@ -63,6 +63,7 @@ public class DuopolyApplication {
 		return newGame;
 	}
 
+	// used to check if specific property is owned already
     @GetMapping("/getOwnedProperty/{gameId}/{PropertyName}")
     public OwnedPropertyUtil getOwnedProperty(@PathVariable("gameId") int gameId,
                                       @PathVariable("PropertyName") String propertyName) {
@@ -87,6 +88,7 @@ public class DuopolyApplication {
         return property;
     }
 
+	// get name of property via current position
     @GetMapping("/getNames/{gameId}/{userId}")
     public OwnedPropertyUtil getNames(@PathVariable("gameId") int gameId,
                                       @PathVariable("userId") int userId)
@@ -113,6 +115,29 @@ public class DuopolyApplication {
             e.printStackTrace();
         }
         return property;
+    }
+
+	// get all properties owned by a player
+    @GetMapping("/getAllOwnedProperties/{gameId}/{userId}")
+    public OwnedPropertyUtil[] getAllOwnedProperties(@PathVariable("gameId") int gameId, @PathVariable("userId") int userId) {
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        OwnedPropertyUtil property = new OwnedPropertyUtil();
+        OwnedPropertyUtil[] properties = new OwnedPropertyUtil[40];
+        property.setGameId(gameId);
+		property.setUserId(userId);
+		
+        try {
+            Connection connection = dcm.getConnection();
+            OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
+
+            properties = propertyDAO.findAllOwned(property);
+            System.out.println(properties);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return properties;
     }
 
 	@PostMapping("/gameMove")
