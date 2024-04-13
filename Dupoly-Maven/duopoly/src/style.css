@@ -92,7 +92,7 @@ body {
 .center {
     /* background-color: rgba(135, 207, 235, 0.464); */
     position: absolute;
-    width: 20vw;
+    width: 30vw;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

@@ -115,7 +115,7 @@ public class DuopolyApplication {
         return property;
     }
 
-	@GetMapping("/gameMove")
+	@PostMapping("/gameMove")
 	public void createOwnedProperty(@RequestBody String json) throws JsonProcessingException
 	{
 		// System.out.println(json);
