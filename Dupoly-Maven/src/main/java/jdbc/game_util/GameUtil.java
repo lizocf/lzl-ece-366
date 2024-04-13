@@ -102,7 +102,7 @@ public class GameUtil implements DataTransferObject
         this.joinable = joinable;
     }
 
-    public boolean isPurchaseable() {
+    public boolean getPurchaseable() {
         return purchaseable;
     }
 

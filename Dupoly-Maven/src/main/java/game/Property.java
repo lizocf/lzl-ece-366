@@ -2,6 +2,9 @@ package game;
 
 import java.sql.Connection;
 import java.util.Scanner;
+
+import jdbc.game_util.GameDAO;
+import jdbc.game_util.GameUtil;
 import jdbc.property_util.*;
 import jdbc.player_util.*;
 
@@ -20,13 +23,14 @@ import java.util.Map;
 class Property implements Space {
     public int baseCost,buildCost,baseRent,buildRent;
     public boolean purchased;
-
     public String propertyName, setName;
     // OwnedPropertyDAO propertyDAO;
 
     public Property(int costPrice, int buildingCostPrice, int rentPrice, int hotelRentPrice,String propname,String setname)
     {
         // need super constructor to initialize stuff
+
+
         baseCost = costPrice;
         buildCost = buildingCostPrice;
         baseRent = rentPrice;
@@ -51,18 +55,49 @@ class Property implements Space {
     public void isOccupied(boolean occupied, int userId, int gameId, String gamecode, Connection connection)
     {
         OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
-        if (occupied & !purchased)
+        GameDAO gameDAO = new GameDAO(connection);
+        PlayerDAO playerDAO = new PlayerDAO(connection);
+
+        GameUtil game = new GameUtil();
+        game.setGameCode(gamecode);
+        game = gameDAO.findById(game);
+
+        PlayerUtil player = new PlayerUtil();
+        player.setUserId(userId);
+        player.setGameId(gameId);
+        player = playerDAO.findById(player);
+
+        // how can we tell if the property is owned.
+        OwnedPropertyUtil owned_property = new OwnedPropertyUtil();
+        owned_property.setGameId(gameId);
+        owned_property.setPropertyName(propertyName);
+
+        // someone owns this and it is not you
+        if ((!(owned_property.getPropertyName() == null)) & (game.getPlayerTurn() != owned_property.getUserId()))
         {
-            //ask user if they want to purchase
-            // Scanner scanner = new Scanner(System.in);
-            // System.out.print("Would you like to purchase[Yes/No]: ");
-            // String s = scanner.nextLine();
 
-            if (true)
-            {
+            System.out.println("You have payed rent");
+            owned_property = propertyDAO.findById(owned_property);
+            playerDAO.update_cash(player,-baseRent * (owned_property.getNumOfHotels() + 1));
 
+            PlayerDAO playerDAO2 = new PlayerDAO(connection);
+
+            // this needs to be fixed up
+            PlayerUtil tenant = new PlayerUtil();
+            tenant.setUserId(owned_property.getUserId());
+            tenant.setGameId(gameId);
+            tenant = playerDAO2.findById(tenant);
+            playerDAO.update_cash(tenant,baseRent * (owned_property.getNumOfHotels() + 1));
+            System.out.println(owned_property.getUserId());
+        }
+
+        if((owned_property.getPropertyName() == null) & (player.getCash() > baseCost))
+        {
+            // the property can be purchased and they choose to purchase it
+            if (game.getPurchaseable()) {
                 // update database (user has purchased a valid property)
-                System.out.print("Property Purchased");
+                System.out.println("Property Purchased");
+                playerDAO.update_cash(player, -baseCost);
                 OwnedPropertyUtil property = new OwnedPropertyUtil();
                 // set the other stuff
                 property.setPropertyName(propertyName);
@@ -71,32 +106,8 @@ class Property implements Space {
                 property.setUserId(userId);
                 property.setGameId(gameId);
                 property = propertyDAO.createInstance(property);
-
             }
         }
-            // game = gameDAO.findbyID();
-            // purchase = game.getPurchaseable();
-            // if purchase:
-            //     xfssfsdfs
-
-        if (occupied & purchased)
-        {
-            // update database (user has lost money)
-            System.out.print("You have payed rent");
-            // we need to get a player by the id finder
-            // call the update for that player
-
-            // PlayerDAO playerDAO = new PlayerDAO(connection);
-            // PlayerUtil player = playerDAO.findById();
-            // these need to be actual values
-            // playerDAO.updateCash(player,baseCost,1); // we need to return a player I guess.
-
-            // how do I link the util to the other things?
-
-            // we pass this into a player update cash function? whcih leads us to
-
-        }
-
     }
 }
 

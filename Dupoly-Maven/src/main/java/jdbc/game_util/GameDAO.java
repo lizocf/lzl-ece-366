@@ -20,7 +20,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
     // TODO: add purchaseable boolean to findById
-    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable " +
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -51,7 +51,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setDebtPot(rs.getInt("debt_pot"));
                 game.setRecentRoll(rs.getInt("roll_number"));
                 game.setPurchaseable(rs.getBoolean("purchaseable"));
-//                game.setPlayerTurn(rs.getInt("which_player_turn"));
+                game.setPlayerTurn(rs.getInt("which_player_turn"));
 //                game.setJoinable(rs.getBoolean("joinable"));
             }
 
@@ -158,7 +158,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     public void update_purchaseable(GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_PURCHASEABLE);)
         {
-            statement.setBoolean(1,dto.isPurchaseable());
+            statement.setBoolean(1,dto.getPurchaseable());
             statement.setString(2,dto.getGameCode());
             statement.execute();
 

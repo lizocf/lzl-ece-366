@@ -25,9 +25,6 @@ import static java.lang.Math.abs;
 @CrossOrigin
 public class Board {
     // insert stuff here
-
-
-
     // 59 spaces
     public Space[] gameBoard;
     public Map<Integer,String> lookup;
@@ -199,7 +196,9 @@ public class Board {
         catch(SQLException e) {
             e.printStackTrace();
         }
+
     }
+
     
     @PostMapping("/updatePurchaseable")
     public void updatePurchaseable(@RequestBody String json) throws JsonProcessingException
