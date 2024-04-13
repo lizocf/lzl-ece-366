@@ -31,7 +31,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_JOIN = "UPDATE game_meta " + "SET joinable = ? WHERE game_code = ? ";
     private static final String UPDATE_TURN = "UPDATE game_meta " + "SET which_player_turn = ?  WHERE game_code = ? ";
     private static final String UPDATE_ROLL = "UPDATE game_meta " + "SET roll_number = ?  WHERE game_code = ? ";
-
+    private static final String UPDATE_PURCHASEABLE = "UPDATE game_meta " + "SET purchaseable = ? WHERE game_code = ? ";
 
     private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
 
@@ -123,7 +123,6 @@ public class GameDAO extends DataAccessObject<GameUtil>
             throw new RuntimeException(e);
         }
     }
-
     // Not sure about this one neecs to be looked into
     public void updatePlayerTurn(GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TURN);)
@@ -154,6 +153,21 @@ public class GameDAO extends DataAccessObject<GameUtil>
             throw new RuntimeException(e);
         }
     }
+
+
+    public void update_purchaseable(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_PURCHASEABLE);)
+        {
+            statement.setBoolean(1,dto.isPurchaseable());
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
 
     // idk what to return here. Maybe it should be void.
     @Override
