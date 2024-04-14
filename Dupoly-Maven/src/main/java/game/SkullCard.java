@@ -123,7 +123,6 @@ public class SkullCard implements Card,Space {
                 int money = poi.getCash();
                 playerDAO.update_cash(poi,money*-1);
                 playerDAO.update_dead(poi);
-                // poi.setDead(true);
             }
         });
 
@@ -152,7 +151,22 @@ public class SkullCard implements Card,Space {
                 // define what needs to happen in the sequel database
                 // find the richest player. Use get all players and compare all of them. Until you find the richest and poorest one.
                 // do a property transfer
-                System.out.print("Skull Card 3 happens");
+
+                // PlayerUtil[] players = new PlayerUtil[10];
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                PlayerUtil[] players = playerDAO.findByGameId(poi);
+
+                if(players.length > 1)
+                {
+                    System.out.print("GIVE YOUR MONEY TO THE RICH GUYS...BASSSEED");
+
+                    //find out who has the most and least cash
+
+
+                    // save info about the property that was deleted from the poorest and give it to the richest
+
+                }
+
 
             }
         });

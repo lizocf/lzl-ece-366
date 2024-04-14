@@ -79,7 +79,7 @@ public class Board {
         gameBoard[23] = new Property(100,100,100,100,"Los Angeles", "New York");
         gameBoard[24] = new Property(100,100,100,100,"San Francisco", "New York");
         gameBoard[25] = new Property(100,100,100,100,"Las Vegas", "New York");
-        gameBoard[26] = new SpecialCard();
+        gameBoard[26] = new SpecialCard(); // 26 should tax
         gameBoard[27] = new Property(100,100,100,100,"Henderson", "New York");
         gameBoard[28] = new SkullCard();
         gameBoard[29] = new Property(100,100,100,100,"Boulder City", "New York");
@@ -190,7 +190,7 @@ public class Board {
             game = gameDAO.findById(game);
             //------------
 
-            gameDAO.update_debt_pot(game);
+            gameDAO.update_debt_pot(game,false);
             System.out.println(game);
         }
         catch(SQLException e) {

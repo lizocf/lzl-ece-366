@@ -97,11 +97,19 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
 
-    public void update_debt_pot(GameUtil dto) {
+    public void update_debt_pot(GameUtil dto,boolean reset) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_DEBT);)
         {
             // statement.setString(1,"debt_pot");
-            statement.setInt(1,(dto.getDebtPot() + 50)); // can I get the current value then just add 50?
+            if (reset)
+            {
+                statement.setInt(1,0);
+            }
+            else
+            {
+                statement.setInt(1,(dto.getDebtPot() + 50));
+            }
+
             statement.setString(2,dto.getGameCode());
             statement.execute();
 

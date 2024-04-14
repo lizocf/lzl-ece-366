@@ -128,6 +128,7 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
     // added for Owned Properties table
     public OwnedPropertyUtil[] findAllOwned(OwnedPropertyUtil dto) {
        OwnedPropertyUtil[] properties = new OwnedPropertyUtil[40]; // max possible properties one can own
+
         try(PreparedStatement statement = this.connection.prepareStatement(GET_ALL);)
         {
             statement.setInt(1, dto.getGameId());

@@ -81,7 +81,6 @@ class Property implements Space {
             playerDAO.update_cash(player,-baseRent * (owned_property.getNumOfHotels() + 1));
 
             PlayerDAO playerDAO2 = new PlayerDAO(connection);
-
             // this needs to be fixed up
             PlayerUtil tenant = new PlayerUtil();
             tenant.setUserId(owned_property.getUserId());
