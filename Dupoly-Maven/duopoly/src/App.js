@@ -34,7 +34,7 @@ class App extends Component {
                     <h1>Choose a direction!</h1>
                 </div>
                 <div className="center" id="roll_div" style={{display: "none"}}>
-                    <h1>Click to roll:</h1>
+                    {/* <h1>Click to roll:</h1> */}
                 </div>
                 <Roll />
             </div>
