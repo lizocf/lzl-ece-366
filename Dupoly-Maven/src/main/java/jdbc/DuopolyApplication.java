@@ -162,14 +162,8 @@ public class DuopolyApplication {
 
 	public static void main(String[] args) { SpringApplication.run(DuopolyApplication.class, args); }
 
-<<<<<<< Updated upstream
-=======
-	
-	public static void main(String[] args)
-	{
-		SpringApplication.run(DuopolyApplication.class, args);
-	}
->>>>>>> Stashed changes
+
+
 }
 
 // Need to find a way to do this curr space stuff in springboot

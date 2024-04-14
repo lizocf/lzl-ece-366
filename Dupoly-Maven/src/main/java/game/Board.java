@@ -54,71 +54,66 @@ public class Board {
         gameBoard[40] = new Special("Eviction");
         gameBoard[50] = new Special("Jail");
 
-        gameBoard[1] = new Property(100,100,100,100,"New York City", "New York"); //need to input property name
-        gameBoard[2] = new SpecialCard(); // might need a speicial Card NAme. Also We should have the hashmaps be here not in the classes themselves. Then we pass in the map. IDK
-        gameBoard[3] = new Property(100,100,100,100,"createOwnedProperty", "New York");
-        gameBoard[4] = new Property(100,100,100,100,"Miami", "Florida");
-        gameBoard[5] = new Property(100,100,100,100,"Tampa", "Florida");
-        gameBoard[6] = new Property(100,100,100,100,"Orlando", "Florida");
-        gameBoard[7] = new Property(100,100,100,100,"Boston", "New York");
+        gameBoard[1] = new Property(20,10,20,60,"Burlington", "Vermont"); //need to input property name
+        gameBoard[2] = new SpecialCard();
+        gameBoard[3] = new Property(20,10,20,50,"Stowe", "Vermont");
+        gameBoard[4] = new Property(100,100,100,100,"Tax", "Florida");
+        gameBoard[5] = new Property(100,100,100,100,"CLE", "Airports");
+        gameBoard[6] = new Property(60,30,160,300,"Beavercreek", "Ohio");
+        gameBoard[7] = new Property(80,35,180,350,"Cincinnati", "Ohio");
         gameBoard[8] = new SkullCard();
-        gameBoard[9] = new Property(100,100,100,100,"Cambridge", "Vermont");
+        gameBoard[9] = new Property(100,40,200,400,"Cleveland", "Ohio");
 
-        gameBoard[11] = new Property(100,100,100,100,"Salem", "New York"); //need to input property name
-        gameBoard[12] = new Property(100,100,100,100,"Detroit", "New York"); // might need a speicial Card NAme. Also We should have the hashmaps be here not in the classes themselves. Then we pass in the map. IDK
-        gameBoard[13] = new Property(100,100,100,100,"Flint", "New York");
-        gameBoard[14] = new Property(100,100,100,100,"Rochester", "New York");
-        gameBoard[15] = new Property(100,100,100,100,"Cleveland", "New York");
+        gameBoard[11] = new Property(60,30,160,300,"Rochester", "Massachusetts");
+        gameBoard[12] = new Property(100,100,100,400,"Electric Company", "Utility");
+        gameBoard[13] = new Property(80,35,180,350,"Flint", "Michigan");
+        gameBoard[14] = new Property(100,40,200,400,"Detroit", "Michigan");
+        gameBoard[15] = new Property(100,100,100,100,"DTW", "Airports");
         gameBoard[16] = new SpecialCard();
-        gameBoard[17] = new Property(100,100,100,100,"Cincinnati", "New York");
-        gameBoard[18] = new SkullCard();
-        gameBoard[19] = new Property(100,100,100,100,"Beavercreek", "New York");
+        gameBoard[17] = new Property(60,30,160,300,"Salem", "Massachusetts");
+        gameBoard[18] = new Property(80,35,180,350,"Cambridge", "Massachusetts");
+        gameBoard[19] = new Property(100,40,200,400,"Boston", "Massachusetts");
 
-        gameBoard[21] = new Property(100,100,100,100,"Stowe", "New York"); //need to input property name
-        gameBoard[22] = new Property(100,100,100,100,"Burlington", "New York"); // might need a speicial Card NAme. Also We should have the hashmaps be here not in the classes themselves. Then we pass in the map. IDK
-        gameBoard[23] = new Property(100,100,100,100,"Los Angeles", "New York");
-        gameBoard[24] = new Property(100,100,100,100,"San Francisco", "New York");
-        gameBoard[25] = new Property(100,100,100,100,"Las Vegas", "New York");
-        gameBoard[26] = new SpecialCard(); // 26 should tax
-        gameBoard[27] = new Property(100,100,100,100,"Henderson", "New York");
+        gameBoard[21] = new Property(150,50,220,440,"Orlando", "Florida"); //need to input property name
+        gameBoard[22] = new SpecialCard();
+        gameBoard[23] = new Property(150,50,220,440,"Tampa", "Florida");
+        gameBoard[24] = new Property(160,60,250,500,"Miami", "Florida");
+        gameBoard[25] = new Property(100,100,100,100,"JFK", "Airports");
+        gameBoard[26] = new Property(100,100,100,100,"Tax", "New York");
+        gameBoard[27] = new Property(180,80,350,450,"Poughkeepskie", "New York");
         gameBoard[28] = new SkullCard();
-        gameBoard[29] = new Property(100,100,100,100,"Boulder City", "New York");
+        gameBoard[29] = new Property(200,100,400,500,"New York City", "New York");
 
-        gameBoard[31] = new Property(100,100,100,100,"San Antonio", "New York");
-        gameBoard[32] = new SpecialCard(); // might need
-        gameBoard[33] = new Property(100,100,100,100,"Dallas", "New York");
-        gameBoard[34] = new Property(100,100,100,100,"Houston", "New York");
-        gameBoard[35] = new Property(100,100,100,100,"Portland", "New York");
-        gameBoard[36] = new Property(100,100,100,100,"Eugene", "New York");
-        gameBoard[37] = new Property(100,100,100,100,"Oregon City", "New York");
-        gameBoard[38] = new Property(100,100,100,100,"Seattle", "New York");
-        gameBoard[39] = new Property(100,100,100,100,"Olympia", "New York");
+        gameBoard[31] = new Property(200,100,400,500,"Los Angeles", "California");
+        gameBoard[32] = new SpecialCard();
+        gameBoard[33] = new Property(180,80,350,450,"San Francisco", "California");
+        gameBoard[34] = new Property(100,100,100,100,"Tax", "New York");
+        gameBoard[35] = new Property(100,100,100,100,"DTW", "Airports");
+        gameBoard[36] = new Property(200,100,400,500,"Las Vegas", "Nevada");
+        gameBoard[37] = new Property(160,60,180,350,"Henderson", "Nevada");
+        gameBoard[38] = new Property(150,50,220,440,"Boulder City", "Nevada");
+        gameBoard[39] = new Property(100,100,100,100,"Olympia", "Washington");
 
-        gameBoard[41] = new Property(100,100,100,100,"Vancouver", "New York");
-        gameBoard[42] = new Property(100,100,100,100,"Albuquerque", "New York");
-        gameBoard[43] = new Property(100,100,100,100,"Santa Fe", "New York");
+        gameBoard[41] = new Property(100,40,200,400,"San Antonio", "Texas");
+        gameBoard[42] = new Property(80,35,180,350,"Dallas", "Texas");
+        gameBoard[43] = new Property(60,30,160,300,"Houston", "Texas");
         gameBoard[44] = new SkullCard();
-        gameBoard[45] = new Property(100,100,100,100,"Electric Company", "New York");
-        gameBoard[46] = new Property(100,100,100,100,"Water Company", "New York");
-        gameBoard[47] = new Property(100,100,100,100,"JFK", "New York");
-        gameBoard[48] = new Property(100,100,100,100,"DTW", "New York");
-        gameBoard[49] = new Property(100,100,100,100,"CLE", "New York");
+        gameBoard[45] =  new Property(100,100,100,100,"DFW", "Airports");
+        gameBoard[46] = new Property(100,40,200,400,"Portland", "Oregon");
+        gameBoard[47] = new Property(80,35,180,350,"Eugene", "Oregon");
+        gameBoard[48] = new Property(100,100,100,400,"Water Company", "Utility");
+        gameBoard[49] = new Property(60,30,160,300,"Oregon City", "Oregon");
 
-        gameBoard[51] = new Property(100,100,100,100,"LAX", "New York"); //need to input property name
+        gameBoard[51] = new Property(100,40,200,400,"Seattle", "Washington"); //need to input property name
         gameBoard[52] = new SpecialCard();
-        gameBoard[53] = new Property(100,100,100,100,"DFW", "New York");
-        gameBoard[54] = new Property(100,100,100,100,"DCA", "New York");
-        gameBoard[55] = new Property(100,100,100,100,"Tax", "New York");
-        gameBoard[56] = new Property(100,100,100,100,"New York City", "New York");
-        gameBoard[57] = new Property(100,100,100,100,"New York City", "New York");
+        gameBoard[53] = new Property(80,35,180,350,"Olympia", "Washington");
+        gameBoard[54] = new Property(60,30,160,300,"Vancouver", "Washington");
+        gameBoard[55] = new Property(100,100,100,100,"DCA", "Airports");
+        gameBoard[56] = new Property(100,100,100,100,"Tax", "New York");
+        gameBoard[57] = new Property(20,10,20,60,"Albuquerque", "New Mexico");
         gameBoard[58] = new SkullCard();
-        gameBoard[59] = new Property(100,100,100,100,"New York City", "New York");
-
-
-//        lookup.put(1,"New York City");
-//        lookup.put(9,"Seattle");
+        gameBoard[59] = new Property(20,10,20,50,"Santa Fe", "New Mexico");
     }
-    // should be reset at the end of every player's turn
 
     @PostMapping("/updateRoll")
     public void updateRoll(@RequestBody String json) throws JsonProcessingException
