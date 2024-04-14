@@ -15,6 +15,16 @@ public class GameUtil implements DataTransferObject
     private int diceRoll;
     private boolean purchaseable;
 
+    public String getRecent_card() {
+        return recent_card;
+    }
+
+    public void setRecent_card(String recent_card) {
+        this.recent_card = recent_card;
+    }
+
+    public String recent_card;
+
     public int getRecentRoll() {
         return recentRoll;
     }

@@ -20,7 +20,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
     // TODO: add purchaseable boolean to findById
-    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn " +
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, recent_card " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -32,6 +32,9 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_TURN = "UPDATE game_meta " + "SET which_player_turn = ?  WHERE game_code = ? ";
     private static final String UPDATE_ROLL = "UPDATE game_meta " + "SET roll_number = ?  WHERE game_code = ? ";
     private static final String UPDATE_PURCHASEABLE = "UPDATE game_meta " + "SET purchaseable = ? WHERE game_code = ? ";
+
+    private static final String UPDATE_RECENT_CARD = "UPDATE game_meta " + "SET recent_card = ? WHERE game_code = ? ";
+
 
     private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
 
@@ -52,6 +55,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setRecentRoll(rs.getInt("roll_number"));
                 game.setPurchaseable(rs.getBoolean("purchaseable"));
                 game.setPlayerTurn(rs.getInt("which_player_turn"));
+                game.setRecent_card(rs.getString("recent_card"));
 //                game.setJoinable(rs.getBoolean("joinable"));
             }
 
@@ -170,6 +174,18 @@ public class GameDAO extends DataAccessObject<GameUtil>
             statement.setString(2,dto.getGameCode());
             statement.execute();
 
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void update_recent_card(GameUtil dto, String card_name) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_RECENT_CARD);)
+        {
+            statement.setString(1,card_name);
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException(e);

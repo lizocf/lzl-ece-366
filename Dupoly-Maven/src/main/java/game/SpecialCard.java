@@ -113,6 +113,9 @@ public class SpecialCard implements Card,Space {
                 System.out.print("Um here have some money");
                 PlayerDAO playerDAO = new PlayerDAO(getConnection());
                 playerDAO.update_cash(poi,500);
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"The Federal Reserve");
+
 
             }
         });
