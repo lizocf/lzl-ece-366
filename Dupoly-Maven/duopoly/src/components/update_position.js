@@ -46,7 +46,6 @@ const Roll = () => {
             });
             console.log(`loadProperty: Player has landed on ${name_response.data.propertyName} of the ${name_response.data.setName} set.`);
 
-            
             // check if already owned through /getOwnedProperty
             const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/${player_response.data.gameId}/${name_response.data.propertyName}`);
             setOwnedProperty({
@@ -57,12 +56,29 @@ const Roll = () => {
             var land_div = document.getElementById("land");
             var buy_div = document.getElementById("buy");
             var buttons = document.getElementById("buttons");
-
+            const end_div = document.getElementById("end");
             land_div.style.display='block';
-            if (!(not_purchaseable.includes(player_response.data.currentPosition)) && (prop_response.data.propertyName == null)) {
+
+            if (!(not_purchaseable.includes(player_response.data.currentPosition) && (prop_response.data.propertyName == null))) {
                 buy_div.style.display='block';
                 buttons.style.display='block';
-            }  
+            } 
+            else {
+                await axios.post("http://localhost:8080/gameMove", {
+                    user_id: "1",           // how do we NOT hardcode?
+                    game_id: "1",
+                    game_code: "PEPE",
+                    space: String(player_response.data.currentPosition)
+                })
+                end_div.style.display='block'; 
+                land_div.style.display='block';
+            }
+            // else if () {
+            //     buy_div.style.display='block';
+            //     buttons.style.display='block';
+
+            //     console.log('This property is already owned by User', prop_response.data.userId);
+            // }  
             
             console.log(`loadProperty: Player has moved to position ${player_response.data.currentPosition}.`);
         } catch (error) {
@@ -85,6 +101,12 @@ const Roll = () => {
                 game_code: "PEPE",
                 space: String(player.cur_pos)
             });
+            
+            // var buy_div = document.getElementById("buy");    
+            // var end_div = document.getElementById("end");
+            // var end_button = document.getElementById("end_button");
+            // end_div.style.display='block';
+            // end_button.style.display='block';
 
             console.log(`Player has purchased ${property.property_name}!`);
         } catch (error) {
@@ -105,7 +127,7 @@ const Roll = () => {
                 game_code: "PEPE",
                 space: String(player.cur_pos)
             });
-            
+
             console.log(`cancelProperty: Player will not buy ${property.property_name}.`);
         } catch (error) {
             console.error('Error fetching player:', error);
@@ -125,13 +147,6 @@ const Roll = () => {
             var roll_div = document.getElementById("roll_div");
             roll_button.style.display='none';
             roll_div.style.display='none';
-    
-            // check if already owned through /getOwnedProperty -> change 
-
-            // if (!(not_purchaseable.includes(response.data.currentPosition))) {
-            //     buy_div.style.display='block';
-            //     // have a post that makes purchaseable boolean true
-            // }  
 
             console.log(`loadUpdate: Player has moved to position ${response.data.currentPosition}.`);
         } catch (error) {
@@ -179,6 +194,7 @@ const Roll = () => {
                     </div>
                 </div>
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>
+                <h1>Click to roll! </h1>
                 <button onClick={nextPosition}>Roll!</button>
             </div>
             <div className="center" id="land" style={{ display: "none", margin:"auto auto", flexDirection: "column" }}>
@@ -190,8 +206,11 @@ const Roll = () => {
                         <button id = "buy_yes" onClick={purchaseProperty}> Yes</button>
                         <button id = "buy_no" onClick={cancelProperty} style={{backgroundColor: "#50514F", marginLeft: "2vh"}}>No</button>
                     </div>
+                </div>
             </div>
-            </div>
+            <div className="center" id="end" style={{ display: "none", margin:"6vh auto", flexDirection: "column"}}>
+                    <button id = "end_button"style={{backgroundColor: "white", color: "black"}}> End Turn </button>
+                </div>
         </>
         )
     };  

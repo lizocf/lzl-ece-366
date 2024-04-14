@@ -20,13 +20,36 @@ const PlayerTable = () => {
             // console.log('loadPlayers: Table rows have been loaded:', tableRows)
             // Now you can use tableRows in your HTML content
             const tableBody = document.getElementById("player_body");
+            const land_div = document.getElementById("land");
+            const buy_div = document.getElementById("buy");
+            const buttons = document.getElementById("buttons");
+            const end_div = document.getElementById("end");
+            const roll = document.getElementById("roll_button");
+
             tableBody.innerHTML = tableRows;
             // document.getElementById("player_body").remove();
+
+            
             document.getElementById("buy_yes").onclick = function() {
                 handleButtonClick();
                 handleButtonClickProp();
+                handleButtonClickProp();
+
+                end_div.style.display = "block";
+                land_div.style.display = "none";
+                buy_div.style.display = "none";
+                buttons.style.display = "none";
             }
-        
+
+            end_div.onclick = function() {
+                handleButtonClick();
+                handleButtonClickProp();
+                roll.style.display = "block";
+                end_div.style.display = "none";
+                land_div.style.display = "none";
+
+            }
+
         } catch (error) {
             console.error('Error fetching players:', error);
         }
@@ -63,6 +86,7 @@ const PlayerTable = () => {
     const handleButtonClick = async () => {
         loadPlayers(); // need to load twice to make update
         try {
+            const fake_response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`); 
             const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`);
             const filteredPlayers = response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash }));
             setPlayers(filteredPlayers);
