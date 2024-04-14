@@ -22,7 +22,6 @@ public class SkullCard implements Card,Space {
 
     GameUtil goi = new GameUtil();
     PlayerUtil poi = new PlayerUtil();
-
     OwnedPropertyUtil proi = new OwnedPropertyUtil();
 
 

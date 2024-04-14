@@ -1,68 +1,331 @@
 package game;
 
+import jdbc.game_util.GameDAO;
+import jdbc.game_util.GameUtil;
+import jdbc.player_util.PlayerDAO;
+import jdbc.player_util.PlayerUtil;
+import jdbc.property_util.OwnedPropertyDAO;
+import jdbc.property_util.OwnedPropertyUtil;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
 
+@SpringBootApplication
+@RestController
+@CrossOrigin
 public class SpecialCard implements Card,Space {
 
+    GameUtil goi = new GameUtil();
+    PlayerUtil poi = new PlayerUtil();
+    OwnedPropertyUtil proi = new OwnedPropertyUtil();
+    String propertyName;
+    Connection connection;
+    String gamecode;
+    int poi_userId;
+    int poi_gameId;
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public int getPoi_userId() {
+        return poi_userId;
+    }
+
+    public void setPoi_userId(int poi_userId) {
+        this.poi_userId = poi_userId;
+    }
+
+    public int getPoi_gameId() {
+        return poi_gameId;
+    }
+
+    public void setPoi_gameId(int poi_gameId) {
+        this.poi_gameId = poi_gameId;
+    }
+
+    public String getGamecode() {
+        return gamecode;
+    }
+
+    public void setGamecode(String gamecode) {
+        this.gamecode = gamecode;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     WeightedProbModel<Object> specialPB = new WeightedProbModel<>()
-            .add(40, "Card 1")
-            .add(35, "Card 2")
-            .add(25, "Card 3")
-            .add(25, "Card 4");
+            .add(0, "Force Trade")
+            .add(100, "The Federal Reserve")
+            .add(0, "King of the City")
+            .add(0, "California Love")
+            .add(0, "Truth or Consequences")
+            .add(0, "Cringe")
+            .add(0, "Get Out of Jail Free")
+            .add(0, "Reverse")
+            .add(0, "Debt Collector")
+            .add(0, "Surprise Party")
+            .add(0, "Run it back")
+            .add(0, "Lottery")
+            .add(0, "Vaycay")
+            .add(0, "Housing Lottery")
+            .add(0, "GO TO")
+            .add(0, "Mercy")
+            .add(0, "Skull Town")
+            .add(0, "FREE AS AIR AND WATER")
+            .add(0, "Among US");
     // public String cardName;
     Map<String, OnCard> cardMap = new HashMap<>();
 
     public SpecialCard()
     {
-        cardMap.put("CardName 1", new OnCard()
+        cardMap.put("Force Trade", new OnCard()
+        {
+
+            // drop money to zero and mark the player as dead
+            @Override
+            public void cardAction()
+            {
+                System.out.println("ruh roh raggy your bankrupt now");
+            }
+        });
+
+        cardMap.put("The Federal Reserve", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                System.out.print("Um here have some money");
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                playerDAO.update_cash(poi,500);
+
+            }
+        });
+
+        cardMap.put("King of the City", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                System.out.print("GIVE YOUR MONEY TO THE RICH GUYS...BASSSEED");
+            }
+        });
+
+        cardMap.put("California Love", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("Truth or Consequences", new OnCard()
         {
             @Override
             public void cardAction()
             {
                 // define what needs to happen in the sequel database
-                System.out.print("Special Card 1 happens");
+                System.out.print("Skull Card 4 happens");
 
             }
         });
 
-        cardMap.put("CardName 2", new OnCard()
+        cardMap.put("Cringe", new OnCard()
         {
             @Override
             public void cardAction()
             {
                 // define what needs to happen in the sequel database
-                System.out.print("Special Card 2 happens");
+                System.out.print("GO TO JAIL");
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                playerDAO.update_jail(poi,true);
+            }
+        });
+
+
+        cardMap.put("Get Out of Jail Free", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // go space no longer grants money
+                // need to include some sort of toggle option in the special spaces.
+                System.out.print("Skull Card 4 happens");
 
             }
         });
 
-        cardMap.put("CardName 3", new OnCard()
+        cardMap.put("Reverse", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // we never defined what this is
+                System.out.print("amoooongusss :)");
+
+            }
+        });
+
+        cardMap.put("Debt Collector", new OnCard()
         {
             @Override
             public void cardAction()
             {
                 // define what needs to happen in the sequel database
-                System.out.print("Special Card 3 happens");
+                System.out.print("Skull Card 2 happens");
 
             }
         });
 
-        cardMap.put("CardName 4", new OnCard()
+        cardMap.put("Surprise Party", new OnCard()
         {
             @Override
             public void cardAction()
             {
                 // define what needs to happen in the sequel database
-                System.out.print("Special Card 4 happens");
+                System.out.print("Skull Card 3 happens");
+
             }
         });
+
+        cardMap.put("Run it back", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("Lottery", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("Vaycay", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+
+        cardMap.put("Housing Lottery", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("GO TO", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("Mercy", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("Skull Town", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+
+        cardMap.put("FREE AS AIR AND WATER", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
+        cardMap.put("Among US", new OnCard()
+        {
+            @Override
+            public void cardAction()
+            {
+                // define what needs to happen in the sequel database
+                System.out.print("Skull Card 4 happens");
+
+            }
+        });
+
     }
 
     @Override
     public void onUse() {
+
+        GameDAO gameDAO = new GameDAO(getConnection());
+        PlayerDAO playerDAO = new PlayerDAO(getConnection());
+        OwnedPropertyDAO ownedPropertyDAO = new OwnedPropertyDAO(getConnection());
+
+
+        // investigate whether I use user or game Id to find owned property (conflicting statements in the DAO)
+        poi.setUserId(getPoi_userId());
+        poi.setGameId(getPoi_gameId());
+        goi.setGameCode(getGamecode());
+        proi.setUserId(getPoi_userId());
+        goi = gameDAO.findById(goi);
+        poi = playerDAO.findById(poi);
+        proi = ownedPropertyDAO.findById(proi);
+        System.out.println(goi);
+        System.out.println(poi);
         String cardName = (String) specialPB.next();
         cardMap.get(cardName).cardAction();
     }
@@ -70,6 +333,10 @@ public class SpecialCard implements Card,Space {
     @Override
     public void isOccupied(boolean occupied, int userId, int gameId, String gamecode,  Connection connection)
     {
+        setConnection(connection);
+        setGamecode(gamecode);
+        setPoi_gameId(gameId);
+        setPoi_userId(userId);
         onUse();
     }
 }
