@@ -18,7 +18,7 @@ New features such as SKULL cards, DEBT space, EVICTION space, and the REVERSE sp
 A player wins once everyone else runs out of money or goes bankrupt. 
 
 ### The board
-
+![Image](https://raw.githubusercontent.com/lizocf/ECE-366-Duopoly/dev/Dupoly-Maven/duopoly/src/images/board_updated.png)
  
 ## Running Duopoly
 In order to build and run this project the following __dependencies__ are required:
@@ -29,15 +29,18 @@ In order to build and run this project the following __dependencies__ are requir
 
 ### Post-setup run instructions:
 *The database must be initialized with players/general game information first!!* 
-See 'First Run Instructions:' below
+See 'First Run Instructions:' below.
+
+First, the localhost springboot server must first be started:
 
     cd Dupoly-Maven
     docker compose up app
     
-A
+Then, after moving to a separate terminal the user-interface must be started: 
 
     cd Dupoly-Maven/duopoly
     npm start
+
 
 ### First run instructions:
 
@@ -79,10 +82,29 @@ In the event of damaging the database during testing the following instructions 
 
 ## Project structure
 
-### Database Structure
-
-
 ### File Structure
+  * /Dupoly-Maven
+    * This is the main folder for Duopoly
+      * /database
+        * Contains the initialization SQL files for the database as well as util scripts
+      * /duopoly
+        * This contains the bulk of UI-related code
+          * /components
+            * Javascript for functionality
+          * /images
+            * Asset images for the game
+          * Contains otherwise required CSS, JS, etc. and UI test util
+      * /src
+        * /main
+          * /java
+            * /game
+              * util for backend
+            * /gameExample
+              * A deprecated test
+            * /jdbc
+              * Main bulk of Backend Util
+          * /resources.static
+            * 
+        * "/demo.sh" and "test.sh" are command line scripts created to test and prove specific API functionalities.
+      * Dockerfile and etc.
 
-
-### 
