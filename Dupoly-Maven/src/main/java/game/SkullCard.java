@@ -78,7 +78,7 @@ public class SkullCard implements Card,Space {
 
 
     WeightedProbModel<Object> skullPB = new WeightedProbModel<>()
-            .add(100, "Bankrupt")
+            .add(0, "Bankrupt")
             .add(0, "Market Crash")
             .add(0, "Based")
             .add(0, "f off")
@@ -90,10 +90,10 @@ public class SkullCard implements Card,Space {
             .add(0, "West Coast Best Coast")
             .add(0, "West Coast Worst Coast")
             .add(0, "Dust Bowl")
-            .add(0, "Triple Skull emoji")
-            .add(0, "We're So Back")
+            .add(50, "Triple Skull emoji")  //kinda broke the game
+            .add(50, "We're So Back")
             .add(0, "Self Sabotage")
-            .add(0, "What Do You Bring To The Table")
+            .add(0, "What Do You Bring To The Table") //untested
             .add(0, "Rent Stabilized")
             .add(0, "Eviction")
             .add(0, "Winner Winner Chicken Dinner");
@@ -122,6 +122,8 @@ public class SkullCard implements Card,Space {
                 int money = poi.getCash();
                 playerDAO.update_cash(poi,money*-1);
                 playerDAO.update_dead(poi);
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Bankrupt");
             }
         });
 
@@ -139,6 +141,8 @@ public class SkullCard implements Card,Space {
                 for(int i=0; i<10; i++) {
                     playerDAO.update_cash(players[i],-420);
                 }
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Market Crash");
             }
         });
 
@@ -160,13 +164,8 @@ public class SkullCard implements Card,Space {
                     System.out.print("GIVE YOUR MONEY TO THE RICH GUYS...BASSSEED");
 
                     //find out who has the most and least cash
-
-
                     // save info about the property that was deleted from the poorest and give it to the richest
-
                 }
-
-
             }
         });
 
@@ -279,6 +278,10 @@ public class SkullCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
+                String new_cardName = (String) skullPB.next();
+                cardMap.get(new_cardName).cardAction();
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Triple Skull Emoji");
 
             }
         });
@@ -290,8 +293,16 @@ public class SkullCard implements Card,Space {
             public void cardAction()
             {
                 // define what needs to happen in the sequel database
-                System.out.print("Skull Card 4 happens");
 
+                System.out.print("We're so back");
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                int money = poi.getCash();
+                if (money < 100)
+                {
+                    playerDAO.update_cash(poi,10000);
+                }
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"We're So Back");
             }
         });
 
@@ -303,6 +314,7 @@ public class SkullCard implements Card,Space {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
 
+
             }
         });
 
@@ -313,6 +325,18 @@ public class SkullCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
+                OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(getConnection());
+
+                OwnedPropertyUtil[] properties = new OwnedPropertyUtil[40];
+                // cannot invoke because null
+                properties = propertyDAO.findAllOwned(proi);
+                for(int j = 0; j < properties.length; j++)
+                {
+                    propertyDAO.updateNumHotel(properties[j],0);
+                }
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"What Do You Bring To The Table");
+
 
             }
         });
@@ -336,7 +360,6 @@ public class SkullCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
-
             }
         });
 
@@ -365,6 +388,7 @@ public class SkullCard implements Card,Space {
         poi.setGameId(getPoi_gameId());
         goi.setGameCode(getGamecode());
         proi.setUserId(getPoi_userId());
+        proi.setGameId(getPoi_gameId());
         goi = gameDAO.findById(goi);
         poi = playerDAO.findById(poi);
         proi = ownedPropertyDAO.findById(proi);

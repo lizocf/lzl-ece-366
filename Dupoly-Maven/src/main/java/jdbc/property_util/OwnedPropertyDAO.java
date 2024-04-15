@@ -92,11 +92,11 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
     }
 
 
-    public void updateNumHotel(OwnedPropertyUtil dto) {
+    public void updateNumHotel(OwnedPropertyUtil dto, int num_of_hotels) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE);)
         {
             statement.setString(1,"num_hotels");
-            statement.setInt(2,(dto.getNumOfHotels() + 1)); // can I get the current value then just add 50?
+            statement.setInt(2,num_of_hotels); // can I get the current value then just add 50?
             statement.setInt(3,dto.getGameId());
             statement.setInt(4,dto.getUserId());
             statement.setString(5,dto.getPropertyName());

@@ -79,7 +79,7 @@ public class SpecialCard implements Card,Space {
             .add(0, "Get Out of Jail Free")
             .add(0, "Reverse")
             .add(0, "Debt Collector")
-            .add(0, "Surprise Party")
+            .add(0, "Surprise Party") // causes null pointer issues
             .add(0, "Run it back")
             .add(0, "Lottery")
             .add(0, "Vaycay")
@@ -125,7 +125,7 @@ public class SpecialCard implements Card,Space {
             @Override
             public void cardAction()
             {
-                System.out.print("GIVE YOUR MONEY TO THE RICH GUYS...BASSSEED");
+                System.out.print("New York");
             }
         });
 
@@ -156,9 +156,7 @@ public class SpecialCard implements Card,Space {
             public void cardAction()
             {
                 // define what needs to happen in the sequel database
-                System.out.print("GO TO JAIL");
-                PlayerDAO playerDAO = new PlayerDAO(getConnection());
-                playerDAO.update_jail(poi,true);
+                System.out.print("Cringe");
             }
         });
 
@@ -180,8 +178,21 @@ public class SpecialCard implements Card,Space {
             @Override
             public void cardAction()
             {
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+
+                String curr_dir = poi.getCurrentDirection();
+                if(curr_dir.equals("LEFT"))
+                {
+                    playerDAO.update_direction(poi,"RIGHT");
+                }
+                else
+                {
+                    playerDAO.update_direction(poi,"LEFT");
+                }
                 // we never defined what this is
-                System.out.print("amoooongusss :)");
+
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Reverse");
 
             }
         });
@@ -193,7 +204,12 @@ public class SpecialCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 2 happens");
-
+                // GameDAO gameDAO = new GameDAO(getConnection());
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                int pot = goi.getDebtPot();
+                playerDAO.update_cash(poi,pot);
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Debt Collector");
             }
         });
 
@@ -204,6 +220,10 @@ public class SpecialCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 3 happens");
+                String cardName = (String) specialPB.next();
+                cardMap.get(cardName).cardAction();
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Surprise Party");
 
             }
         });
@@ -226,6 +246,11 @@ public class SpecialCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                playerDAO.update_cash(poi,100000);
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Lottery");
+
 
             }
         });
@@ -260,7 +285,6 @@ public class SpecialCard implements Card,Space {
             {
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
-
             }
         });
 
@@ -269,8 +293,16 @@ public class SpecialCard implements Card,Space {
             @Override
             public void cardAction()
             {
+                PlayerUtil[] players = new PlayerUtil[10];
                 // define what needs to happen in the sequel database
                 System.out.print("Skull Card 4 happens");
+                PlayerDAO playerDAO = new PlayerDAO(getConnection());
+                players = playerDAO.findByGameId(poi);
+                for(int i=0; i<10; i++) {
+                    playerDAO.update_cash(players[i],1000);
+                }
+                GameDAO gameDAO = new GameDAO(getConnection());
+                gameDAO.update_recent_card(goi,"Mercy");
 
             }
         });
@@ -324,6 +356,7 @@ public class SpecialCard implements Card,Space {
         poi.setGameId(getPoi_gameId());
         goi.setGameCode(getGamecode());
         proi.setUserId(getPoi_userId());
+        proi.setGameId(getPoi_gameId());
         goi = gameDAO.findById(goi);
         poi = playerDAO.findById(poi);
         proi = ownedPropertyDAO.findById(proi);

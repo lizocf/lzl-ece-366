@@ -43,3 +43,12 @@ curl --header "Content-Type: application/json" \
     "direction": "left"
     }' \
     "http://localhost:8080/updateDir"
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{
+    "user_id": "1",
+    "game_id": "1"
+  }' \
+  "http://localhost:8080/createPlayerInGame"
+
