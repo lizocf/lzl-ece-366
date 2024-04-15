@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect} from "react";
 import axios from "axios";
 import "../style.css";
-import space from "./locations";
+import propData from "./locations";
 import PlayerTable, { handleButtonClick } from "./playertable";
 import Tiles from "./tiles";
 
@@ -187,7 +187,7 @@ const Roll = () => {
     return (
         <>
             <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(space[player.cur_pos]) : {}}>
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
                     <div className="eyes">
                     <div className="eye"></div>
                     <div className="eye"></div>

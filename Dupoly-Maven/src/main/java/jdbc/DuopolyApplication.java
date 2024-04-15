@@ -63,6 +63,26 @@ public class DuopolyApplication {
 		return newGame;
 	}
 
+	@GetMapping("/getGameInfo/{gameCode}")
+	public GameUtil getGameInfo(@PathVariable("game_code") String gameCode)
+	{
+
+		DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+				"duopoly", "postgres", "password");
+		GameUtil newGame = new GameUtil();
+		try {
+			Connection connection = dcm.getConnection();
+			GameDAO gameDAO = new GameDAO(connection);
+			newGame.setGameCode(gameCode);
+
+			newGame = gameDAO.findById(newGame);
+			System.out.println(newGame);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return newGame;
+	}
 	// used to check if specific property is owned already
     @GetMapping("/getOwnedProperty/{gameId}/{PropertyName}")
     public OwnedPropertyUtil getOwnedProperty(@PathVariable("gameId") int gameId,

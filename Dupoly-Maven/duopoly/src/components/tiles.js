@@ -3,6 +3,7 @@ import { useState, useEffect} from "react";
 import axios from "axios";
 import "../style.css";
 import "./update_position";
+import propData from "./locations";
 
 
 const Tiles = () => { 
@@ -23,7 +24,24 @@ const Tiles = () => {
                 num_hotels: name_response.data.numOfHotels
             });
             console.log(`loadProperty: This is ${name_response.data.propertyName} of the ${name_response.data.setName} set.`);
-          
+            console.log(propData.costPrice[clicked_id]);
+
+            // check if already owned through /getOwnedProperty
+            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/1/${name_response.data.propertyName}`);
+            setOwnedProperty({
+                user_id: prop_response.data.userId,
+                property_name: prop_response.data.propertyName
+            });
+
+            var owned_player = prop_response.data.userId;
+            if (owned_player === 0) {
+                var owned = "Not yet purchased."
+            } else {
+                const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/${owned_player}`);
+                var owned = response.data.userName;
+            }
+
+            
             const tableRows = (
                 `<tr>
                     <td>${name_response.data.propertyName}</td>
@@ -31,8 +49,33 @@ const Tiles = () => {
                     <td>${name_response.data.numOfHotels}</td>
                 </tr>`
             );
+            
+            const rentRows = (
+                `<tr style={{ fontWeight: 'bold' }}>
+                    <td>Owner</td>
+                    <td>${owned}</td>
+                </tr>
+                <tr style={{ fontWeight: 'bold' }}>
+                    <td>Building Cost</td>
+                    <td>${propData.buildingPrice[clicked_id]}</td>
+                </tr>
+                <tr style={{ fontWeight: 'bold' }}>
+                    <td>Rent Cost</td>
+                    <td>${propData.rentPrice[clicked_id]}</td>
+                </tr>
+                <tr style={{ fontWeight: 'bold' }}>
+                    <td>Hotel Cost</td>
+                    <td>${propData.hotelPrice[clicked_id]}</td>
+                </tr>`
+            );
+
             const tableBody = document.getElementById("updated_props");
             tableBody.innerHTML = tableRows;
+
+            const rentBody = document.getElementById("rent");
+            rentBody.innerHTML = rentRows;
+        // }
+
         } catch (error) {
             console.error('Error fetching property:', error);
         }
@@ -40,8 +83,8 @@ const Tiles = () => {
 
     return (
         <>
-        <div class="container_left" style={{margin: "-20vh -73vh"}}>
-        <main class="table" id="property_info">
+        <div className="container_left" style={{margin: "-21vh -67vh"}}>
+        <main className="props-table" id="property_info" style={{background: "#fff5", borderRadius: "0.8rem"}}>
             <section className="table__body">
                 <h1>Property Info</h1>
                 <table>
@@ -63,23 +106,11 @@ const Tiles = () => {
             </section>
             <section className="table__body">
                 <h1>Rent Information</h1>
+                <table>
                     <tbody id="rent">
-                    <tr style={{ fontWeight: 'bold' }}>
-                        <td>Owner</td>
-                    </tr>
-                    <tr style={{ fontWeight: 'bold' }}>
-                        <td>Building Cost</td>
-                    </tr>
-                    <tr style={{ fontWeight: 'bold' }}>
-                        <td>Rent Cost</td>
-                    </tr>
-                    <tr style={{ fontWeight: 'bold' }}>
-                        <td>Hotel Cost</td>
-                    </tr>
-                    <tr style={{ fontWeight: 'bold' }}>
-                        <td>Demolition Cost</td>
-                    </tr>
+                    {/* RentTable */}
                     </tbody>
+                </table>
             </section>
         </main>
     </div>

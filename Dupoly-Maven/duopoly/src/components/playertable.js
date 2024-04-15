@@ -40,6 +40,12 @@ const PlayerTable = () => {
                 buy_div.style.display = "none";
                 buttons.style.display = "none";
             }
+            document.getElementById("buy_yes").onclick = function() {
+                end_div.style.display = "block";
+                land_div.style.display = "none";
+                buy_div.style.display = "none";
+                buttons.style.display = "none";
+            }
 
             end_div.onclick = function() {
                 handleButtonClick();
