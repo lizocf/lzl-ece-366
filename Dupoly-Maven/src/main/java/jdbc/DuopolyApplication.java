@@ -63,8 +63,9 @@ public class DuopolyApplication {
 		return newGame;
 	}
 
+    // need for card descriptions
 	@GetMapping("/getGameInfo/{gameCode}")
-	public GameUtil getGameInfo(@PathVariable("game_code") String gameCode)
+	public GameUtil getGameInfo(@PathVariable("gameCode") String gameCode)
 	{
 
 		DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",

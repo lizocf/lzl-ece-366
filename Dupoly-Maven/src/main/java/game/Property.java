@@ -73,7 +73,7 @@ class Property implements Space {
         owned_property.setPropertyName(propertyName);
 
         // someone owns this and it is not you
-        if ((!(owned_property.getPropertyName() == null)) & (game.getPlayerTurn() != owned_property.getUserId()))
+        if ((!(owned_property.getPropertyName() == null)) && (game.getPlayerTurn() != owned_property.getUserId()))
         {
 
             System.out.println("You have payed rent");
@@ -90,7 +90,7 @@ class Property implements Space {
             System.out.println(owned_property.getUserId());
         }
 
-        if((owned_property.getPropertyName() == null) & (player.getCash() > baseCost))
+        if((owned_property.getPropertyName() == null) && (player.getCash() > baseCost))
         {
             // the property can be purchased and they choose to purchase it
             if (game.getPurchaseable()) {
