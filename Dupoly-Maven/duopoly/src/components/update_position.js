@@ -4,6 +4,7 @@ import axios from "axios";
 import "../style.css";
 import space from "./locations";
 import PlayerTable, { handleButtonClick } from "./playertable";
+import Tiles from "./tiles";
 
 const Roll = () => {
     const [player, setPlayer] = useState(null);
@@ -193,6 +194,7 @@ const Roll = () => {
                         </div>
                     </div>
                 </div>
+                <Tiles />
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>
                 <h1>Click to roll! </h1>
                 <button onClick={nextPosition}>Roll!</button>

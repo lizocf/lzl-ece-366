@@ -4,6 +4,8 @@ import {Component } from "react";
 import PlayerTable from "./components/playertable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
+import Tiles from "./components/tiles";
+import LeftTables from "./components/lefttables";
 
 // function App() {
 //     const [data, setData] = useState([]);
@@ -26,9 +28,12 @@ class App extends Component {
         return (
             <>
             {/* <Move /> */}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+
             <div className="container_right"style={{margin: "-20vh auto"}}>
                 <PlayerTable />
             </div>
+            {/* <LeftTables/> */}
             <div className="container_middle">
                 <div className="center" id="direction_div">
                     <h1>Choose a direction!</h1>
@@ -39,6 +44,7 @@ class App extends Component {
                 <Roll />
             </div>
             <UpdateDirection />
+            
             </>
         )
     }

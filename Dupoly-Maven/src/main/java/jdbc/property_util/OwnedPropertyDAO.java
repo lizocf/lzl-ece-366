@@ -125,6 +125,25 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
         return property;
     }
 
+    public OwnedPropertyUtil findNamesByPos(int space) {
+       OwnedPropertyUtil property = new OwnedPropertyUtil();
+        try(PreparedStatement statement = this.connection.prepareStatement(GET_NAMES);)
+        {
+            statement.setInt(1, space);
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+                property.setPropertyName(rs.getString("property_name"));
+                property.setSetName(rs.getString("set_name"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return property;
+    }
+
+
     // added for Owned Properties table
     public OwnedPropertyUtil[] findAllOwned(OwnedPropertyUtil dto) {
        OwnedPropertyUtil[] properties = new OwnedPropertyUtil[40]; // max possible properties one can own

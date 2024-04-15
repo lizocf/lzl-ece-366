@@ -117,6 +117,28 @@ public class DuopolyApplication {
         return property;
     }
 
+	// get name of property via ANY position
+    @GetMapping("/getNamesByPos/{pos}")
+    public OwnedPropertyUtil getNamesByPos(@PathVariable("pos") int pos)
+    {
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+
+        OwnedPropertyUtil property = new OwnedPropertyUtil();
+
+        try {
+            Connection connection = dcm.getConnection();
+            OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
+
+            property = propertyDAO.findNamesByPos(pos);
+            System.out.println(property);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return property;
+    }
+
 	// get all properties owned by a player
     @GetMapping("/getAllOwnedProperties/{gameId}/{userId}")
     public OwnedPropertyUtil[] getAllOwnedProperties(@PathVariable("gameId") int gameId, @PathVariable("userId") int userId) {
