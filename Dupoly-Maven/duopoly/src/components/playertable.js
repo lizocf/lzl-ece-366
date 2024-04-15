@@ -40,7 +40,7 @@ const PlayerTable = () => {
                 buy_div.style.display = "none";
                 buttons.style.display = "none";
             }
-            document.getElementById("buy_yes").onclick = function() {
+            document.getElementById("buy_no").onclick = function() {
                 end_div.style.display = "block";
                 land_div.style.display = "none";
                 buy_div.style.display = "none";
@@ -53,6 +53,8 @@ const PlayerTable = () => {
                 roll.style.display = "block";
                 end_div.style.display = "none";
                 land_div.style.display = "none";
+                document.getElementById("broke_h1").style.display = "none";
+
 
             }
 
@@ -152,6 +154,12 @@ const PlayerTable = () => {
                 <section className="table__body">
                     <h1>Players</h1>
                     <table>
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Cash</th>
+                        </tr>
+                    </thead>
                         <tbody id="player_body">
                             {/* Table rows will be inserted here */}
                         </tbody>

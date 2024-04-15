@@ -69,6 +69,7 @@ const LeftTables = () => {
                     game_code: "PEPE",
                     space: String(player_response.data.currentPosition)
                 })
+                
                 end_div.style.display='block'; 
                 land_div.style.display='block';
             }
