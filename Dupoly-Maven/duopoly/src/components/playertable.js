@@ -54,7 +54,8 @@ const PlayerTable = () => {
                 end_div.style.display = "none";
                 land_div.style.display = "none";
                 document.getElementById("broke_h1").style.display = "none";
-
+                document.getElementById("special_prop").style.display='none';
+                document.getElementById("land_prop").style.display='block';
 
             }
 

@@ -90,11 +90,12 @@ const Roll = () => {
                     console.log(card_response.data.recent_card);
 
                     document.getElementById("special_prop").innerHTML = card_response.data.recent_card;
+                    document.getElementById("special_prop").style.display='block';
                     document.getElementById("land_prop").style.display='none';
                     end_div.style.display='block'; 
                 } else {  
-                    document.getElementById("land_prop").style.display='block';
                     document.getElementById("special_prop").style.display='none';
+                    document.getElementById("land_prop").style.display='block';
                 }
             }
             console.log(`loadProperty: Player has moved to position ${player_response.data.currentPosition}.`);
