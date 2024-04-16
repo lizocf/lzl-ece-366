@@ -157,6 +157,66 @@ body {
     border-radius: 50%;
 }
 
+/* board tables */
+table, th, td {
+    border-collapse: collapse;
+    padding: 1rem;
+    text-align: left;
+}
+
+
+/* owned property table */
+.prop-table {
+    width: 20vw;
+    height: 40vh;
+    background: #fff5;
+
+    backdrop-filter: blur(7px);
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: .8rem;
+
+    overflow: hidden;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    position: relative;
+    table-layout:fixed;
+    top: 14.7%; left: 16.1%;
+    font-size: 0.9em;
+    width: 3.3vh;
+    min-width: 3vh;
+    max-width: 5vh;
+    height: 9.8vh;
+    /* border: 0.1vh solid rgb(0, 0, 0); */
+    transform: rotate(-28.4deg);
+}
+
+.styled-table thead tr {
+    /* background-color: #ffffff00; */
+    color: #ffffff00;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    /* background-color: #00000061; */
+    padding: 12px 15px;
+    width: 3.2vh;
+    min-width: 3vh;
+    /* max-width: 5vh; */
+    /* border: 0.1vh solid black; */
+}
+
+/* .styled-table tbody tr { */
+    /* border-bottom: 1px solid #dddddd; */
+    /* border: 0.5vh black; */
+/* } */
+
+.styled-table td:hover {
+    background-color: rgba(18, 0, 54, 0.573);  
+  }
+
 /* button */
 button {
     position: relative;
@@ -277,6 +337,7 @@ main.table {
     overflow: hidden;
 }
 
+
 /* logs table */
 .logs-table {
     width: 20vw;
@@ -368,7 +429,7 @@ main.table {
 table {
     width: 100%;
 }
-
+/* 
 td img {
     width: 36px;
     height: 36px;
@@ -376,13 +437,13 @@ td img {
     border-radius: 50%;
 
     vertical-align: middle;
-}
+} */
 
-table, th, td {
+/* table, th, td {
     border-collapse: collapse;
-    padding: 1rem;
+    /* padding: 1rem;
     text-align: left;
-}
+} */
 
 thead th {
     position: sticky;
@@ -407,9 +468,9 @@ tbody tr.hide {
     transform: translateX(100%);
 }
 
-tbody tr:hover {
+/* tbody tr:hover {
     background-color: #fff6 !important;
-}
+} */
 
 tbody tr td,
 tbody tr td p,
@@ -417,7 +478,7 @@ tbody tr td img {
     transition: .2s ease-in-out;
 }
 
-tbody tr.hide td,
+/* tbody tr.hide td,
 tbody tr.hide td p {
     padding: 0;
     font: 0 / 0 sans-serif;
@@ -428,7 +489,7 @@ tbody tr.hide td img {
     width: 0;
     height: 0;
     transition: .2s ease-in-out .5s;
-}
+} */
 
 .status {
     padding: .4rem 0;
@@ -455,11 +516,11 @@ tbody tr.hide td img {
 }
 
 
-@media (max-width: 1000px) {
+/* @media (max-width: 1000px) {
     td:not(:first-of-type) {
         min-width: 12.1rem;
     }
-}
+} */
 
 thead th span.icon-arrow {
     display: inline-block;

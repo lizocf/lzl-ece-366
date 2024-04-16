@@ -55,7 +55,7 @@ body {
 /* containers */
 
 .container_board {
-    background-color: rgba(135, 207, 235, 0.464);
+    /* background-color: rgba(135, 207, 235, 0.464); */
     /* left: 27%; */
     width: 97vh;
     height: 97vh;
@@ -219,9 +219,13 @@ body {
 /* skew */
 
 .rectangle {
-    width: 80px;
-    height: 80px;
-    background-color: skyblue; 
+    position: relative;
+    top: 19.5%; left: 20.5875%;
+    width: 3.6vh;
+    height: 9.8vh;
+    border: 0.2vh solid black;
+    background-color: rgba(189, 189, 189, 0.055);
+    transform: rotate(-28.7deg);
 }
 
 .rotate-translate {
@@ -230,6 +234,49 @@ body {
   }
   
 
+/* board tables */
+table, th, td {
+    border-collapse: collapse;
+    padding: 1rem;
+    text-align: left;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    position: relative;
+    table-layout:fixed;
+    top: 1.7%; left: 16.1%;
+    font-size: 0.9em;
+    width: 3.6vh;
+    height: 9.8vh;
+    /* border: 0.1vh solid rgb(0, 0, 0); */
+    transform: rotate(-28.7deg);
+}
+
+.styled-table thead tr {
+    background-color: #ffffff00;
+    color: #ffffff00;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    background-color: #0000000b;
+    /* padding: 12px 15px; */
+    width: 3.38vh;
+    /* border: 0.1vh solid black; */
+}
+
+.styled-table tbody tr {
+    /* border-bottom: 1px solid #dddddd; */
+    border: 0.5vh black;
+}
+
+.styled-table td:hover {
+    background-color: rgba(18, 0, 54, 0.573);  
+  }
+
+  
 /* arrow buttons */
 .arrow{
   position:relative;
@@ -444,9 +491,11 @@ tbody tr.hide {
     transform: translateX(100%);
 }
 
+/* prob gonna fix this eventually */
+/* 
 tbody tr:hover {
     background-color: #fff6 !important;
-}
+} */
 
 tbody tr td,
 tbody tr td p,

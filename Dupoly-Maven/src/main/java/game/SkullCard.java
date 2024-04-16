@@ -78,7 +78,7 @@ public class SkullCard implements Card,Space {
 
 
     WeightedProbModel<Object> skullPB = new WeightedProbModel<>()
-            .add(0, "Bankrupt")
+            .add(100, "Bankrupt")
             .add(0, "Market Crash")
             .add(0, "Based")
             .add(0, "f off")
@@ -90,8 +90,8 @@ public class SkullCard implements Card,Space {
             .add(0, "West Coast Best Coast")
             .add(0, "West Coast Worst Coast")
             .add(0, "Dust Bowl")
-            .add(50, "Triple Skull emoji")  //kinda broke the game
-            .add(50, "We're So Back")
+            .add(0, "Triple Skull emoji")  //kinda broke the game
+            .add(0, "We're So Back")
             .add(0, "Self Sabotage")
             .add(0, "What Do You Bring To The Table") //untested
             .add(0, "Rent Stabilized")

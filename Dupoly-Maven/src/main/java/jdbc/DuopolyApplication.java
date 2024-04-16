@@ -63,6 +63,27 @@ public class DuopolyApplication {
 		return newGame;
 	}
 
+    // need for card descriptions
+	@GetMapping("/getGameInfo/{gameCode}")
+	public GameUtil getGameInfo(@PathVariable("gameCode") String gameCode)
+	{
+
+		DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+				"duopoly", "postgres", "password");
+		GameUtil newGame = new GameUtil();
+		try {
+			Connection connection = dcm.getConnection();
+			GameDAO gameDAO = new GameDAO(connection);
+			newGame.setGameCode(gameCode);
+
+			newGame = gameDAO.findById(newGame);
+			System.out.println(newGame);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return newGame;
+	}
 	// used to check if specific property is owned already
     @GetMapping("/getOwnedProperty/{gameId}/{PropertyName}")
     public OwnedPropertyUtil getOwnedProperty(@PathVariable("gameId") int gameId,
@@ -109,6 +130,28 @@ public class DuopolyApplication {
             player = playerDAO.findById(player);
 
             property = propertyDAO.findNames(player);
+            System.out.println(property);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return property;
+    }
+
+	// get name of property via ANY position
+    @GetMapping("/getNamesByPos/{pos}")
+    public OwnedPropertyUtil getNamesByPos(@PathVariable("pos") int pos)
+    {
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+
+        OwnedPropertyUtil property = new OwnedPropertyUtil();
+
+        try {
+            Connection connection = dcm.getConnection();
+            OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
+
+            property = propertyDAO.findNamesByPos(pos);
             System.out.println(property);
         }
         catch(SQLException e) {
