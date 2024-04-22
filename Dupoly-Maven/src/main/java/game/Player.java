@@ -16,12 +16,60 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
+import static java.lang.Math.abs;
+
 @SpringBootApplication
 @RestController
 @CrossOrigin
 public class Player extends Account {
     public int game_id, cash, currSpace;
     public boolean afk, current_direction;
+
+    private int passedSpace(int prev_pos, int curr_pos, String curr_dir)
+    {
+
+        // so there are two spaces  in this game that if you pass buy they can owe you money
+        // these are debt Pot and GO
+
+        // so we need to check if prev and current are in between one of these spaces
+
+        if(curr_dir.equals("left"))
+        {
+            if((prev_pos>10) && (10>curr_pos))
+            {
+
+                return 1;
+
+
+
+            }
+
+            if((prev_pos<0) && (0<curr_pos))
+            {
+                return 2;
+
+            }
+
+        }
+        else
+        {
+            if((prev_pos<10) && (10<curr_pos))
+            {
+
+                return 1;
+
+            }
+
+            if((prev_pos>10) && (10>curr_pos))
+            {
+                return 2;
+
+            }
+        }
+        return 0;
+    }
+
+
 
     @GetMapping("/playerTest")
     public String playerTest()
@@ -205,10 +253,24 @@ public class Player extends Account {
             player.setGameId(Integer.valueOf(inputMap.get("game_id")));
             player = playerDAO.findById(player);
             game = gameDAO.findById(game);
+
+
             // needs to take in something extra, maybe a game DAO
             // can change the id to the code but is that the best way to proceed
             // why is it by code and not by id?
             playerDAO.update_position(player, game);
+
+            boolean p = playerDAO.passedDebtPot(player.getPreviousPosition(),player.getCurrentPosition(),player.getCurrentDirection());
+
+            if(p)
+            {
+                gameDAO.update_debt_pot(game,false);
+            }
+
+
+
+
+
             System.out.println(player);
         }
         catch(SQLException e) {

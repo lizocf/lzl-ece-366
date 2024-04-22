@@ -8,9 +8,19 @@ public class PlayerUtil implements DataTransferObject {
         return userId;
     }
 
-    private int userId, gameId, cash, currentPosition;
+    private int userId, gameId, cash, currentPosition, previousPosition;
     private boolean jail, afk, dead;
+
+    public int getPreviousPosition() {
+        return previousPosition;
+    }
+
+    public void setPreviousPosition(int previousPosition) {
+        this.previousPosition = previousPosition;
+    }
+
     private String userName, currentDirection;
+
 
     public int getUserId() {
         return userId;

@@ -71,6 +71,12 @@ public class PropertyDAOTest
         assertEquals(2,ownedPropertyUtil.getNumOfHotels());
     }
 
+    
+
+
+
+
+
 
 
 

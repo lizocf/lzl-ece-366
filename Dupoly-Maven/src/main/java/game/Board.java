@@ -36,13 +36,8 @@ public class Board {
         // Hardcoded for now but maybe we eventualy put these in a yaml file
         // the format is .add(probability percentage, "card name")
         // call specialPB.next() to draw a card. This gets passed in to the SkullCard.onUSe function AHHHH THIS MIGHT WORK
-
-
-
-
         gameBoard = new Space[60];
         lookup = new HashMap<Integer,String>();
-
 
         // Better way to intialize this board using a loop but for now we will hardcode it. 
 
@@ -248,10 +243,7 @@ public class Board {
 //        }
 //    }
 
-    private boolean passedSpace(int prevSpaceNum, int currSpaceNum, int specialSpaceNum)
-    {
-        return abs(currSpaceNum - prevSpaceNum) > specialSpaceNum;
-    }
+
 }
 
 // playing a game. Hard Code No game loop. Instatiate Player classes

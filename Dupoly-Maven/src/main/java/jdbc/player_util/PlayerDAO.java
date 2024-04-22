@@ -1,5 +1,6 @@
 package jdbc.player_util;
 
+import jdbc.game_util.GameDAO;
 import jdbc.game_util.GameUtil;
 import jdbc.jdbc_util.DataAccessObject;
 
@@ -16,10 +17,10 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
             super(connection);
         }
 
-    private static final String GET_ONE = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, jail, afk, dead " +
+    private static final String GET_ONE = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, previous_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=? AND user_id=?";
     
-    private static final String GET_GAME = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, jail, afk, dead " +
+    private static final String GET_GAME = "SELECT game_id, user_id, user_name, cash, current_direction, current_position,previous_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=?";
 
     private static final String INSERT = "INSERT INTO player_in_game(game_id, user_id, user_name) SELECT ? AS game_id," + 
@@ -31,7 +32,13 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
     private static final String UPDATE_DIR = "UPDATE player_in_game " + "SET current_direction = ? " + "WHERE user_id = ?";
     private static final String UPDATE_JAIL = "UPDATE player_in_game " + "SET jail = ? " + "WHERE user_id = ?";
     private static final String UPDATE_AFK = "UPDATE player_in_game " + "SET afk = ? " + "WHERE user_id = ?";
-    private static final String UPDATE_POS = "UPDATE player_in_game " + "SET current_position = ? " + "WHERE user_id = ?";
+    private static final String UPDATE_POS_CUR = "UPDATE player_in_game " + "SET previous_position = current_position, current_position = ? " + "WHERE user_id = ?";
+
+
+
+    private static final String UPDATE_POS_PREV = "UPDATE player_in_game " + "SET current_position = ? " + "WHERE user_id = ?";
+
+
 
 
     private static final String DELETE = "DELETE FROM player_in_game WHERE user_id = ?";
@@ -52,6 +59,7 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
                 player.setCash(rs.getInt("cash"));
                 player.setCurrentDirection(rs.getString("current_direction"));
                 player.setCurrentPosition(rs.getInt("current_position"));
+                player.setPreviousPosition(rs.getInt("previous_position"));
                 player.setJail(rs.getBoolean("jail"));
                 player.setAfk(rs.getBoolean("afk"));
                 player.setDead(rs.getBoolean("dead"));
@@ -79,6 +87,7 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
                 int cash = rs.getInt("cash");
                 String cur_dir = rs.getString("current_direction");
                 int cur_pos = rs.getInt("current_position");
+                int prev_pos = rs.getInt("previous_position");
                 boolean jail = rs.getBoolean("jail");
                 boolean afk = rs.getBoolean("afk");
                 boolean dead = rs.getBoolean("dead");
@@ -92,6 +101,7 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
                 players[i].setCash(cash);
                 players[i].setCurrentDirection(cur_dir);
                 players[i].setCurrentPosition(cur_pos);
+                players[i].setPreviousPosition(prev_pos);
                 players[i].setJail(jail);
                 players[i].setAfk(afk);
                 players[i].setDead(dead);
@@ -211,19 +221,56 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
             throw new RuntimeException(e);
         }
     }
-    
-    public void update_position(PlayerUtil dto, GameUtil game_dto) // update_position
-
-            //what does int move do?
+    public boolean passedGo(int prev_pos, int curr_pos, String curr_dir)
     {
-         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_POS);)
+        if(curr_dir.equals("right"))
+        {
+            if(((48<=prev_pos) && (prev_pos<=59)) && ((1<=curr_pos) && (curr_pos<=11)))
+            {
+                return true;
+
+            }
+        }
+        else
+        {
+            if(((48<=curr_pos) && (curr_pos<=59)) && ((1<=prev_pos) && (prev_pos<=11)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean passedDebtPot(int prev_pos, int curr_pos, String curr_dir)
+    {
+        if(curr_dir.equals("right"))
+        {
+            if( ((prev_pos==59) || ((0<=prev_pos) && (prev_pos<=9)) ) && ((11<=curr_pos) && (curr_pos<=23)))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if(((curr_pos==59) || ((0<=curr_pos) && (curr_pos<=9)) ) && ((11<=prev_pos) && (prev_pos<=23)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void update_position(PlayerUtil dto, GameUtil game_dto) // update_position
+    {
+         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_POS_CUR);)
         {
             // statement.setString(1,"current_position");
-
+            dto.setPreviousPosition(dto.getCurrentPosition());
             if(dto.getCurrentDirection().equals("right"))  // Check if its suppose to be right or left lol
             {
+
                 int new_pos = ((dto.getCurrentPosition() + game_dto.getRecentRoll()) % 60);
-                dto.setCurrentPosition(new_pos); // should be dice roll value not a static 7
+                dto.setCurrentPosition(new_pos);
+
 
             }
             else
@@ -236,18 +283,25 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
                     dto.setCurrentPosition(60 - abs(game_dto.getRecentRoll() - dto.getCurrentPosition()));
                 }
                 // currPlayerTurn.currSpace = currPlayerTurn.currSpace > diceroll ? (currPlayerTurn.currSpace-diceroll) : (60 - abs(diceroll - currPlayerTurn.currSpace));
+
             }
             statement.setInt(1, dto.getCurrentPosition());
             statement.setInt(2,dto.getUserId());
             statement.execute();
+
+            if(passedGo(dto.getPreviousPosition(),dto.getCurrentPosition(),dto.getCurrentDirection()))
+            {
+                update_cash(dto,200);
+                System.out.println("UPDATE CASH");
+            }
+
+
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
-
-
-
+    
     @Override
     public void delete(PlayerUtil dto)
     {
