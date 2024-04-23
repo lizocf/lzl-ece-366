@@ -52,6 +52,42 @@ body {
     font-family: sans-serif;
 }
 
+.login-bg {
+    margin:0;
+    padding:10px;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #101021d2;
+    background-image: url('images/DUOPOLY_logo_bg.png');
+    background-size: 40%; /* Ensure the background image covers the entire viewport */
+    background-position: top; /* Center the background image */
+    background-repeat: no-repeat; /* Do not repeat the background image */
+    position: relative;
+}
+
+
+.nickname {
+    font-size: 24px;
+    border-radius: 20px;
+    line-height: 1.5;
+    padding: 5px 10px;
+    transition: box-shadow 100ms ease-in, border 100ms ease-in, background-color 100ms ease-in;
+    border: 2px solid #dee1e2;
+    color: rgb(14, 14, 16);
+    background: #dfdee2;
+    display: block;
+    height: 50px;
+    width: 100%;
+    :hover {
+        border-color: #ccc;
+    }
+    :focus{
+        border-color: #9147ff;
+        background: #fff;
+    }
+}
+
 /* containers */
 
 .container_board {

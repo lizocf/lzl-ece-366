@@ -150,9 +150,9 @@ const Roll = () => {
             });
     
             var roll_button = document.getElementById("roll_button");
-            var roll_div = document.getElementById("roll_div");
+            // var roll_div = document.getElementById("roll_div");
             roll_button.style.display='none';
-            roll_div.style.display='none';
+            // roll_div.style.display='none';
 
             console.log(`loadUpdate: Player has moved to position ${response.data.currentPosition}.`);
         } catch (error) {

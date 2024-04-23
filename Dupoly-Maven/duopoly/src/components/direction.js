@@ -24,7 +24,7 @@ const UpdateDirection = () => {
     function UpdateLeft() {
         var left_button = document.getElementById("left");
         var right_button = document.getElementById("right");
-        var roll_div = document.getElementById("roll_div");
+        // var roll_div = document.getElementById("roll_div");
         var roll_button = document.getElementById("roll_button");
         var direction_div = document.getElementById("direction_div");
         axios.post("http://localhost:8080/updateDir", {
@@ -35,7 +35,7 @@ const UpdateDirection = () => {
         left_button.style.display='none';
         right_button.style.display='none';
         roll_button.style.display='block';
-        roll_div.style.display='block';
+        // roll_div.style.display='block';
         direction_div.style.display='none';
         console.log(`Player has chosen to go left.`);
         loadPlayer();
@@ -46,7 +46,7 @@ const UpdateDirection = () => {
         var left_button = document.getElementById("left");
         var right_button = document.getElementById("right");
         var direction_div = document.getElementById("direction_div");
-        var roll_div = document.getElementById("roll_div");
+        // var roll_div = document.getElementById("roll_div");
         var roll_button = document.getElementById("roll_button");
         axios.post("http://localhost:8080/updateDir", {
             user_id : "1",
@@ -56,7 +56,7 @@ const UpdateDirection = () => {
         left_button.style.display='none';
         right_button.style.display='none';
         roll_button.style.display='block';
-        roll_div.style.display='block';
+        // roll_div.style.display='block';
         direction_div.style.display='none';
         console.log(`Player has chosen to go right.`);
         loadPlayer();

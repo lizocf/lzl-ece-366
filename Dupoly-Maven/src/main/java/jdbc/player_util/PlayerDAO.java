@@ -20,7 +20,7 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
     private static final String GET_ONE = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, previous_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=? AND user_id=?";
     
-    private static final String GET_GAME = "SELECT game_id, user_id, user_name, cash, current_direction, current_position,previous_position, jail, afk, dead " +
+    private static final String GET_GAME = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, previous_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=?";
 
     private static final String INSERT = "INSERT INTO player_in_game(game_id, user_id, user_name) SELECT ? AS game_id," + 

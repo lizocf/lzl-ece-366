@@ -5,6 +5,7 @@ CREATE TABLE player_in_game (
     cash int DEFAULT 2000,
     current_direction varchar(10) DEFAULT NULL,
     current_position int DEFAULT 0,
+    previous_position int DEFAULT 0,
     jail BOOLEAN DEFAULT FALSE,
     afk BOOLEAN DEFAULT FALSE,
     dead BOOLEAN DEFAULT FALSE,
