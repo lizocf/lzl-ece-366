@@ -15,6 +15,26 @@ public class OwnedPropertyUtil implements DataTransferObject
     private String propertyName;
     private int numOfHotels;
 
+    private boolean upgradeable;
+
+    private boolean tradeable;
+
+    public boolean isTradeable() {
+        return tradeable;
+    }
+
+    public void setTradeable(boolean tradeable) {
+        this.tradeable = tradeable;
+    }
+
+    public boolean isUpgradeable() {
+        return upgradeable;
+    }
+
+    public void setUpgradeable(boolean upgradeable) {
+        this.upgradeable = upgradeable;
+    }
+
     public int debtPot;
 
     public int getDebtPot() {

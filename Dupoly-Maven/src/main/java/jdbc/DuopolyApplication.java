@@ -109,6 +109,30 @@ public class DuopolyApplication {
         return property;
     }
 
+    @PostMapping("/updateUpgradeable")
+    public void updateUpgradeable(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        OwnedPropertyUtil owned_property = new OwnedPropertyUtil();
+
+        try{
+            Connection connection = dcm.getConnection();
+            OwnedPropertyDAO ownedPropertyDAO = new OwnedPropertyDAO(connection);
+
+            owned_property.setPropertyName(inputMap.get("property_name"));
+            owned_property.setGameId(Integer.valueOf(inputMap.get("game_id")));
+            owned_property.setUpgradeable(Boolean.valueOf(inputMap.get("upgradeable")));
+            ownedPropertyDAO.updateUpgradeable(owned_property);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 	// get name of property via current position
     @GetMapping("/getNames/{gameId}/{userId}")
     public OwnedPropertyUtil getNames(@PathVariable("gameId") int gameId,
@@ -160,6 +184,60 @@ public class DuopolyApplication {
         return property;
     }
 
+    @PostMapping("/upgradeProperty")
+    public void upgradeProperty(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        OwnedPropertyUtil property = new OwnedPropertyUtil();
+        OwnedPropertyUtil[] properties = new OwnedPropertyUtil[40];
+
+        // we need to get the property they are interested in updating. [.]
+        // Then we get all for the associated user of that property. [.]
+        // if its equal to one of the two guys set target to 2
+        // Then we just check if its equal to that props set name.
+
+        int target = 3;
+        int owned = 0;
+
+        try{
+            Connection connection = dcm.getConnection();
+            OwnedPropertyDAO ownedPropertyDAO = new OwnedPropertyDAO(connection);
+
+            property.setPropertyName(inputMap.get("property_name"));
+            property.setUserId(Integer.valueOf(inputMap.get("user_id")));
+            property.setGameId(Integer.valueOf(inputMap.get("game_id")));
+
+            // property.setUpgradeable(Boolean.valueOf(inputMap.get("upgradeable")));
+            property = ownedPropertyDAO.findById(property);
+            properties = ownedPropertyDAO.findAllOwned(property);
+
+            if (property.getSetName().equals("New York") || property.getSetName().equals("California") || property.getSetName().equals("Vermont") || property.getSetName().equals("New Mexico") )
+            {
+                target = 2;
+            }
+
+            for(OwnedPropertyUtil p : properties)
+            {
+                if(p.getSetName().equals(property.getSetName()))
+                {
+                    owned++;
+                    if(owned == target+1) // plus 1 b/c it will count the property itself
+                    {
+                        ownedPropertyDAO.updateNumHotel(property,1);
+                        owned = 0;
+                    }
+                }
+            }
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 	// get all properties owned by a player
     @GetMapping("/getAllOwnedProperties/{gameId}/{userId}")
     public OwnedPropertyUtil[] getAllOwnedProperties(@PathVariable("gameId") int gameId, @PathVariable("userId") int userId) {
@@ -182,6 +260,70 @@ public class DuopolyApplication {
         }
         return properties;
     }
+
+    @PostMapping("/playerTrade")
+    public void playerTrade(@RequestBody String json) throws JsonProcessingException
+    {
+
+        // System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+
+        try
+        {
+            Connection connection = dcm.getConnection();
+
+            // so in order to do a trade we need to first grab two players and the properties they own
+            // next we need to a way to know if that property is trade-able
+            // then we grab all the trade-able properties and just swap them between the two players
+
+            OwnedPropertyDAO ownedPropertyDAO = new OwnedPropertyDAO(connection);
+
+            OwnedPropertyUtil[] trader_properties = new OwnedPropertyUtil[40];
+            OwnedPropertyUtil[] tradey_proerties = new OwnedPropertyUtil[40];
+
+            OwnedPropertyUtil trader_prop = new OwnedPropertyUtil();
+            trader_prop.setGameId(Integer.valueOf(inputMap.get("game_id1")));
+            trader_prop.setUserId(Integer.valueOf(inputMap.get("user_id1")));
+
+            OwnedPropertyUtil tradey_prop = new OwnedPropertyUtil();
+            tradey_prop.setGameId(Integer.valueOf(inputMap.get("game_id2")));
+            tradey_prop.setUserId(Integer.valueOf(inputMap.get("user_id2")));
+
+            tradey_proerties = ownedPropertyDAO.findAllOwned(tradey_prop);
+            trader_properties = ownedPropertyDAO.findAllOwned(trader_prop);
+
+            // we have all the properties now we need to swap the ones marked as traded
+
+            // loop through one of the props
+//            for(int j = 0; j < trader_properties.length; j++)
+//            {
+//                //
+//            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 	@PostMapping("/gameMove")
 	public void createOwnedProperty(@RequestBody String json) throws JsonProcessingException

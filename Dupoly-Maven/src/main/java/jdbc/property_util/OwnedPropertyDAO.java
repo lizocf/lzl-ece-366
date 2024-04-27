@@ -17,7 +17,7 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
         super(connection);
     }
 
-    private static final String GET_ONE = "SELECT game_id, user_id, set_name, property_name, num_hotels " +
+    private static final String GET_ONE = "SELECT game_id, user_id, set_name, property_name, num_hotels, updgradeable, tradeable " +
             "FROM owned_property WHERE game_id = ? AND property_name = ?";
     
     private static final String GET_ALL = "SELECT game_id, user_id, set_name, property_name, num_hotels " +
@@ -31,7 +31,13 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
 
     private static final String UPDATE = "UPDATE owned_property " + "SET ? = ? " + "WHERE  game_id = ? AND user_id = ? AND property_name = ?";
 
+    private static final String UPDATE_UPGRADEABLE = "UPDATE owned_property " + "SET upgradeable = ? " + "WHERE  game_id = ? AND user_id = ? AND property_name = ?";
+
+    private static final String UPDATE_TRADEABLE = "UPDATE owned_property " + "SET tradeable = ? " + "WHERE  game_id = ? AND user_id = ? AND property_name = ?";
+
     private static final String DELETE = "DELETE FROM owned_property " + " WHERE (game_id, property_name) = (?,?)";
+
+
 
     @Override
     public OwnedPropertyUtil findById(OwnedPropertyUtil dto) {
@@ -48,6 +54,8 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
                 property.setSetName(rs.getString("set_name"));
                 property.setPropertyName(rs.getString("property_name"));
                 property.setNumOfHotels(rs.getInt("num_hotels"));
+                property.setUpgradeable(rs.getBoolean("upgradeable"));
+                property.setUpgradeable(rs.getBoolean("tradeable"));
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -107,6 +115,44 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
         }
     }
 
+
+//    private static final String UPDATE = "UPDATE owned_property " + "SET ? = ? " + "WHERE  game_id = ? AND user_id = ? AND property_name = ?";
+//
+//    private static final String UPDATE_UPGRADEABLE = "UPDATE owned_property " + "SET upgradeable = ? " + "WHERE  game_id = ? AND user_id = ? AND property_name = ?";
+    public void updateUpgradeable(OwnedPropertyUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_UPGRADEABLE);)
+        {
+            statement.setBoolean(1,dto.isUpgradeable()); // can I get the current value then just add 50?
+            statement.setInt(2,dto.getGameId());
+            statement.setInt(3,dto.getUserId());
+            statement.setString(4,dto.getPropertyName());
+            statement.execute();
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateTradeable(OwnedPropertyUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TRADEABLE);)
+        {
+            statement.setBoolean(1,dto.isTradeable()); // can I get the current value then just add 50?
+            statement.setInt(2,dto.getGameId());
+            statement.setInt(3,dto.getUserId());
+            statement.setString(4,dto.getPropertyName());
+            statement.execute();
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+
+
+
     public OwnedPropertyUtil findNames(PlayerUtil player_dto) {
        OwnedPropertyUtil property = new OwnedPropertyUtil();
         try(PreparedStatement statement = this.connection.prepareStatement(GET_NAMES);)
@@ -162,6 +208,7 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
                 properties[i].setSetName(rs.getString("set_name"));
                 properties[i].setPropertyName(rs.getString("property_name"));
                 properties[i].setNumOfHotels(rs.getInt("num_hotels"));
+                properties[i].setUpgradeable(rs.getBoolean("tradeable"));
                 System.out.println(properties[i]);
                 ++i;
             }
