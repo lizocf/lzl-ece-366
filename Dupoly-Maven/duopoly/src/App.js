@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PlayerTable from "./components/playertable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
+import Chat from "./components/chat"
+
 import Tiles from "./components/tiles";
 import LeftTables from "./components/lefttables";
 import axios from "axios";
@@ -150,15 +152,18 @@ const Game = () => {
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
-                <PlayerTable />
+                <PlayerTable/>
             </div>
             <div className="container_middle">
                 <div className="center" id="direction_div">
                     <h1>Choose a direction!</h1>
                 </div>
-                <Roll />
+                <Roll/>
             </div>
-            <UpdateDirection />
+            <UpdateDirection/>
+            <div className="container_left" style={{margin: "-20vh auto"}}>
+                <Chat/>
+            </div>
         </div>
     );
 };
