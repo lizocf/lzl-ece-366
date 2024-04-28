@@ -9,7 +9,23 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 const Chat = () => {
-    var stompClient = null;
+    // var stompClient = connect();
+
+    var socket = new SockJS('/gs-guide-websocket');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+            showGreeting(JSON.parse(greeting.body).content);
+        });
+    });
+
+
+
+    useEffect(() => {
+        connect(); // Connect when component mounts
+    }, []);
     //
     function setConnected(connected) {
         $("#connect").prop("disabled", connected);
@@ -115,6 +131,7 @@ const Chat = () => {
                 <div style={{marginBottom: '20px', minHeight: '200px', maxHeight: '300px', overflowY: 'auto'}}>
                     {/* Message history display */}
                 </div>
+
                 <div style={{display: 'flex', alignItems: 'center'}}>
                     <input type="text" placeholder="Type your message..." style={{
                         marginRight: '10px',
@@ -123,7 +140,7 @@ const Chat = () => {
                         border: '1px solid #ccc',
                         flex: '1'
                     }}/>
-                    <button style={{
+                    <button id="send" style={{
                         padding: '8px 20px',
                         borderRadius: '5px',
                         background: '#007bff',
@@ -133,6 +150,22 @@ const Chat = () => {
                     </button>
                 </div>
             </div>
+
+            <div className="form-group">
+                <label htmlFor="connect">WebSocket connection:</label>
+                <button id="connect" className="btn btn-default" type="submit">Connect</button>
+                <button id="disconnect" className="btn btn-default" type="submit" disabled="disabled">Disconnect
+                </button>
+            </div>
+
+            {/*<div className="col-md-6">*/}
+            {/*    <form className="form-inline">*/}
+            {/*        <div className="form-group">*/}
+            {/*            <input type="text" id="name" className="form-control" placeholder="Your name here..."/>*/}
+            {/*        </div>*/}
+            {/*        <button id="send" className="btn btn-default" type="submit">Send</button>*/}
+            {/*    </form>*/}
+            {/*</div>*/}
 
 
         </>
