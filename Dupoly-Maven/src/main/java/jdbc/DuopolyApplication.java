@@ -3,6 +3,8 @@ package jdbc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.*;
 import jdbc.account_util.*;
+import org.springframework.stereotype.Controller;
+import webservice.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,15 +21,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-
-
+import webservice.MessagingStompWebsocketApplication;
 
 
 @SpringBootApplication
-@RestController
-@Import({SpringBootTest.class, Account.class, Player.class, Board.class})
+@Controller
+@Import({SpringBootTest.class, Account.class, Player.class, Board.class, MessagingStompWebsocketApplication.class})
 @CrossOrigin
 public class DuopolyApplication {
 
