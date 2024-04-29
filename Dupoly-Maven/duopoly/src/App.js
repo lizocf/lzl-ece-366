@@ -7,30 +7,25 @@ import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
 import Tiles from "./components/tiles";
 import LeftTables from "./components/lefttables";
+import Login from './components/Login/Login';
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged} from "firebase/auth";
+import Dashboard from './components/Dashboard/Dashboard';
+import useToken from './components/useToken';
 
-var username = ""; 
+// const express = require('express')()
+// const path = require('path')
+// const app = express()
+// const PORT = process.env.PORT || 4000
+// const server = app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)})
 
-const useUser = () => {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+// app.use(express.static(path.join(__dirname + 'public')))
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(getAuth(), user => {
-            setUser(user);
-            setIsLoading(false);
-        });
-
-        return unsubscribe; // if user navigates away, removes hook
-    }, []); // only calls this when auth; only once
-
-    return {user, isLoading};
-};
+var username = "";
 
 const LogIn = () => {
     const [userCredentials, setUserCredentials] = useState({ username: '', password: '' });
+    const [token, setToken] = useState();
     const login = (username, password) => {
         setUserCredentials({ username, password});
     };
@@ -233,17 +228,49 @@ const Game = () => {
     );
 };
 
-class App extends Component {
-    render() {
-        return (
-            <Router>
+// class App extends Component {
+//     render() {
+//         const [token, setToken] = useState();
+    
+//         if(!token) {
+//             return <Login setToken={setToken} />
+//           }
+
+//         return (
+//             <Router>
+//                 <Routes>
+//                     <Route path="/" element={<LogIn />} />
+//                     <Route path="/game" element={<Game />} /> {/* change to /game/{gamecode} */}
+//                     {/* <div className="wrapper"> */}
+//                     <Route path="/dashboard" element={<Dashboard />} />
+//                     {/* </div> */}
+//                 </Routes>
+//             </Router>
+//         );
+//     }
+// }
+
+  function App() {
+
+    const { token, setToken } = useToken();
+  
+    if(!token) {
+      return <Login setToken={setToken} />
+    }
+    return (
+      <div className="wrapper">
+        <h1>Application</h1>
+        <Router>
                 <Routes>
                     <Route path="/" element={<LogIn />} />
                     <Route path="/game" element={<Game />} /> {/* change to /game/{gamecode} */}
+                    {/* <div className="wrapper"> */}
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* </div> */}
                 </Routes>
             </Router>
-        );
-    }
-}
-
+      </div>
+    );
+  }
+  
 export default App;
