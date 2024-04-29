@@ -4,9 +4,11 @@ const app = express();
 
 app.use(cors());
 
-app.use('/login', (req, res) => {
+var r = (Math.random() + 1).toString(36).substring(4,10);
+
+app.use('/', (req, res) => {
     res.send({
-      token: 'test123'
+      token: r
     });
   });
 
