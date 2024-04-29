@@ -14,10 +14,10 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
         super(connection);
     }
 
-    private static final String GET_ONE = "SELECT user_id, user_name, num_wins, num_losses, elo_rating, duo_points " +
+    private static final String GET_ONE = "SELECT user_id, user_name, user_pw, num_wins, num_losses, elo_rating, duo_points " +
                                           "FROM accounts WHERE user_name=(?)";
 
-    private static final String INSERT = "INSERT INTO accounts (user_name)" + " VALUES (?)";
+    private static final String INSERT = "INSERT INTO accounts (user_name, user_pw) VALUES (?, ?);"; // need to add user_pw
 
     // private static final String UPDATE = "UPDATE accounts SET ?=? WHERE user_id=?";
     private static final String UPDATE_WINS = "UPDATE accounts SET num_wins=num_wins+1 WHERE user_id=?";
@@ -39,6 +39,7 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
             while(rs.next()) {
                 account.setUserId(rs.getInt("user_id")); // need id to interface with accounts !!!!
                 account.setUserName(rs.getString("user_name"));
+                account.setUserPW(rs.getString("user_pw"));
                 account.setNumWins(rs.getInt("num_wins"));
                 account.setNumLosses(rs.getInt("num_losses"));
                 account.setEloRating(rs.getString("elo_rating")); // fixed
@@ -55,7 +56,7 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
     public AccountUtil createInstance(AccountUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(INSERT);) {
             statement.setString(1, dto.getUserName());
-            // statement.setString(2, dto.getPassword());
+            statement.setString(2, dto.getUserPW());
             statement.execute();
             return this.findById(dto);    // need user_id sequence
         } catch(SQLException e) {

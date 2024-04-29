@@ -75,7 +75,8 @@ public class Account{
             Connection connection = dcm.getConnection();
             AccountDAO accountDAO = new AccountDAO(connection);
             newAccount.setUserName(inputMap.get("user_name"));
-
+            newAccount.setUserPW(inputMap.get("user_pw"));
+            System.out.println(newAccount);
             newAccount = accountDAO.createInstance(newAccount);
             System.out.println(newAccount);
         }
