@@ -10,7 +10,7 @@ public class AccountUtil implements DataTransferObject
     }
 
     public int userId, numWins, numLosses, duoPoints;
-    public String eloRating, userName, userPW;
+    public String eloRating, userName, userPW, userToken;
     private String password;
 
     // @Override
@@ -69,6 +69,15 @@ public class AccountUtil implements DataTransferObject
     public void setUserPW(String userPW) {
         this.userPW = userPW;
     }
+
+    public String getToken() {
+        return userToken;
+    }
+
+    public void setToken(String userToken) {
+        this.userPW = userToken;
+    }
+
 
     public String getPassword() {
         return password;

@@ -86,6 +86,31 @@ public class Account{
         return newAccount;
     }
 
+    @PostMapping("/createToken")
+    public AccountUtil createToken(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        AccountUtil newAccount = new AccountUtil();
+
+        try {
+            Connection connection = dcm.getConnection();
+            AccountDAO accountDAO = new AccountDAO(connection);
+            newAccount.setToken(inputMap.get("token"));
+            newAccount.setUserName(inputMap.get("user_name"));
+            System.out.println(newAccount);
+            newAccount = accountDAO.createToken(newAccount);
+            System.out.println(newAccount);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return newAccount;
+    }
+
     @PostMapping("/updateWins")
     public AccountUtil updateWins(@RequestBody String json) throws JsonProcessingException
     {

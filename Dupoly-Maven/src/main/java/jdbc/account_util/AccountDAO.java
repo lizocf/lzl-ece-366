@@ -14,7 +14,7 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
         super(connection);
     }
 
-    private static final String GET_ONE = "SELECT user_id, user_name, user_pw, num_wins, num_losses, elo_rating, duo_points " +
+    private static final String GET_ONE = "SELECT user_id, user_name, user_pw, token, num_wins, num_losses, elo_rating, duo_points " +
                                           "FROM accounts WHERE user_name=(?)";
 
     private static final String INSERT = "INSERT INTO accounts (user_name, user_pw) VALUES (?, ?);"; // need to add user_pw
@@ -24,6 +24,7 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
     private static final String UPDATE_LOSS = "UPDATE accounts SET num_losses=num_losses+1 WHERE user_id=?";
     private static final String UPDATE_DP = "UPDATE accounts SET duo_points=? WHERE user_id=?";
     private static final String UPDATE_ELO = "UPDATE accounts SET elo_rating=? WHERE user_id=?";
+    private static final String UPDATE_TOKEN = "UPDATE accounts SET token=? WHERE user_name=?"; 
     
     private static final String DELETE = "DELETE FROM accounts WHERE user_id = (?)";
 
@@ -40,6 +41,7 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
                 account.setUserId(rs.getInt("user_id")); // need id to interface with accounts !!!!
                 account.setUserName(rs.getString("user_name"));
                 account.setUserPW(rs.getString("user_pw"));
+                account.setToken(rs.getString("token"));
                 account.setNumWins(rs.getInt("num_wins"));
                 account.setNumLosses(rs.getInt("num_losses"));
                 account.setEloRating(rs.getString("elo_rating")); // fixed
@@ -64,6 +66,19 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
             throw new RuntimeException(e);
         }
     }
+
+    public AccountUtil createToken(AccountUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TOKEN);) {
+            statement.setString(1, dto.getToken());
+            statement.setString(2, dto.getUserName());
+            statement.execute();
+            return this.findById(dto);    // need user_id sequence
+        } catch(SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void update(AccountUtil dto) { // update_wins
