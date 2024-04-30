@@ -1,7 +1,7 @@
 import "./App.css";
 import "./style.css";
 import {Component } from "react";
-import {useNavigate, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {useNavigate, useParams, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PlayerTable from "./components/playertable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
@@ -209,21 +209,45 @@ const Lobby = () => {
 };
 
 const Game = () => {
+    const { gameCode } = useParams();
+    
+    const getGame = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/getGameInfo/' + gameCode);
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error fetching players:', error);
+    }}
+
+    const getUser = async () => {
+        console.log(username)
+        try {       
+            const user_response = await axios.get('http://localhost:8080/getUserName/' + username);
+            console.log('User', user_response.data);
+        } catch (error) {
+            console.error('Error fetching players:', error);
+        }}
+    
+
+    getGame();
+    getUser();
+
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
-                <PlayerTable />
+                <PlayerTable gameCode={gameCode} />
             </div>
             <div className="container_middle">
                 <div className="center" id="direction_div">
                     <h1>Choose a direction!</h1>
                 </div>
-                <Roll />
+                <Roll gameCode={gameCode} />
             </div>
-            <UpdateDirection />
+            <UpdateDirection gameCode={gameCode} />
         </div>
     );
 };
+
   function App() {
 
     const { token, setToken } = useToken();
@@ -235,7 +259,7 @@ const Game = () => {
         <Router>
                 <Routes>
                     <Route path="/" element={<LogIn />} />
-                    <Route path="/game" element={<Game />} /> {/* change to /game/{gamecode} */}
+                    {/* <Route path="/game" element={<Game />} /> change to /game/{gamecode} */}
                     <Route path="/game/:gameCode" element={<Game />} />
                 </Routes>
             </Router>

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const PlayerTable = () => {
+const PlayerTable = ({gameCode}) => {
     const [players, setPlayers] = useState([]);
     const [properties, setProperties] = useState([]);
+
+    
+    console.log("(PlayerTable) Game Code: " + gameCode);
 
     const loadPlayers = async () => {
         try {

@@ -5,8 +5,10 @@ import "../style.css";
 import "./update_position";
 
 
-const UpdateDirection = () => {
+const UpdateDirection = ({gameCode}) => {
     const [player, setPlayer] = useState(null);
+
+    console.log("(UpdateDirection) Game Code: " + gameCode);
 
     const loadPlayer = async () => {
         try {

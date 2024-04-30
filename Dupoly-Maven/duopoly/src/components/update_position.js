@@ -6,12 +6,14 @@ import propData from "./locations";
 import PlayerTable, { handleButtonClick } from "./playertable";
 import Tiles from "./tiles";
 
-const Roll = () => {
+const Roll = ({gameCode}) => {
     const [player, setPlayer] = useState(null);
     const [game, setGame] = useState(null);
     const [players, setPlayers] = useState(null);
     const [property, setProperty] = useState(null);
     const [ownedProperty, setOwnedProperty] = useState(null);
+
+    console.log("(Roll) Game Code: " + gameCode);
 
     let not_purchaseable = [0,2,4,8,10,16,20,22,26,28,30,32,34,38,40,44,50,52,56,58];
     let skullsurprise = [2,8,16,22,28,32,38,44,52,58];
