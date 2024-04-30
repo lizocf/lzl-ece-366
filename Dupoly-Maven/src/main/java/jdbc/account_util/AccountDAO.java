@@ -17,6 +17,10 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
     private static final String GET_ONE = "SELECT user_id, user_name, user_pw, token, num_wins, num_losses, elo_rating, duo_points " +
                                           "FROM accounts WHERE user_name=(?)";
 
+    private static final String GET_TOKEN = "SELECT user_id, user_name, user_pw, token, num_wins, num_losses, elo_rating, duo_points " +
+                                          "FROM accounts WHERE token=(?)";
+
+
     private static final String INSERT = "INSERT INTO accounts (user_name, user_pw) VALUES (?, ?);"; // need to add user_pw
 
     // private static final String UPDATE = "UPDATE accounts SET ?=? WHERE user_id=?";
@@ -53,6 +57,32 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
         }
         return account;
     }
+
+    public AccountUtil findByToken(AccountUtil dto) {
+        AccountUtil account = new AccountUtil();
+        try(PreparedStatement statement = this.connection.prepareStatement(GET_TOKEN);)
+        {
+            // statement.setInt(1, dto.getUserId());
+            statement.setString(1, dto.getToken());
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+                account.setUserId(rs.getInt("user_id")); // need id to interface with accounts !!!!
+                account.setUserName(rs.getString("user_name"));
+                account.setUserPW(rs.getString("user_pw"));
+                account.setToken(rs.getString("token"));
+                account.setNumWins(rs.getInt("num_wins"));
+                account.setNumLosses(rs.getInt("num_losses"));
+                account.setEloRating(rs.getString("elo_rating")); // fixed
+                account.setDuoPoints(rs.getInt("duo_points"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return account;
+    }
+    
 
     @Override
     public AccountUtil createInstance(AccountUtil dto) {

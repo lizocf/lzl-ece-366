@@ -24,7 +24,7 @@ export default function Login({ setToken }) {
   // const navigate = useNavigate();
 
   const handleSubmit = async e => {
-    console.log("Username: " + document.getElementById("username").value + " Password: " + document.getElementById("username").value);
+    console.log("Username: " + document.getElementById("username").value + " Password: " + document.getElementById("password").value);
     // e.preventDefault();
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
@@ -39,14 +39,71 @@ export default function Login({ setToken }) {
         token : token.token,
         user_name : username
     })
-    console.log("(Login) "+ response, username, token.token);
+    console.log("(Login) "+ username, token.token);
    } catch (error) {
       console.log(error);
     }
 
   }
+
+  const createUser = async () => {   
+    try {
+        var create_h1 = document.getElementById("create_h1");
+        const acc_response = await axios.post("http://localhost:8080/createNewAccount", {
+        user_name : document.getElementById("username").value,
+        user_pw : document.getElementById("password").value
+    })
+    console.log('(createUser): ', acc_response.data);
+    return true
+    } catch (error) {
+        if (error.response) {
+            console.log("This username is already taken. Please try again.")
+            create_h1.innerHTML = "This username is already taken. Please try again :(";
+        } else if (error.request) {
+            console.log(error.request);
+        } else {
+            console.log('Error', error.message);
+        }
+        console.log(error);
+        return false;
+    }
+}
+
+const logUser = async () => {   
+  try {
+    const username = document.getElementById("username").value;
+    let password = document.getElementById("password").value; // Correct usage of `let` for mutable variable
+    const login_h1 = document.getElementById("login_h1"); // Immutable reference
+
+    // Treat empty password as null
+    password = password === "" ? null : password;
+
+    // Fetch user data from the server
+    const log_response = await axios.get(`http://localhost:8080/getUserName/${username}`);
+    const userData = log_response.data;
+
+    // Check if the username exists
+    if (!userData || !userData.userName) {
+        login_h1.innerHTML = "This username does not exist. :(";
+        console.log("This username does not exist. Please try again");
+        return false;
+    }
+
+    // Check password correctness
+    if (password === userData.userPW) {
+        return true;
+    } else {
+        login_h1.innerHTML = "Incorrect password! Please try again :(";
+        console.log("Incorrect password! Expected:", userData.userPW, "Got:", password);
+        return false;
+    }
+} catch (error) {
+    console.error('logUser: Error during login process:', error);
+    return false;
+}
+}
   
-  
+
   function handleLogIn() {
     var log_in_button = document.getElementById("log_in");
     var sign_up_button = document.getElementById("sign_up");
@@ -70,6 +127,20 @@ export default function Login({ setToken }) {
         menu_screen.style.display = "none";
         login_h1.style.display = "block";
         create_h1.style.display = "none";
+
+        enter.onclick = function() {
+          console.log("Login Account: " + document.getElementById("username").value + " Password: " + document.getElementById("password").value); // I still dont know how useState works :(
+          logUser().then((createCheck) => {
+            if (createCheck) {
+                login_screen.style.display = "none";
+                handleSubmit();
+            } else {
+                console.log("Error creating account");
+            }
+        });
+      }
+
+
     }
 
     sign_up_button.onclick = function() {
@@ -79,72 +150,20 @@ export default function Login({ setToken }) {
         create_h1.style.display = "block";
 
         enter.onclick = function() {
-            // username = document.getElementById("username").value;
-            console.log("username: " + document.getElementById("username").value);
-            createUser().then((createCheck) => {
-                if (createCheck) {
-                    // create_user_screen.style.display = "none";
-                    login_screen.style.display = "none";
-                    join_screen.style.display = "flex";
-                    welcome_h1.innerHTML = "Welcome " + document.getElementById("username").value + "!";
-                } else {
-                    console.log("Error creating account");
-                }
-            });
-            handleSubmit();
             console.log("Created Account: " + document.getElementById("username").value + " Password: " + document.getElementById("password").value); // I still dont know how useState works :(
-            
+            createUser().then((createCheck) => {
+              if (createCheck) {
+                  login_screen.style.display = "none";
+                  handleSubmit();
+              } else {
+                  console.log("Error creating account");
+              }
+          });
         }
 
     }
   }
 
-  const createUser = async () => {
-    try {
-        const acc_response = await axios.post("http://localhost:8080/createNewAccount", {
-        user_name : document.getElementById("username").value,
-        user_pw : document.getElementById("password").value
-    })
-    console.log(acc_response.data);
-    // setUserCredentials({ username: document.getElementById("username").value, password: document.getElementById("password").value });
-    return true
-    } catch (error) {
-        if (error.response) {
-            // console.log(error.response.data);
-            // console.log(error.response.status);
-            // console.log(error.response.headers);
-            console.log("This username is already taken. Please try again.")
-            let create_h1 = document.getElementById("create_h1");
-            create_h1.innerHTML = "This username is already taken. Please try again :(";
-        } else if (error.request) {
-            /*
-             * The request was made but no response was received, `error.request`
-             * is an instance of XMLHttpRequest in the browser and an instance
-             * of http.ClientRequest in Node.js
-             */
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request and triggered an Error
-            console.log('Error', error.message);
-        }
-        console.log(error);
-        return false;
-    }
-}
-
-    const createGame = () => {
-      var create_button = document.getElementById("create_game");
-
-      create_button.onclick = function() {
-          r = (Math.random() + 1).toString(36).substring(4,10);
-          axios.post("http://localhost:8080/createNewGame", {
-              game_code : r // make this randomized
-          })
-          console.log('Game has been created. Game Code: ' + r);
-          // window.location.href = "/game";
-          // navigate(`/game/${r}`);
-      }
-    }
 
   return(
     <div className="login-bg">
@@ -164,11 +183,11 @@ export default function Login({ setToken }) {
                     <button type="button" className="button" id="enter" style={{margin: "-2vh auto", top: "30px", padding: "15px 20px", backgroundColor: "#7e5ef4"}}> Enter</button>
                 </form>
             </div>
-            <div id="join_screen" className="center" style={{margin: "14vh auto", display: "none", flexDirection: "column"}}>
+            {/* <div id="join_screen" className="center" style={{margin: "14vh auto", display: "none", flexDirection: "column"}}>
                     <h1 id="welcome_h1">Welcome!</h1>
                     <button className="button" id="create_game" onClick={() => createGame()} style={{margin: "auto auto", top: "1vh", backgroundColor: "#7e5ef4"}}> Create Game</button>
                     <button className="button" id="join_game" style={{margin: "1.5vh auto", top: "1vh"}}> Join Game</button>
-            </div>
+            </div> */}
           </div>
       
       {/* <form onSubmit={handleSubmit}>

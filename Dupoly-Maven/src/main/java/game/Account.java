@@ -60,6 +60,25 @@ public class Account{
         return account;
     }
 
+    @GetMapping("/getUserToken/{token}")
+    public AccountUtil getUserToken(@PathVariable("token") String token) {
+        System.out.println(token);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        AccountUtil account = new AccountUtil();
+        account.setToken(token);
+        try {
+            Connection connection = dcm.getConnection();
+            AccountDAO accountDAO = new AccountDAO(connection);
+
+            account = accountDAO.findByToken(account);
+            System.out.println(account);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return account;
+    }
 
     @PostMapping("/createNewAccount")
     public AccountUtil createNewAccount(@RequestBody String json) throws JsonProcessingException
