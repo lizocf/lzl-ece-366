@@ -24,7 +24,7 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
     private static final String UPDATE_LOSS = "UPDATE accounts SET num_losses=num_losses+1 WHERE user_id=?";
     private static final String UPDATE_DP = "UPDATE accounts SET duo_points=? WHERE user_id=?";
     private static final String UPDATE_ELO = "UPDATE accounts SET elo_rating=? WHERE user_id=?";
-    private static final String UPDATE_TOKEN = "UPDATE accounts SET token=? WHERE user_name=?"; 
+    private static final String UPDATE_TOKEN = "UPDATE accounts SET token=? WHERE user_id=?"; 
     
     private static final String DELETE = "DELETE FROM accounts WHERE user_id = (?)";
 
@@ -67,12 +67,12 @@ public class AccountDAO extends DataAccessObject<AccountUtil>
         }
     }
 
-    public AccountUtil createToken(AccountUtil dto) {
+    public void createToken(AccountUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TOKEN);) {
             statement.setString(1, dto.getToken());
-            statement.setString(2, dto.getUserName());
+            statement.setInt(2, dto.getUserId());
             statement.execute();
-            return this.findById(dto);    // need user_id sequence
+            // return this.findById(dto);    // need user_id sequence
         } catch(SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

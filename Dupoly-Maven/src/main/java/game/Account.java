@@ -99,10 +99,11 @@ public class Account{
         try {
             Connection connection = dcm.getConnection();
             AccountDAO accountDAO = new AccountDAO(connection);
-            newAccount.setToken(inputMap.get("token"));
             newAccount.setUserName(inputMap.get("user_name"));
             System.out.println(newAccount);
-            newAccount = accountDAO.createToken(newAccount);
+            newAccount = accountDAO.findById(newAccount);
+            newAccount.setToken(inputMap.get("token"));
+            accountDAO.createToken(newAccount);
             System.out.println(newAccount);
         }
         catch(SQLException e) {

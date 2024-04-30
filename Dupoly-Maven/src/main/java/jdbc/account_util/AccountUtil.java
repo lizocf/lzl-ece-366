@@ -75,7 +75,7 @@ public class AccountUtil implements DataTransferObject
     }
 
     public void setToken(String userToken) {
-        this.userPW = userToken;
+        this.userToken = userToken;
     }
 
 

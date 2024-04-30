@@ -11,6 +11,18 @@ import Login from './components/Login/Login';
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import useToken from './components/useToken';
+// import express from 'express';
+
+// // const app = express();
+
+
+// // const cors = require('cors');
+// // const corsOptions = {
+// //     origin:'http://localhost:3000', 
+// //     credentials:true,            //access-control-allow-credentials:true
+// //     optionSuccessStatus:200
+// // }
+// // app.use(cors(corsOptions));
 
 // const express = require('express')()
 // const path = require('path')
@@ -209,7 +221,9 @@ const Lobby = () => {
 };
 
 const Game = () => {
+    const [player, setPlayer] = useState(null);
     const { gameCode } = useParams();
+    const userId = 0;
     
     const getGame = async () => {
     try {
@@ -220,10 +234,10 @@ const Game = () => {
     }}
 
     const getUser = async () => {
-        console.log(username)
         try {       
             const user_response = await axios.get('http://localhost:8080/getUserName/' + username);
-            console.log('User', user_response.data);
+            console.log('User', user_response.data.userId);
+            userId = user_response.data.userId;
         } catch (error) {
             console.error('Error fetching players:', error);
         }}
@@ -232,10 +246,12 @@ const Game = () => {
     getGame();
     getUser();
 
+    console.log("caught user id: " + userId)
+
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
-                <PlayerTable gameCode={gameCode} />
+                <PlayerTable gameCode={gameCode} userId={userId} />
             </div>
             <div className="container_middle">
                 <div className="center" id="direction_div">
