@@ -36,7 +36,7 @@ public class TurnDAO extends DataAccessObject<TurnUtil>
             while(rs.next()) {
                 turn.setTurnNumber(rs.getInt("id"));
                 turn.setGameId(rs.getInt("game_id")); // need userId as another search parameter instead
-                turn.setUserId(rs.getString("user_id"));
+                turn.setUserId(rs.getInt("user_id"));
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -115,15 +115,15 @@ public class TurnDAO extends DataAccessObject<TurnUtil>
         }
     }
 
-        public void delete(TurnUtil dto)
-    {
-        try(PreparedStatement statement = this.connection.prepareStatement(DELETE);)
-        {
-            statement.setInt(1,dto.getGameId());
-            statement.execute();
-        }catch (SQLException e){
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
+//    public void delete(TurnUtil dto)
+//    {
+//        try(PreparedStatement statement = this.connection.prepareStatement(DELETE);)
+//        {
+//            statement.setInt(1,dto.getGameId());
+//            statement.execute();
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

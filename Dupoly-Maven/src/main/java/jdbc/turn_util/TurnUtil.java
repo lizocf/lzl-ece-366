@@ -11,7 +11,7 @@ public class TurnUtil implements DataTransferObject {
         return turnNumber;
     }
 
-    public int setTurnNumber(int turnNumber) {
+    public void setTurnNumber(int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
@@ -27,7 +27,7 @@ public class TurnUtil implements DataTransferObject {
         return userId;
     }
 
-    public void setuserId(int userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
