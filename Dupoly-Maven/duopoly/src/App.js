@@ -161,9 +161,14 @@ const Game = () => {
                 <Roll/>
             </div>
             <UpdateDirection/>
-            <div className="container_left" style={{margin: "-20vh auto"}}>
-                <Chat/>
+            <div className="container_left" style={{margin: "-30vh auto", backgroundColor:"rebeccapurple", overflow:"scroll"}}>
+                <div className="logs-table">
+                    <Chat/>
+                </div>
+
             </div>
+
+
         </div>
     );
 };

@@ -21,12 +21,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import webservice.MessagingStompWebsocketApplication;
+import webservice.*;
+
 
 
 @SpringBootApplication
 @Controller
-@Import({SpringBootTest.class, Account.class, Player.class, Board.class, MessagingStompWebsocketApplication.class})
+@Import({SpringBootTest.class, Account.class, Player.class, Board.class, WebSocketConfig.class, WebSocketTextController.class})
 @CrossOrigin
 public class DuopolyApplication {
 
@@ -301,17 +302,6 @@ public class DuopolyApplication {
 //            {
 //                //
 //            }
-
-
-
-
-
-
-
-
-
-
-
 
 
         }
