@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const PlayerTable = ({gameCode}) => {
+const PlayerTable = ({gameCode, userId, gameId}) => {
     const [players, setPlayers] = useState([]);
     const [properties, setProperties] = useState([]);
 
-    
-    console.log("(PlayerTable) Game Code: " + gameCode);
+    console.log("(PlayerTable) Game Code: " + gameCode + " User ID: " + userId + " Game ID: " + gameId);
+
+    useEffect(() => {
+        const intervalId = setInterval(loadPlayers, 5000); // Fetch players every 5 seconds
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, [gameCode, userId]);
 
     const loadPlayers = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`);
+            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
             const filteredPlayers = response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash }));
             setPlayers(filteredPlayers);
             console.log('loadPlayers: Players have been loaded:', filteredPlayers);
@@ -68,7 +72,7 @@ const PlayerTable = ({gameCode}) => {
     };
     const loadProperties = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getAllOwnedProperties/1/1`); // gameId and userId are hardcoded
+            const response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`); // gameId and userId are hardcoded
             // console.log('Here!!!', response.data);
             const filteredProperties = response.data.filter(property => property !== null).map(property => ({ 
                 property_name: property.propertyName, 
@@ -98,8 +102,8 @@ const PlayerTable = ({gameCode}) => {
     const handleButtonClick = async () => {
         loadPlayers(); // need to load twice to make update
         try {
-            const fake_response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`); 
-            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/1`);
+            const fake_response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameCode}`); 
+            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameCode}`);
             const filteredPlayers = response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash }));
             setPlayers(filteredPlayers);
             // console.log('Button: Players have been loaded:', filteredPlayers);
@@ -121,9 +125,9 @@ const PlayerTable = ({gameCode}) => {
     const handleButtonClickProp = async () => {
         loadProperties(); // I needed to call getOwnedProperties three times to update the table ?? cant just do loadProperties() x3 either
         try {
-            const fake_response = await axios.get(`http://localhost:8080/getAllOwnedProperties/1/1`); 
+            const fake_response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`); 
             // console.log('Before', fake_response.data);
-            const response = await axios.get(`http://localhost:8080/getAllOwnedProperties/1/1`);
+            const response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`);
             const filteredProperties = response.data.filter(property => property !== null).map(property => ({ 
                 property_name: property.propertyName, 
                 set_name: property.setName,

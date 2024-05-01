@@ -194,6 +194,15 @@ const Roll = ({gameCode}) => {
     return (
         <>
             <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"block", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
                 <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
                     <div className="eyes">
                     <div className="eye"></div>
@@ -201,6 +210,58 @@ const Roll = ({gameCode}) => {
                         </div>
                     </div>
                 </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                {/* <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div> */}
+                
                 <Tiles />
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>
                 <h1>Click to roll! </h1>
