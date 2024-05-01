@@ -26,7 +26,7 @@ import webservice.*;
 
 
 @SpringBootApplication
-@Controller
+@RestController
 @Import({SpringBootTest.class, Account.class, Player.class, Board.class, WebSocketConfig.class, WebSocketTextController.class})
 @CrossOrigin
 public class DuopolyApplication {
