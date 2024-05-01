@@ -1,10 +1,13 @@
 package jdbc;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+@CrossOrigin
 public class DatabaseConnectionManager {
     private final String url;
     private final Properties properties;

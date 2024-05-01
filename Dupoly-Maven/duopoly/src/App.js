@@ -5,6 +5,8 @@ import {useNavigate, useParams, BrowserRouter as Router, Route, Routes } from 'r
 import PlayerTable from "./components/playertable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
+import Chat from "./components/chat"
+
 import Tiles from "./components/tiles";
 import LeftTables from "./components/lefttables";
 import Login from './components/Login/Login';
@@ -204,11 +206,14 @@ const Game = ({ userToken }) => {
                 <div className="center" id="direction_div">
                     <h1>Choose a direction!</h1>
                 </div>
-                <Roll gameCode={gameCode} />
+                <Roll gameCode={gameCode}/>
             </div>
-            <UpdateDirection gameCode={gameCode} />
-            <div className="container_button">
-                
+            <UpdateDirection gameCode={gameCode}/>
+            <div className="container_left" style={{margin: "-30vh auto", backgroundColor:"rebeccapurple", overflow:"scroll"}}>
+                <div className="logs-table">
+                    <Chat/>
+                </div>
+
             </div>
         </div>
     );
