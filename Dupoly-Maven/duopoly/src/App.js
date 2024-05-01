@@ -1,7 +1,7 @@
 import "./App.css";
 import "./style.css";
 import {Component } from "react";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {useNavigate, useParams, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PlayerTable from "./components/playertable";
 import UpdateDirection from "./components/direction";
 import Roll from "./components/update_position";
@@ -9,183 +9,233 @@ import Chat from "./components/chat"
 
 import Tiles from "./components/tiles";
 import LeftTables from "./components/lefttables";
+import Login from './components/Login/Login';
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
+import useToken from './components/useToken';
+
+var username = "";
+var r = "";
+ 
+// Initialize an object to store turn orders for each game
+let gameTurnOrders = {};
+
+// Function to add a player to the turn order for a specific game
+function addPlayerToTurnOrder(gameId, playerId) {
+    // Check if the game already has a turn order
+    if (!gameTurnOrders[gameId]) {
+        // If not, initialize a new turn order array for the game
+        gameTurnOrders[gameId] = [];
+    }
+    // Add the player to the turn order for the specified game
+    gameTurnOrders[gameId].push(playerId);
+}
+
+// Function to rotate the turn order for a specific game
+function rotateTurnOrder(gameId) {
+    // Check if the game has a turn order
+    if (gameTurnOrders[gameId]) {
+        // Move the first player to the end of the array to rotate the turn order
+        gameTurnOrders[gameId].push(gameTurnOrders[gameId].shift());
+    }
+}
+
+// Function to get the current turn player for a specific game
+function getCurrentTurnPlayer(gameId) {
+    // Check if the game has a turn order
+    if (gameTurnOrders[gameId]) {
+        // Return the first player in the turn order array for the specified game
+        return gameTurnOrders[gameId][0];
+    }
+    return null; // Return null if the game doesn't have a turn order
+}
+
+// Example usage
 
 
-const LogIn = () => {
-    const [userCredentials, setUserCredentials] = useState({ username: '', password: '' });
-    const login = (username, password) => {
-        setUserCredentials({ username, password });
+const JoinGame = ({userToken}) => {
+    const navigate = useNavigate();
+
+    const join = async () => {
+        var code = document.getElementById("code").value;
+        console.log("Joining game with code: " + code);
+        var join_h1 = document.getElementById("join_h1");
+        
+        // check if code exists in database
+        try {
+            const response = await axios.get('http://localhost:8080/getGameInfo/' + code);
+            console.log(response.data);
+            if (response.data.gameCode == null) {
+                console.log("Game does not exist. Please try again.")
+                join_h1.innerHTML = "Game does not exist! Try again :(";
+            } else {
+                // if code exists, navigate to game
+                console.log("Game exists. Joining game...")
+                const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${code}`);
+
+                // Create player in game
+                const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+    
+                await axios.post("http://localhost:8080/createPlayerInGame", {
+                    user_id: String(userResponse.data.userId),
+                    game_id: String(gameResponse.data.gameId),
+                });
+
+                addPlayerToTurnOrder(gameResponse.data.gameId, userResponse.data.userId);
+                console.log('Player has been added to turn order:', gameTurnOrders[gameResponse.data.gameId]);
+                navigate(`/game/${code}`);
+            }
+        } catch (error) {
+            console.error('Error fetching game:', error);
+        }}
+
+    
+    return (
+        <div className="login-bg">
+            <div className="container_middle">
+            <div className="center" style={{margin: "10vh auto"}}>
+            <form>
+                <h1 id="join_h1" style={{margin: "2vh auto"}}>Join Game! :)</h1>
+                <input className="nickname" id="code" type="text" placeholder="Enter code..." />
+                <button className="button" type="button" onClick={() => navigate('/')} style={{margin: "-10vh auto", top: "30px", left:"-5px", color: "black"}}> Go Back</button>
+                <button className="button" type="button" onClick={() => join()} style={{margin: "-10vh auto", top: "30px", left:"5px", backgroundColor: "#7e5ef4"}}> Join Game</button>
+            </form>
+            </div>
+            </div>
+        </div>
+    );
+};
+const Lobby = ({ userToken }) => {
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        welcomeUser();
+    }, [userToken]);
+
+    const welcomeUser = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+            console.log(`(welcomeUser) ${response.data.userName}.`);
+            const welcome_h1 = document.getElementById("welcome_h1");
+            if (welcome_h1) {
+                welcome_h1.innerHTML = `Welcome ${response.data.userName}!`;
+            }
+        } catch (error) {
+            console.error('Error fetching user account:', error);
+        }
     };
 
-    function handleLogIn() {
-        var log_in_button = document.getElementById("log_in");
-        var sign_up_button = document.getElementById("sign_up");
-        var create_user_screen = document.getElementById("create_user_screen");
-        var menu_screen = document.getElementById("menu_screen");
-        var login_screen = document.getElementById("login_screen");
-        var go_back_log = document.getElementById("go_back_log");
-        var enter_log = document.getElementById("enter_log");
-        var go_back = document.getElementById("go_back");
-        var enter = document.getElementById("enter");
+    const createGame = async () => {
+        try {
+            const gameCode = (Math.random() + 1).toString(36).substring(4, 10);
+
+            // Create new game
+            await axios.post("http://localhost:8080/createNewGame", {
+                game_code: gameCode // make this randomized
+            });
+
+            console.log('Game has been created. Game Code: ' + gameCode);
+
+            // Fetch game information (presumably to get game_id)
+            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+
+            // Create player in game
+            const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+
+            await axios.post("http://localhost:8080/createPlayerInGame", {
+                user_id: String(userResponse.data.userId),
+                game_id: String(gameResponse.data.gameId),
+            });
+
+            navigate(`/game/${gameCode}`);
+
+        } catch (error) {
+            console.error('Error in creating game:', error);
+        }
+    };
+
+    return (
+        <div className="login-bg">
+            <div className="container_middle">
+            <div id="join_screen" className="center" style={{margin: "14vh auto", display: "flex", flexDirection: "column"}}>
+                    <h1 id="welcome_h1">Welcome!</h1>
+                    <button className="button" id="create_game" onClick={() => createGame()} style={{margin: "auto auto", top: "1vh", backgroundColor: "#7e5ef4"}}> Create Game</button>
+                    <button className="button" id="join_game"onClick={() => navigate(`/joinGame`)} style={{margin: "1.5vh auto", top: "1vh", color: "black"}}> Join Game</button>
+            </div>
+            </div>
+        </div>
+    );
+};
 
 
-        log_in_button.onclick = function() {
-            login_screen.style.display = "block";
-            menu_screen.style.display = "none";
-        }
+const Game = ({ userToken }) => {
+    const [userId, setUserId] = useState(null); // State to hold userId
+    const [getGameId, setGameId] = useState(null); // State to hold gameId
+    const { gameCode } = useParams();
 
-        sign_up_button.onclick = function() {
-            create_user_screen.style.display = "block";
-            menu_screen.style.display = "none";
-    
-        }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+                setUserId(userResponse.data.userId); // Update state with userId
+                console.log(`(getUser) ${userResponse.data.userId}`);
+                
+                const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+                setGameId(gameResponse.data.gameId); // Update state with gameId
+                console.log(`(gameResponse) ${gameResponse.data.gameId}`);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-        go_back.onclick = function() {
-            login_screen.style.display = "none";
-            create_user_screen.style.display = "none";
-            menu_screen.style.display = "block";
-            menu_screen.style.flexDirection = "column";
-        }
-        
-        enter.onclick = function() {
-            console.log("Username: " + document.getElementById("new_username").value + " Password: " + document.getElementById("new_password").value)
-        }
+        fetchData();
+    }, [userToken, gameCode]); // useEffect will run when userToken or gameCode changes
 
-        go_back_log.onclick = function() {
-            login_screen.style.display = "none";
-            create_user_screen.style.display = "none";
-            menu_screen.style.display = "block";
-            menu_screen.style.flexDirection = "column";
-        }
-        
-        enter_log.onclick = function() {
-            console.log("Username: " + document.getElementById("username").value + " Password: " + document.getElementById("password").value)
-        }
+    console.log('userId:', userId);
+
+    if (userId === null | getGameId === null) {
+        return <div>Loading...</div>;
     }
 
-    function createGame() {
-        var create_button = document.getElementById("create_game");
-
-        create_button.onclick = function() {
-            var r = (Math.random() + 1).toString(36).substring(4,10);
-            axios.post("http://localhost:8080/createNewGame", {
-                game_code : r // make this randomized
-            })
-            console.log('Game has been created. Game Code: ' + r);
-            // window.location.href = "/game";
-        }
-
-    }
-
-    return (
-        <div className="login-bg">
-            <div className="container_middle">
-            <div className="center" id="menu_screen" style={{margin: "auto auto", display: "flex", flexDirection: "column"}}>
-                    <button type="button" className="button" id="log_in" onClick={() => handleLogIn()} style={{margin: "auto auto", backgroundColor: "#7e5ef4", padding: "1vh 5.4vh"}}> Log In!</button>
-                    <button type="button" className="button" id="sign_up" onClick={() => handleLogIn()}  style={{margin: "1vh auto", padding: "1vh 4.5vh", color:"black"}}> Sign Up!</button>
-            </div>
-            <div className="center" style={{margin: "10vh auto"}}>
-                <form id="create_user_screen" style={{display: 'none'}}>
-                    <h1 style={{margin: "1vh auto", fontStyle:"italic"}}>Create Username :)</h1>
-                    <input id="new_username" className="nickname" type="text" placeholder="Enter username..." />
-                    <input  id="new_password" style={{margin: "1vh auto"}}  className="nickname" type="password" placeholder="Enter password..." />
-                    <button type="button" className="button" id="go_back" style={{margin: "-2vh auto", top: "30px", left: "0px", padding: "15px 20px", backgroundColor: "#7e5ef4"}}> Go Back</button>
-                    <button type="button" className="button" id="enter" style={{margin: "-2vh auto", top: "30px", padding: "15px 20px", backgroundColor: "#7e5ef4"}}> Enter</button>
-                </form>
-                <form id="login_screen" style={{display: 'none'}}>
-                    <h1 style={{margin: "1vh auto", fontStyle:"italic"}}>Log In :)</h1>
-                    <input id="username" className="nickname" type="text" placeholder="Enter username..." />
-                    <input  id="password" style={{margin: "1vh auto"}}  className="nickname" type="password" placeholder="Enter password..." />
-                    <button type="button" className="button" id="go_back_log" style={{margin: "-2vh auto", top: "30px", left: "0px", padding: "15px 20px", backgroundColor: "#7e5ef4"}}> Go Back</button>
-                    <button type="button" className="button" id="enter_log" style={{margin: "-2vh auto", top: "30px", padding: "15px 20px", backgroundColor: "#7e5ef4"}}> Enter</button>
-                </form>
-            </div>
-            {/* <div className="center" style={{margin: "10vh auto"}}>
-                <a href="/game">
-                    <button className="button" id="create_game"onClick={() => createGame()} style={{margin: "28.5vh auto", top: "30px", left: "0px", backgroundColor: "#7e5ef4"}}> Create Game</button>
-                </a>
-                <a href="/game">
-                    <button className="button" id="join_game" style={{margin: "28.5vh auto", top: "30px", padding: "15px 20px"}}> Join Game</button>
-                </a>
-            </div> */}
-            </div>
-        </div>
-    );
-};
-
-
-const JoinGame = () => {
-    return (
-        <div className="login-bg">
-            <div className="container_middle">
-            <div className="center" style={{margin: "10vh auto"}}>
-            <form>
-                <input className="nickname" type="text" placeholder="Enter nickname..." />
-                <button className="button" style={{margin: "-10vh auto", top: "30px", left: "0px", backgroundColor: "#7e5ef4"}}> Create Game</button>
-                <button className="button" style={{margin: "-10vh auto", top: "30px", padding: "15px 20px"}}> Join Game</button>
-            </form>
-            </div>
-            </div>
-        </div>
-    );
-};
-
-const Lobby = () => {
-    return (
-        <div className="login-bg">
-            <div className="container_middle">
-            <div className="center" style={{margin: "10vh auto"}}>
-            <form>
-                <input className="nickname" type="text" placeholder="Enter nickname..." />
-                <button className="button" style={{margin: "-10vh auto", top: "30px", left: "0px", backgroundColor: "#7e5ef4"}}> Create Game</button>
-                <button className="button" style={{margin: "-10vh auto", top: "30px", padding: "15px 20px"}}> Join Game</button>
-            </form>
-            </div>
-            </div>
-        </div>
-    );
-};
-
-const Game = () => {
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
-                <PlayerTable/>
+                <PlayerTable gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
             <div className="container_middle">
                 <div className="center" id="direction_div">
                     <h1>Choose a direction!</h1>
                 </div>
-                <Roll/>
+                <Roll gameCode={gameCode}/>
             </div>
-            <UpdateDirection/>
+            <UpdateDirection gameCode={gameCode}/>
             <div className="container_left" style={{margin: "-30vh auto", backgroundColor:"rebeccapurple", overflow:"scroll"}}>
                 <div className="logs-table">
                     <Chat/>
                 </div>
 
             </div>
-
-
         </div>
     );
 };
 
-class App extends Component {
-    render() {
-        return (
-            <Router>
+  function App() {
+
+    const { token, setToken } = useToken();
+  
+    if(!token) {
+      return <Login setToken={setToken} />
+    }
+    return (
+        <Router>
                 <Routes>
-                    <Route path="/" element={<LogIn />} />
-                    <Route path="/lobby" element={<Game />} />
-                    <Route path="/game" element={<Game />} /> {/* change to /game/{gamecode} */}
-                    {/* https://www.sitepoint.com/get-url-parameters-with-javascript/ */}
+                    <Route path="/" element={<Lobby userToken={token}/>} />
+                    {/* <Route path="/game" element={<Game />} /> change to /game/{gamecode} */}
+                    <Route path="/game/:gameCode" element={<Game userToken={token}/>} />
+                    <Route path="/joinGame" element={<JoinGame userToken={token}/>} />
                 </Routes>
             </Router>
-        );
-    }
-}
-
+    );
+  }
+  
 export default App;

@@ -12,6 +12,13 @@
     "firebase": "^10.10.0",
     "jquery": "^3.7.1",
     "net": "^1.0.2",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.0",
+    "export": "^0.1.337",
+    "firebase": "^10.11.1",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
@@ -22,7 +29,12 @@
     "stomp": "^0.1.1",
     "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4",
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "socket.io": "^4.7.5",
+    "stream": "^0.0.2",
+    "url": "^0.11.3",
+    "web-vitals": "^2.1.4",
+    "zlib": "^1.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -51,6 +63,7 @@
   "devDependencies": {
     "cors": "^2.8.5",
     "react-stomp": "^5.1.0",
-    "sockjs": "^0.3.24"
+    "sockjs": "^0.3.24",
+    "express": "^4.19.2"
   }
 }

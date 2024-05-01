@@ -6,12 +6,14 @@ import propData from "./locations";
 import PlayerTable, { handleButtonClick } from "./playertable";
 import Tiles from "./tiles";
 
-const Roll = () => {
+const Roll = ({gameCode}) => {
     const [player, setPlayer] = useState(null);
     const [game, setGame] = useState(null);
     const [players, setPlayers] = useState(null);
     const [property, setProperty] = useState(null);
     const [ownedProperty, setOwnedProperty] = useState(null);
+
+    console.log("(Roll) Game Code: " + gameCode);
 
     let not_purchaseable = [0,2,4,8,10,16,20,22,26,28,30,32,34,38,40,44,50,52,56,58];
     let skullsurprise = [2,8,16,22,28,32,38,44,52,58];
@@ -192,6 +194,15 @@ const Roll = () => {
     return (
         <>
             <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"block", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
                 <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
                     <div className="eyes">
                     <div className="eye"></div>
@@ -199,6 +210,58 @@ const Roll = () => {
                         </div>
                     </div>
                 </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                {/* <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container_board">
+                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
+                    <div className="eyes">
+                    <div className="eye"></div>
+                    <div className="eye"></div>
+                        </div>
+                    </div>
+                </div> */}
+                
                 <Tiles />
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>
                 <h1>Click to roll! </h1>

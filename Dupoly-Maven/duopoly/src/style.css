@@ -125,6 +125,16 @@ body {
     float:left;
 }
 
+.container_button {
+    background-color: rgba(135, 207, 235, 0.464);
+    width: 20vh;
+    height: 20vh;
+    position: relative;
+    text-align: center;
+    border-radius: 50%;
+}
+
+
 .center {
     /* background-color: rgba(135, 207, 235, 0.464); */
     position: absolute;

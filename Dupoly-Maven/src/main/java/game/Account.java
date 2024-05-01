@@ -60,6 +60,25 @@ public class Account{
         return account;
     }
 
+    @GetMapping("/getUserToken/{token}")
+    public AccountUtil getUserToken(@PathVariable("token") String token) {
+        System.out.println(token);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        AccountUtil account = new AccountUtil();
+        account.setToken(token);
+        try {
+            Connection connection = dcm.getConnection();
+            AccountDAO accountDAO = new AccountDAO(connection);
+
+            account = accountDAO.findByToken(account);
+            System.out.println(account);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return account;
+    }
 
     @PostMapping("/createNewAccount")
     public AccountUtil createNewAccount(@RequestBody String json) throws JsonProcessingException
@@ -75,8 +94,35 @@ public class Account{
             Connection connection = dcm.getConnection();
             AccountDAO accountDAO = new AccountDAO(connection);
             newAccount.setUserName(inputMap.get("user_name"));
-
+            newAccount.setUserPW(inputMap.get("user_pw"));
+            System.out.println(newAccount);
             newAccount = accountDAO.createInstance(newAccount);
+            System.out.println(newAccount);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return newAccount;
+    }
+
+    @PostMapping("/createToken")
+    public AccountUtil createToken(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        AccountUtil newAccount = new AccountUtil();
+
+        try {
+            Connection connection = dcm.getConnection();
+            AccountDAO accountDAO = new AccountDAO(connection);
+            newAccount.setUserName(inputMap.get("user_name"));
+            System.out.println(newAccount);
+            newAccount = accountDAO.findById(newAccount);
+            newAccount.setToken(inputMap.get("token"));
+            accountDAO.createToken(newAccount);
             System.out.println(newAccount);
         }
         catch(SQLException e) {
