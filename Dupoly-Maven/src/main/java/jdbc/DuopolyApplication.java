@@ -16,6 +16,8 @@ import jdbc.game_util.GameUtil;
 import jdbc.player_util.*;
 import jdbc.property_util.OwnedPropertyUtil;
 import jdbc.property_util.OwnedPropertyDAO;
+import jdbc.turn_util.TurnDAO;
+import jdbc.turn_util.TurnUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
@@ -312,7 +314,154 @@ public class DuopolyApplication {
 
     }
 
+////// TURN ORDER COMMANDS //////
 
+    // getUserTurnOrder
+    @GetMapping("/getTurnOrder/{gameId}/{userId}")
+    public TurnUtil getUserTurnOrder(@PathVariable("gameId") int gameId, @PathVariable("userId") int userId) {
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+
+        TurnUtil turn = new TurnUtil();
+        turn.setGameId(gameId);
+        turn.setUserId(userId);
+
+        try {
+            Connection connection = dcm.getConnection();
+            TurnDAO turnDAO = new TurnDAO(connection);
+
+            turn = turnDAO.findById(turn);
+            System.out.println(turn);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return turn;
+    }
+
+    // getGameTurnOrder
+    @GetMapping("/getGameTurnOrder/{gameId}")
+    public TurnUtil[] getGameTurnOrder(@PathVariable("gameId") int gameId) {
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+
+        TurnUtil turn = new TurnUtil();
+        turn.setGameId(gameId);
+
+        TurnUtil[] order = new TurnUtil[8];
+
+        try {
+            Connection connection = dcm.getConnection();
+            TurnDAO turnDAO = new TurnDAO(connection);
+
+            order = turnDAO.findByGameId(turn);
+            System.out.println(order);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return order;
+    }
+
+
+    // addUserToTurnOrder
+    @PostMapping("/addUserToTurnOrder")
+    public void addUserToTurnOrder(@RequestBody String json) throws JsonProcessingException
+    {
+        // System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        TurnUtil turn = new TurnUtil();
+
+        try{
+            Connection connection = dcm.getConnection();
+            TurnDAO turnDAO = new TurnDAO(connection);
+
+            turn.setGameId(Integer.valueOf(inputMap.get("game_id")));
+            turn.setUserId(Integer.valueOf(inputMap.get("user_id")));
+            
+            turnDAO.createInstance(turn);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // deleteGameOrder
+    @PostMapping("/deleteGameOrder")
+    public void deleteGameOrder(@RequestBody String json) throws JsonProcessingException
+    {
+        // System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        TurnUtil turn = new TurnUtil();
+
+        try{
+            Connection connection = dcm.getConnection();
+            TurnDAO turnDAO = new TurnDAO(connection);
+
+            turn.setGameId(Integer.valueOf(inputMap.get("game_id")));
+            
+            turnDAO.delete(turn);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/updateTurnOrder")
+    public void updateTurnOrder(@RequestBody String json) throws JsonProcessingException
+    {
+        // System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        TurnUtil turn = new TurnUtil();
+
+        try{
+            Connection connection = dcm.getConnection();
+            TurnDAO turnDAO = new TurnDAO(connection);
+
+            turn.setGameId(Integer.valueOf(inputMap.get("game_id")));
+            turnDAO.rotateUserOrder(turn);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // deleteUserOrder
+    @PostMapping("/deleteUserOrder")
+    public void deleteUserOrder(@RequestBody String json) throws JsonProcessingException
+    {
+        // System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        TurnUtil turn = new TurnUtil();
+
+        try{
+            Connection connection = dcm.getConnection();
+            TurnDAO turnDAO = new TurnDAO(connection);
+
+            turn.setGameId(Integer.valueOf(inputMap.get("game_id")));
+            turn.setUserId(Integer.valueOf(inputMap.get("user_id")));
+
+            turnDAO.deleteUser(turn);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+//////// gameMove ////////////
 
 	@PostMapping("/gameMove")
 	public void createOwnedProperty(@RequestBody String json) throws JsonProcessingException
