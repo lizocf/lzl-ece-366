@@ -24,8 +24,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                     <td>${player.cash}</td>
                 </tr>`
             )).join(""); // Join the array of rows into a single string
-            // console.log('loadPlayers: Table rows have been loaded:', tableRows)
-            // Now you can use tableRows in your HTML content
+
             const tableBody = document.getElementById("player_body");
             const land_div = document.getElementById("land");
             const buy_div = document.getElementById("buy");
@@ -63,6 +62,8 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 document.getElementById("broke_h1").style.display = "none";
                 document.getElementById("special_prop").style.display='none';
                 document.getElementById("land_prop").style.display='block';
+
+                // ADD UPDATE_TURN FUNCTION HERE
 
             }
 

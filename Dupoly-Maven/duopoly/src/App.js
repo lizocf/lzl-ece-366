@@ -195,12 +195,45 @@ const Game = ({ userToken }) => {
     console.log('userId:', userId);
     console.log('turns:', turns);
 
+    const beginGame = () => {
+        let ready_div = document.getElementById("ready_div");
+        let ready_button = document.getElementById("ready_button");
+        ready_div.style.display = "none";
+        ready_button = "none";
+
+        axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
+
+        // ADD ORIGINAL RETURN HTML
+
+    };
+
     if (userId === null | getGameId === null | turns === null) {
         return <div>Loading...</div>;
     }
 
-// check if player is first in turn order -> add userId to which_turn column in game_meta table
-// return "Ready to play?" button
+// check if player is first in turn order -> add userId to which_turn column in game_meta table 
+
+    // if (turns === userId) {  // ADD CHECK IF NUM_TURN = 0
+    //     axios.post("http://localhost:8080/updatePlayerTurn", {
+    //         user_id: String(userId),
+    //         game_code: gameCode
+    //     });
+    //     return (
+    //         <div>
+    //             <div className="container_middle">
+    //                 <div className="center" id="ready_div" style={{display: "flex", flexDirection: "column"}}>
+    //                     <h1>Ready? >:)</h1>
+    //                 </div>
+    //                 <button className="button" id="ready_button" onClick={() => beginGame()} style={{padding: "2vh 5vh", margin: "15vh auto", backgroundColor:"maroon"}}>ready! :D</button>
+    //             </div>
+    //         </div>
+    //     );
+    // }
+
+// return "Ready to play?" button -> onClick: joinable=False. Do we need to update num_players? idk
+
+// if not first in turn order -> return "Waiting for <user_name>... "
+
 
     return (
         <div>

@@ -137,10 +137,10 @@ public class GameDAO extends DataAccessObject<GameUtil>
         }
     }
     // Not sure about this one neecs to be looked into
-    public void updatePlayerTurn(GameUtil dto) {
+    public void updatePlayerTurn(PlayerUtil player, GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TURN);)
         {
-            statement.setInt(1,dto.getId()); // this needs to be an actual player id.
+            statement.setInt(1,player.getUserId()); // this needs to be an actual player id.
             statement.setString(2,dto.getGameCode());
             statement.execute();
 
