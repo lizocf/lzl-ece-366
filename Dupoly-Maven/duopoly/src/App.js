@@ -59,7 +59,7 @@ const JoinGame = ({userToken}) => {
                     });
                 // }
                 
-                // navigate(`/game/${code}`);
+                navigate(`/game/${code}`);
             }
         } catch (error) {
             console.error('Error fetching game:', error);
@@ -159,6 +159,9 @@ const Game = ({ userToken }) => {
     const [getGameId, setGameId] = useState(null); // State to hold gameId
     const [turns, setTurns] = useState(null); // State to hold turn
     const { gameCode } = useParams();
+    const [numTurns, setNumTurns] = useState(null); // State to hold number of turns
+    
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -182,6 +185,7 @@ const Game = ({ userToken }) => {
                 const filteredTurns = turnResponse.data.filter(turn => turn !== null).map(turns => ({ userId: turns.userId, turn: turns.turnNumber}));
                 // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
                 setTurns(filteredTurns[0].userId); // Update state with turn
+                setNumTurns(gameResponse.data.numTurns)
             } catch (error) {
                 console.error('Error fetching turn:', error);
         }}
@@ -194,59 +198,93 @@ const Game = ({ userToken }) => {
 
     console.log('userId:', userId);
     console.log('turns:', turns);
+    console.log('numTurns:', numTurns);
 
     const beginGame = () => {
-        let ready_div = document.getElementById("ready_div");
-        let ready_button = document.getElementById("ready_button");
-        ready_div.style.display = "none";
-        ready_button = "none";
+        var ready_button = document.getElementById("ready_button");
+        let directionDiv = document.getElementById("direction_div");
+        let updateDirDiv = document.getElementById("update_dir_div");
+        let waitingDiv = document.getElementById("waiting_div");
+        if (directionDiv) {
+            directionDiv.style.display = "block";
+        }
+        if (updateDirDiv) {
+            updateDirDiv.style.display = "block";
+        }
 
+        if (ready_button) {
+            ready_button.style.display = "none";
+        }
+
+        if (waitingDiv) {
+            waitingDiv.style.display = "none";
+        }
         axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
-
-        // ADD ORIGINAL RETURN HTML
+        axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
 
     };
 
-    if (userId === null | getGameId === null | turns === null) {
-        return <div>Loading...</div>;
-    }
-
 // check if player is first in turn order -> add userId to which_turn column in game_meta table 
 
-    // if (turns === userId) {  // ADD CHECK IF NUM_TURN = 0
-    //     axios.post("http://localhost:8080/updatePlayerTurn", {
-    //         user_id: String(userId),
-    //         game_code: gameCode
-    //     });
-    //     return (
-    //         <div>
-    //             <div className="container_middle">
-    //                 <div className="center" id="ready_div" style={{display: "flex", flexDirection: "column"}}>
-    //                     <h1>Ready? >:)</h1>
-    //                 </div>
-    //                 <button className="button" id="ready_button" onClick={() => beginGame()} style={{padding: "2vh 5vh", margin: "15vh auto", backgroundColor:"maroon"}}>ready! :D</button>
-    //             </div>
-    //         </div>
-    //     );
-    // }
+    if (turns === userId) {  // ADD CHECK IF NUM_TURN = 0
+        if (numTurns === 0) {
+            axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+            user_id: String(userId),
+            game_code: gameCode
+        });
+            // Ensure the element exists before trying to modify its style
+            let readyButton = document.getElementById("ready_button");
+            if (readyButton) {
+                readyButton.style.display = "block";
+            }
+        } else {
+            let directionDiv = document.getElementById("direction_div");
+            let updateDirDiv = document.getElementById("update_dir_div");
+            let readyButton = document.getElementById("ready_button");
+            if (directionDiv) {
+                directionDiv.style.display = "block";
+            }
+            if (updateDirDiv) {
+                updateDirDiv.style.display = "block";
+            }
 
+            if (readyButton) {
+                readyButton.style.display = "none";
+            }
+        }
+    } else {
+        let waitingDiv = document.getElementById("waiting_div");
+        if (waitingDiv) {
+            waitingDiv.style.display = "block";
+        }
+    }
 // return "Ready to play?" button -> onClick: joinable=False. Do we need to update num_players? idk
 
 // if not first in turn order -> return "Waiting for <user_name>... "
 
-
+// if (userId === null | getGameId === null | turns === null) {
+//     return <div>Loading...</div>;
+// }
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
                 <PlayerTable gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
             <div className="container_middle">
-                <div className="center" id="direction_div">
+                <div className="center" id="direction_div" style={{display: "none"}}>
                     <h1>Choose a direction!</h1>
                 </div>
                 <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
+                <div className="center" id="ready_button">
+                    <button className="button" onClick={() => beginGame()} style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>
+                </div>
+                <div className="center" id="waiting_div" style={{display: "block"}}>
+                    <h1>Waiting for players...</h1>
+                </div>        
             </div>
-            <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
+            <div id="update_dir_div" style={{display:"none"}}>
+                <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
+            </div>
             <div className="container_left" style={{bottom:"0", margin: "-22vh auto", backgroundColor:"rebeccapurple"}}>
                 <div className="logs-table">
                     <Chat/>
@@ -255,7 +293,8 @@ const Game = ({ userToken }) => {
             </div>
         </div>
     );
-};
+}
+// };
 
   function App() {
 

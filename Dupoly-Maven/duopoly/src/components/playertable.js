@@ -8,8 +8,8 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
     console.log("(PlayerTable) Game Code: " + gameCode + " User ID: " + userId + " Game ID: " + gameId);
 
     useEffect(() => {
-        // const intervalId = setInterval(loadPlayers, 5000); // Fetch players every 5 seconds
-        // return () => clearInterval(intervalId); // Cleanup on unmount
+        const intervalId = setInterval(loadPlayers, 5000); // Fetch players every 5 seconds
+        return () => clearInterval(intervalId); // Cleanup on unmount
     }, [gameCode, userId]);
 
     const loadPlayers = async () => {

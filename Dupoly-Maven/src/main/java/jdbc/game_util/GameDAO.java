@@ -20,7 +20,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
     // TODO: add purchaseable boolean to findById
-    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, recent_card " +
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -30,6 +30,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_DEBT = "UPDATE game_meta " + "SET debt_pot = ? WHERE game_code = ? ";
     private static final String UPDATE_JOIN = "UPDATE game_meta " + "SET joinable = ? WHERE game_code = ? ";
     private static final String UPDATE_TURN = "UPDATE game_meta " + "SET which_player_turn = ?  WHERE game_code = ? ";
+    private static final String UPDATE_NUM_TURNS = "UPDATE game_meta " + "SET num_turns = ?  WHERE game_code = ? ";
     private static final String UPDATE_ROLL = "UPDATE game_meta " + "SET roll_number = ?  WHERE game_code = ? ";
     private static final String UPDATE_PURCHASEABLE = "UPDATE game_meta " + "SET purchaseable = ? WHERE game_code = ? ";
 
@@ -56,6 +57,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setRecentRoll(rs.getInt("roll_number"));
                 game.setPurchaseable(rs.getBoolean("purchaseable"));
                 game.setPlayerTurn(rs.getInt("which_player_turn"));
+                game.setNumTurns(rs.getInt("num_turns"));
                 game.setRecent_card(rs.getString("recent_card"));
 //                game.setJoinable(rs.getBoolean("joinable"));
             }
@@ -149,6 +151,21 @@ public class GameDAO extends DataAccessObject<GameUtil>
             throw new RuntimeException(e);
         }
     }
+
+    public void update_num_turns(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_NUM_TURNS);)
+        {
+            statement.setInt(1,dto.getNumTurns()); // this needs to be an actual player id.
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     public void update_dice_roll(GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_ROLL);)
