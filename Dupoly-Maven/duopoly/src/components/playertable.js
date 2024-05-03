@@ -102,8 +102,8 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
     const handleButtonClick = async () => {
         loadPlayers(); // need to load twice to make update
         try {
-            const fake_response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameCode}`); 
-            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameCode}`);
+            const fake_response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`); 
+            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
             const filteredPlayers = response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash }));
             setPlayers(filteredPlayers);
             // console.log('Button: Players have been loaded:', filteredPlayers);

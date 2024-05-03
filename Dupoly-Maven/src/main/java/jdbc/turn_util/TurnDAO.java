@@ -23,7 +23,7 @@ public class TurnDAO extends DataAccessObject<TurnUtil>
     private static final String INSERT = "INSERT INTO turn_orders (game_id, user_id) VALUES (?,?)";
     private static final String UPDATE_TURN = "UPDATE turn_orders SET user_id = ARRAY_APPEND(user_id[2:], user_id[1]) WHERE game_id = ?";
     private static final String DELETE = "DELETE FROM turn_orders WHERE game_id = ?";
-    private static final String DELETE_USER = "UPDATE turn_orders SET user_id = ARRAY_REMOVE(user_id, ?) WHERE game_id = ?";
+    private static final String DELETE_USER = "UPDATE turn_orders SET user_id = ? WHERE game_id = ?";
 
     @Override
     public TurnUtil findById(TurnUtil dto) {

@@ -5,14 +5,14 @@ import "../style.css";
 import "./update_position";
 
 
-const UpdateDirection = ({gameCode}) => {
+const UpdateDirection = ({gameCode, userId, gameId}) => {
     const [player, setPlayer] = useState(null);
 
     console.log("(UpdateDirection) Game Code: " + gameCode);
 
     const loadPlayer = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
+            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
             setPlayer({
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
@@ -30,8 +30,8 @@ const UpdateDirection = ({gameCode}) => {
         var roll_button = document.getElementById("roll_button");
         var direction_div = document.getElementById("direction_div");
         axios.post("http://localhost:8080/updateDir", {
-            user_id : "1",
-            game_id : "1",
+            user_id : String(userId),
+            game_id : String(gameId),
             direction : "left"
         })
         left_button.style.display='none';
@@ -51,8 +51,8 @@ const UpdateDirection = ({gameCode}) => {
         // var roll_div = document.getElementById("roll_div");
         var roll_button = document.getElementById("roll_button");
         axios.post("http://localhost:8080/updateDir", {
-            user_id : "1",
-            game_id : "1",
+            user_id : String(userId),
+            game_id : String(gameId),
             direction : "right"
         })
         left_button.style.display='none';

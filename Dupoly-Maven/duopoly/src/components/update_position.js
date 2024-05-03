@@ -6,7 +6,7 @@ import propData from "./locations";
 import PlayerTable, { handleButtonClick } from "./playertable";
 import Tiles from "./tiles";
 
-const Roll = ({gameCode}) => {
+const Roll = ({gameCode, userId, gameId}) => {
     const [player, setPlayer] = useState(null);
     const [game, setGame] = useState(null);
     const [players, setPlayers] = useState(null);
@@ -20,7 +20,7 @@ const Roll = ({gameCode}) => {
 
     const loadPlayer = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
+            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
             setPlayer({
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
@@ -35,7 +35,7 @@ const Roll = ({gameCode}) => {
     // get property name from space
     const loadProperty = async () => {
         try {
-            const player_response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`); // how do we make this a funciton??
+            const player_response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`); // how do we make this a funciton??
             setPlayer({
                 cur_pos: player_response.data.currentPosition,
                 cur_dir: player_response.data.currentDirection,
@@ -78,13 +78,13 @@ const Roll = ({gameCode}) => {
                 buttons.style.display='none';
 
                 await axios.post("http://localhost:8080/gameMove", {
-                    user_id: "1",           // how do we NOT hardcode?
-                    game_id: "1",
-                    game_code: "PEPE",
+                    user_id : String(userId),
+                    game_id : String(gameId),
+                    game_code: String(gameCode),
                     space: String(player_response.data.currentPosition)
                 })
                 
-                const card_response = await axios.get(`http://localhost:8080/getGameInfo/PEPE`);
+                const card_response = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
                 setGame({
                     recent_card: card_response.data.recent_card
                 })
@@ -111,20 +111,20 @@ const Roll = ({gameCode}) => {
     const purchaseProperty = async () => {
         try {
             await axios.post("http://localhost:8080/updatePurchaseable", {
-                game_code: "PEPE",
+                game_code: String(gameCode),
                 purchase: "true"
             });
 
             await axios.post("http://localhost:8080/gameMove", {
-                user_id: "1",           // how do we NOT hardcode?
-                game_id: "1",
-                game_code: "PEPE",
+                user_id : String(userId),
+                game_id : String(gameId),
+                game_code: String(gameCode),
                 space: String(player.cur_pos)
             });
 
-            const name_response = await axios.get(`http://localhost:8080/getNames/1/1`);
+            const name_response = await axios.get(`http://localhost:8080/getNames/${gameId}/${userId}`);
 
-            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/1/${name_response.data.propertyName}`);
+            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/${gameId}/${name_response.data.propertyName}`);
 
             if (prop_response.data.propertyName === null) {
                 console.log(`You're broke！`);
@@ -143,7 +143,7 @@ const Roll = ({gameCode}) => {
     
     const loadUpdate = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/1`);
+            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
             setPlayer({
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
@@ -165,15 +165,15 @@ const Roll = ({gameCode}) => {
     const nextPosition = async () => {
         try {
             await axios.post("http://localhost:8080/updateRoll", {
-                user_id: "1",           // how do we NOT hardcode?
-                game_id: "1",
-                game_code: "PEPE"
+                user_id : String(userId),
+                game_id : String(gameId),
+                game_code: String(gameCode),
             });
 
             await axios.post("http://localhost:8080/updatePos", {
-                user_id: "1",
-                game_id: "1",
-                game_code: "PEPE"
+                user_id : String(userId),
+                game_id : String(gameId),
+                game_code: String(gameCode),
             });
             loadUpdate(); // Reload player data after updating position
             loadProperty();

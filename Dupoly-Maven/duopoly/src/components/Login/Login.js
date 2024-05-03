@@ -6,7 +6,6 @@ import {useNavigate, useParams, BrowserRouter as Router, Route, Routes } from 'r
 
 async function loginUser(credentials) {
  return fetch('http://localhost:8090/login', {
-  // return fetch('http://0.0.0.0:8090/login', {
    method: 'POST',
    headers: {
      'Content-Type': 'application/json'
@@ -26,7 +25,6 @@ export default function Login({ setToken }) {
 
   const handleSubmit = async e => {
     console.log("Username: " + document.getElementById("username").value + " Password: " + document.getElementById("password").value);
-    // e.preventDefault();
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     const token = await loginUser({
@@ -73,11 +71,11 @@ export default function Login({ setToken }) {
 const logUser = async () => {   
   try {
     const username = document.getElementById("username").value;
-    let password = document.getElementById("password").value; // Correct usage of `let` for mutable variable
-    const login_h1 = document.getElementById("login_h1"); // Immutable reference
+    let password = document.getElementById("password").value; 
+    const login_h1 = document.getElementById("login_h1"); 
 
     // Treat empty password as null
-    password = password === "" ? null : password;
+    // password = password === "" ? null : password;
 
     // Fetch user data from the server
     const log_response = await axios.get(`http://localhost:8080/getUserName/${username}`);
@@ -169,7 +167,6 @@ const logUser = async () => {
   return(
     <div className="login-bg">
       <div className="container_middle">
-      {/* <h1>Please Log In</h1> */}
             <div className="center" id="menu_screen" style={{margin: "auto auto", display: "flex", flexDirection: "column"}}>
                     <button type="button" className="button" id="log_in" onClick={() => handleLogIn()} style={{margin: "auto auto", backgroundColor: "#7e5ef4", padding: "1vh 5.4vh"}}> Log In!</button>
                     <button type="button" className="button" id="sign_up" onClick={() => handleLogIn()}  style={{margin: "1vh auto", padding: "1vh 4.5vh", color:"black"}}> Sign Up!</button>
@@ -184,26 +181,7 @@ const logUser = async () => {
                     <button type="button" className="button" id="enter" style={{margin: "-2vh auto", top: "30px", padding: "15px 20px", backgroundColor: "#7e5ef4"}}> Enter</button>
                 </form>
             </div>
-            {/* <div id="join_screen" className="center" style={{margin: "14vh auto", display: "none", flexDirection: "column"}}>
-                    <h1 id="welcome_h1">Welcome!</h1>
-                    <button className="button" id="create_game" onClick={() => createGame()} style={{margin: "auto auto", top: "1vh", backgroundColor: "#7e5ef4"}}> Create Game</button>
-                    <button className="button" id="join_game" style={{margin: "1.5vh auto", top: "1vh"}}> Join Game</button>
-            </div> */}
           </div>
-      
-      {/* <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={e => setUserName(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setPassword(e.target.value)} />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form> */}
     </div>
   )
 }

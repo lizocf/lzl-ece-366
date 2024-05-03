@@ -17,10 +17,10 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
         super(connection);
     }
 
-    private static final String GET_ONE = "SELECT game_id, user_id, set_name, property_name, num_hotels, updgradeable, tradeable " +
+    private static final String GET_ONE = "SELECT game_id, user_id, set_name, property_name, num_hotels, upgradeable, tradeable " +
             "FROM owned_property WHERE game_id = ? AND property_name = ?";
     
-    private static final String GET_ALL = "SELECT game_id, user_id, set_name, property_name, num_hotels " +
+    private static final String GET_ALL = "SELECT game_id, user_id, set_name, property_name, num_hotels, upgradeable, tradeable " +
             "FROM owned_property WHERE game_id = ? AND user_id = ?";
 
     private static final String INSERT = "INSERT INTO owned_property(game_id, user_id, set_name, property_name)"
@@ -199,7 +199,7 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
             statement.setInt(1, dto.getGameId());
             statement.setInt(2, dto.getUserId());
             ResultSet rs = statement.executeQuery();
-            System.out.println("game_id\t\tuser_id\t\tset_name\t\tproperty_name\t\tnum_hotels");
+            System.out.println("game_id\t\tuser_id\t\tset_name\t\tproperty_name\t\tnum_hotels\t\tupradeable\t\ttradeable");
             int i = 0;
             while(rs.next()) {
                 properties[i] = new OwnedPropertyUtil();
@@ -208,6 +208,7 @@ public class OwnedPropertyDAO extends DataAccessObject<OwnedPropertyUtil>
                 properties[i].setSetName(rs.getString("set_name"));
                 properties[i].setPropertyName(rs.getString("property_name"));
                 properties[i].setNumOfHotels(rs.getInt("num_hotels"));
+                properties[i].setUpgradeable(rs.getBoolean("upgradeable"));
                 properties[i].setUpgradeable(rs.getBoolean("tradeable"));
                 System.out.println(properties[i]);
                 ++i;

@@ -8,7 +8,6 @@ import Roll from "./components/update_position";
 import Chat from "./components/chat"
 
 import Tiles from "./components/tiles";
-import LeftTables from "./components/lefttables";
 import Login from './components/Login/Login';
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
@@ -17,40 +16,6 @@ import useToken from './components/useToken';
 var username = "";
 var r = "";
  
-// Initialize an object to store turn orders for each game
-let gameTurnOrders = {};
-
-// Function to add a player to the turn order for a specific game
-function addPlayerToTurnOrder(gameId, playerId) {
-    // Check if the game already has a turn order
-    if (!gameTurnOrders[gameId]) {
-        // If not, initialize a new turn order array for the game
-        gameTurnOrders[gameId] = [];
-    }
-    // Add the player to the turn order for the specified game
-    gameTurnOrders[gameId].push(playerId);
-}
-
-// Function to rotate the turn order for a specific game
-function rotateTurnOrder(gameId) {
-    // Check if the game has a turn order
-    if (gameTurnOrders[gameId]) {
-        // Move the first player to the end of the array to rotate the turn order
-        gameTurnOrders[gameId].push(gameTurnOrders[gameId].shift());
-    }
-}
-
-// Function to get the current turn player for a specific game
-function getCurrentTurnPlayer(gameId) {
-    // Check if the game has a turn order
-    if (gameTurnOrders[gameId]) {
-        // Return the first player in the turn order array for the specified game
-        return gameTurnOrders[gameId][0];
-    }
-    return null; // Return null if the game doesn't have a turn order
-}
-
-// Example usage
 
 
 const JoinGame = ({userToken}) => {
@@ -75,14 +40,17 @@ const JoinGame = ({userToken}) => {
 
                 // Create player in game
                 const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
-    
-                await axios.post("http://localhost:8080/createPlayerInGame", {
-                    user_id: String(userResponse.data.userId),
-                    game_id: String(gameResponse.data.gameId),
-                });
 
-                addPlayerToTurnOrder(gameResponse.data.gameId, userResponse.data.userId);
-                console.log('Player has been added to turn order:', gameTurnOrders[gameResponse.data.gameId]);
+                const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
+                if (checkUserInGameResponse.data.userId != null) {
+                    navigate(`/game/${code}`);
+                } else {
+                    await axios.post("http://localhost:8080/createPlayerInGame", {
+                        user_id: String(userResponse.data.userId),
+                        game_id: String(gameResponse.data.gameId),
+                    });
+                }
+                
                 navigate(`/game/${code}`);
             }
         } catch (error) {
@@ -206,12 +174,12 @@ const Game = ({ userToken }) => {
                 <div className="center" id="direction_div">
                     <h1>Choose a direction!</h1>
                 </div>
-                <Roll gameCode={gameCode}/>
+                <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
-            <UpdateDirection gameCode={gameCode}/>
+            <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
             <div className="container_left" style={{margin: "-30vh auto", backgroundColor:"rebeccapurple", overflow:"scroll"}}>
                 <div className="logs-table">
-                    <Chat/>
+                    {/* <Chat/> */}
                 </div>
 
             </div>
