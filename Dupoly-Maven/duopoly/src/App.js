@@ -1,6 +1,6 @@
 import "./App.css";
 import "./style.css";
-import {Component } from "react";
+import {Component, useInsertionEffect } from "react";
 import {useNavigate, useParams, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PlayerTable from "./components/playertable";
 import UpdateDirection from "./components/direction";
@@ -12,6 +12,7 @@ import Login from './components/Login/Login';
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import useToken from './components/useToken';
+
 
 var username = "";
 var r = "";
@@ -41,17 +42,24 @@ const JoinGame = ({userToken}) => {
                 // Create player in game
                 const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
 
+                // check if player in game
                 const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
-                if (checkUserInGameResponse.data.userId != null) {
-                    navigate(`/game/${code}`);
-                } else {
-                    await axios.post("http://localhost:8080/createPlayerInGame", {
+
+                // if (checkUserInGameResponse.data.userName != null) {
+                //     navigate(`/game/${code}`);
+                // } else {
+                    console.log("Creating player in game...");
+                    axios.post("http://localhost:8080/createPlayerInGame", {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
-                }
+                    axios.post("http://localhost:8080/addUserToTurnOrder", {
+                        user_id: String(userResponse.data.userId),
+                        game_id: String(gameResponse.data.gameId),
+                    });
+                // }
                 
-                navigate(`/game/${code}`);
+                // navigate(`/game/${code}`);
             }
         } catch (error) {
             console.error('Error fetching game:', error);
@@ -94,9 +102,8 @@ const Lobby = ({ userToken }) => {
     };
 
     const createGame = async () => {
+        const gameCode = (Math.random() + 1).toString(36).substring(4, 10);
         try {
-            const gameCode = (Math.random() + 1).toString(36).substring(4, 10);
-
             // Create new game
             await axios.post("http://localhost:8080/createNewGame", {
                 game_code: gameCode // make this randomized
@@ -114,11 +121,22 @@ const Lobby = ({ userToken }) => {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
+        
+            axios.post("http://localhost:8080/addUserToTurnOrder", {
+                user_id: String(userResponse.data.userId),
+                game_id: String(gameResponse.data.gameId),
+            });
 
             navigate(`/game/${gameCode}`);
 
         } catch (error) {
             console.error('Error in creating game:', error);
+            const welcome_h1 = document.getElementById("welcome_h1");
+            welcome_h1.innerHTML = "You're in a game already! Join that one >:(";
+
+            // delete game that user tried to create
+            await axios.post("http://localhost:8080/deleteGame", {game_code: gameCode})
+            
         }
     };
 
@@ -139,6 +157,7 @@ const Lobby = ({ userToken }) => {
 const Game = ({ userToken }) => {
     const [userId, setUserId] = useState(null); // State to hold userId
     const [getGameId, setGameId] = useState(null); // State to hold gameId
+    const [turns, setTurns] = useState(null); // State to hold turn
     const { gameCode } = useParams();
 
     useEffect(() => {
@@ -153,17 +172,35 @@ const Game = ({ userToken }) => {
                 console.log(`(gameResponse) ${gameResponse.data.gameId}`);
             } catch (error) {
                 console.error('Error fetching data:', error);
-            }
+            }            
         };
+        
+        const fetchTurn = async () => {
+            try {
+                const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+                const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
+                const filteredTurns = turnResponse.data.filter(turn => turn !== null).map(turns => ({ userId: turns.userId, turn: turns.turnNumber}));
+                // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
+                setTurns(filteredTurns[0].userId); // Update state with turn
+            } catch (error) {
+                console.error('Error fetching turn:', error);
+        }}
 
         fetchData();
+        fetchTurn();
+        const intervalId = setInterval(fetchTurn, 5000); // Fetch turn every 5 seconds
+        return () => clearInterval(intervalId); // Cleanup on unmount
     }, [userToken, gameCode]); // useEffect will run when userToken or gameCode changes
 
     console.log('userId:', userId);
+    console.log('turns:', turns);
 
-    if (userId === null | getGameId === null) {
+    if (userId === null | getGameId === null | turns === null) {
         return <div>Loading...</div>;
     }
+
+// check if player is first in turn order -> add userId to which_turn column in game_meta table
+// return "Ready to play?" button
 
     return (
         <div>
@@ -177,9 +214,9 @@ const Game = ({ userToken }) => {
                 <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
             <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
-            <div className="container_left" style={{margin: "-30vh auto", backgroundColor:"rebeccapurple", overflow:"scroll"}}>
+            <div className="container_left" style={{bottom:"0", margin: "-22vh auto", backgroundColor:"rebeccapurple"}}>
                 <div className="logs-table">
-                    {/* <Chat/> */}
+                    <Chat/>
                 </div>
 
             </div>

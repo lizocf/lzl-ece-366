@@ -36,7 +36,8 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_RECENT_CARD = "UPDATE game_meta " + "SET recent_card = ? WHERE game_code = ? ";
 
 
-    private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
+    // private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
+    private static final String DELETE = "DELETE FROM game_meta WHERE game_code = ?";
 
     @Override
     public GameUtil findById(GameUtil dto) {
@@ -192,12 +193,10 @@ public class GameDAO extends DataAccessObject<GameUtil>
         }
     }
 
-
-    // idk what to return here. Maybe it should be void.
     @Override
     public void delete(GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(DELETE);){
-            statement.setInt(1,dto.getGameId());
+            statement.setString(1,dto.getGameCode());
             statement.execute();
         }catch (SQLException e){
             e.printStackTrace();

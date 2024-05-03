@@ -6,7 +6,7 @@ import "./update_position";
 import propData from "./locations";
 
 
-const Tiles = () => { 
+const Tiles = ({gameId}) => { 
     const [player, setPlayer] = useState(null);
     const [property, setProperty] = useState(null);
     const [ownedProperty, setOwnedProperty] = useState(null);
@@ -27,7 +27,7 @@ const Tiles = () => {
             console.log(propData.costPrice[clicked_id]);
 
             // check if already owned through /getOwnedProperty
-            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/1/${name_response.data.propertyName}`);
+            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/${gameId}/${name_response.data.propertyName}`);
             setOwnedProperty({
                 user_id: prop_response.data.userId,
                 property_name: prop_response.data.propertyName
@@ -37,7 +37,7 @@ const Tiles = () => {
             if (owned_player === 0) {
                 var owned = "Not yet purchased."
             } else {
-                const response = await axios.get(`http://localhost:8080/getPlayerInGame/1/${owned_player}`);
+                const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${owned_player}`);
                 var owned = response.data.userName;
             }
 

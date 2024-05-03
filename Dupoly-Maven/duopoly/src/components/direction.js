@@ -66,6 +66,9 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
     
     return (
       <>
+        {/* <div className="center" id="direction_div">
+            <h1>Choose a direction!</h1>
+        </div> */}
         <div className="center" style={{margin: "5vh auto"}}>
             <div className="arrow" id="left"
                  onClick={() => UpdateLeft()}></div>

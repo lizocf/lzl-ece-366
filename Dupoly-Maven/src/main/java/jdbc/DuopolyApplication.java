@@ -461,6 +461,31 @@ public class DuopolyApplication {
     }
 
 
+// deleteGame
+
+@PostMapping("/deleteGame")
+public void deleteGame(@RequestBody String json) throws JsonProcessingException
+{
+    // System.out.println(json);
+    ObjectMapper objectMapper = new ObjectMapper();
+    Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+    DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+            "duopoly", "postgres", "password");
+    GameUtil game = new GameUtil();
+
+    try{
+        Connection connection = dcm.getConnection();
+        GameDAO gameDAO = new GameDAO(connection);
+
+        game.setGameCode(inputMap.get("game_code"));
+
+        gameDAO.delete(game);
+    }
+    catch(SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 //////// gameMove ////////////
 
 	@PostMapping("/gameMove")

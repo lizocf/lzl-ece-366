@@ -262,7 +262,8 @@ const Roll = ({gameCode, userId, gameId}) => {
                     </div>
                 </div> */}
                 
-                <Tiles />
+                <Tiles gameId={gameId}/>
+                
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>
                 <h1>Click to roll! </h1>
                 <button onClick={nextPosition}>Roll!</button>
