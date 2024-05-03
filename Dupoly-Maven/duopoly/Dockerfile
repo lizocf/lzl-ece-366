@@ -17,4 +17,4 @@ RUN npm install --save react-jsx
 COPY . ./
 
 # start app
-CMD npm start
+CMD sh -c 'npm start & node server.js'

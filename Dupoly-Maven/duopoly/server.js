@@ -12,4 +12,7 @@ app.use('/', (req, res) => {
     });
   });
 
-  app.listen(8090, () => console.log('API is running on http://localhost:8090/login'));
+
+  const host = '0.0.0.0'
+
+  app.listen(8090, host, () => console.log('API is running on http://localhost:8090/login'));
