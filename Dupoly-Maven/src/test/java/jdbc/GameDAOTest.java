@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import jdbc.game_util.GameDAO;
 import jdbc.game_util.GameUtil;
+import jdbc.player_util.PlayerUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,7 @@ class GameDAOTest {
     private PreparedStatement preparedStatement;
     private GameDAO gameDAO;
     private GameUtil gameUtil;
+    private PlayerUtil playerUtil;
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -35,6 +37,14 @@ class GameDAOTest {
         gameUtil.setGameId(1);
         gameUtil.setRecent_card("Bankrupt");
 
+    }
+
+    @Test
+    void testUpdate() throws SQLException {
+        gameDAO.update(gameUtil);
+
+        verify(preparedStatement,times(1)).execute();
+        verify(preparedStatement).setInt(1,150);
     }
 
     @Test
@@ -57,6 +67,30 @@ class GameDAOTest {
         verify(preparedStatement).setInt(1, 150);
 
         verify(preparedStatement).setString(2, "AS123");
+    }
+
+    @Test
+    void testUpdate_joinable() throws SQLException {
+        gameDAO.update_joinable(gameUtil);
+
+        verify(preparedStatement, times(1)).execute();
+        verify(preparedStatement).setBoolean(1, false);
+        verify(preparedStatement).setString(2, "AS123");
+    }
+
+    @Test
+    void testUpdatePlayerTurn() throws SQLException {
+        playerUtil = new PlayerUtil();
+        playerUtil.setUserId(1);
+        playerUtil.setCash(1000);
+        playerUtil.setCurrentPosition(1);
+        playerUtil.setCurrentDirection("LEFT");
+        gameDAO.updatePlayerTurn(playerUtil, gameUtil);
+
+        verify(preparedStatement, times(1)).execute();
+        verify(preparedStatement).setInt(1, 1);
+        verify(preparedStatement).setString(2, "AS123");
+
     }
 
     @Test
