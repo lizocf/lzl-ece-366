@@ -1,7 +1,7 @@
 CREATE TABLE turn_orders (
     id SERIAL PRIMARY KEY,
     game_id INT NOT NULL,
-    user_id INT NOT NULL UNIQUE,
+    user_id INT NOT NULL,
     FOREIGN KEY (game_id) REFERENCES game_meta(game_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES accounts(user_id) ON DELETE CASCADE
 );

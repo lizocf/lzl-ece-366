@@ -18,6 +18,20 @@ const Roll = ({gameCode, userId, gameId}) => {
     let not_purchaseable = [0,2,4,8,10,16,20,22,26,28,30,32,34,38,40,44,50,52,56,58];
     let skullsurprise = [2,8,16,22,28,32,38,44,52,58];
 
+    useEffect(() => {
+        const loadAllPlayers = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
+                setPlayers(response.data);
+                console.log("Loaded players: ", response.data);
+            } catch (error) {
+                console.error('Error fetching players:', error);
+            }
+        };
+
+        loadAllPlayers();  // Load all player data when the component mounts
+    }, [gameId]);
+
     const loadPlayer = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
@@ -188,13 +202,21 @@ const Roll = ({gameCode, userId, gameId}) => {
 
     useEffect(() => {
         loadPlayer(); // Load player data when the component mounts
+        // loadAllPlayers();
         // loadProperty();
     }, []);
 
+
+    if (!players) {
+        return <div>Loading players...</div>;
+    }
+
+
+    console.log("All players!!", players)
     return (
         <>
             <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
+                <div className="icon" id="player_icon" style={players[0] && players[0] ? parseStyle(propData.space[players[0].currentPosition]) : parseStyle(propData.space[0]), {
                     display:"block", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
                     <div className="eyes">
                     <div className="eye"></div>
@@ -203,14 +225,14 @@ const Roll = ({gameCode, userId, gameId}) => {
                     </div>
                 </div>
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon" style={players[1] && players[1] ? parseStyle(propData.space[players[1].currentPosition]) : parseStyle(propData.space[0])}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
-                <div className="container_board">
+                {/* <div className="container_board">
                 <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
                     display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
                     <div className="eyes">
@@ -236,7 +258,7 @@ const Roll = ({gameCode, userId, gameId}) => {
                     <div className="eye"></div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 {/* <div className="container_board">
                 <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
                     <div className="eyes">

@@ -117,7 +117,11 @@ const Lobby = ({ userToken }) => {
             // Create player in game
             const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
 
-            await axios.post("http://localhost:8080/createPlayerInGame", {
+            axios.post("http://localhost:8080/updateHost", {
+                host: String(userResponse.data.userId),
+                game_code: gameCode
+            });
+            axios.post("http://localhost:8080/createPlayerInGame", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
@@ -126,6 +130,9 @@ const Lobby = ({ userToken }) => {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
+
+
+            
 
             navigate(`/game/${gameCode}`);
 
@@ -161,7 +168,6 @@ const Game = ({ userToken }) => {
     const { gameCode } = useParams();
     const [numTurns, setNumTurns] = useState(null); // State to hold number of turns
     
-    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -194,7 +200,7 @@ const Game = ({ userToken }) => {
         fetchTurn();
         const intervalId = setInterval(fetchTurn, 5000); // Fetch turn every 5 seconds
         return () => clearInterval(intervalId); // Cleanup on unmount
-    }, [userToken, gameCode]); // useEffect will run when userToken or gameCode changes
+    }, [userToken, gameCode, turns]); // useEffect will run when userToken or gameCode changes
 
     console.log('userId:', userId);
     console.log('turns:', turns);
@@ -224,47 +230,78 @@ const Game = ({ userToken }) => {
 
     };
 
-// check if player is first in turn order -> add userId to which_turn column in game_meta table 
+    const fetchEverything = async () => {
+        try {
+            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+            const readyButton = document.getElementById("ready_button");
+            const ready_button = document.getElementById("ready_button");
+            const directionDiv = document.getElementById("direction_div");
+            const updateDirDiv = document.getElementById("update_dir_div");
+            const waitingDiv = document.getElementById("waiting_div");
+            const roll = document.getElementById("roll_button");
 
-    if (turns === userId) {  // ADD CHECK IF NUM_TURN = 0
-        if (numTurns === 0) {
-            axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
-            user_id: String(userId),
-            game_code: gameCode
-        });
-            // Ensure the element exists before trying to modify its style
-            let readyButton = document.getElementById("ready_button");
-            if (readyButton) {
-                readyButton.style.display = "block";
-            }
-        } else {
-            let directionDiv = document.getElementById("direction_div");
-            let updateDirDiv = document.getElementById("update_dir_div");
-            let readyButton = document.getElementById("ready_button");
-            if (directionDiv) {
-                directionDiv.style.display = "block";
-            }
-            if (updateDirDiv) {
-                updateDirDiv.style.display = "block";
-            }
+            console.log("(numTurns)",gameResponse.data.numTurns)
 
-            if (readyButton) {
-                readyButton.style.display = "none";
+            if (turns === userId) { // its our user's turn!
+                if (numTurns === 0) { // is it THE first turn?
+                    axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+                    user_id: String(userId),
+                    game_code: gameCode
+
+                });
+                    readyButton.style.display = "block";
+
+                    readyButton.onclick = function() {
+                        axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
+                        directionDiv.style.display = "block";
+                        updateDirDiv.style.display = "block";
+                        ready_button.style.display = "none";
+                        waitingDiv.style.display = "none";
+                    }
+                } else if(numTurns === 1) { // first player's turn
+                    directionDiv.style.display = "block";
+                    updateDirDiv.style.display = "block";
+                    ready_button.style.display = "none";
+                    waitingDiv.style.display = "none";
+                } else if (numTurns === 2) { // other users choose direction
+                    if (userId !== gameResponse.data.host) {
+                        directionDiv.style.display = "block";
+                        updateDirDiv.style.display = "block";
+                        ready_button.style.display = "none";
+                        waitingDiv.style.display = "none";
+                    }   else {axios.post("http://localhost:8080/updateNumTurns", { // technically first player's turn but +1 to go to next if
+                            num_turns: String(gameResponse.data.numTurns + 1), 
+                            game_code: gameCode
+                        });
+                }} else if (numTurns > 2) { // no longer choose direction
+                    roll.style.display = "block";
+                    waitingDiv.style.display = "none";
+                    directionDiv.style.display = "none";
+                    updateDirDiv.style.display = "none";
+                    ready_button.style.display = "none";
+                } else { // not our user's turn
+                waitingDiv.style.display = "block";
+                directionDiv.style.display = "none";
+                updateDirDiv.style.display = "none";
+                ready_button.style.display = "none";
+                roll.style.display = "none";
+                }
             }
-        }
-    } else {
-        let waitingDiv = document.getElementById("waiting_div");
-        if (waitingDiv) {
-            waitingDiv.style.display = "block";
-        }
-    }
+         } catch (error) {
+            console.error('Error fetching data:', error);
+        }            
+    };
+    
+
+
+fetchEverything();
 // return "Ready to play?" button -> onClick: joinable=False. Do we need to update num_players? idk
 
 // if not first in turn order -> return "Waiting for <user_name>... "
 
-// if (userId === null | getGameId === null | turns === null) {
-//     return <div>Loading...</div>;
-// }
+    if (userId === null | getGameId === null | turns === null) {
+        console.log('Loading...')
+    }
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
@@ -274,7 +311,9 @@ const Game = ({ userToken }) => {
                 <div className="center" id="direction_div" style={{display: "none"}}>
                     <h1>Choose a direction!</h1>
                 </div>
+                
                 <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
+
                 <div className="center" id="ready_button">
                     <button className="button" onClick={() => beginGame()} style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>
                 </div>

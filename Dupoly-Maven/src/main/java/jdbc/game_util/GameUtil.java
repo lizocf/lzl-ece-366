@@ -14,6 +14,16 @@ public class GameUtil implements DataTransferObject
     private boolean joinable;
     private int diceRoll;
     private boolean purchaseable;
+    private int host;
+
+    public int getHost() {
+        return host;
+    }
+
+    public void setHost(int host) {
+        this.host = host;
+    }
+
 
     public String getRecent_card() {
         return recent_card;

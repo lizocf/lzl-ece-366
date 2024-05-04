@@ -8,10 +8,13 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
     console.log("(PlayerTable) Game Code: " + gameCode + " User ID: " + userId + " Game ID: " + gameId);
 
     useEffect(() => {
-        const intervalId = setInterval(loadPlayers, 5000); // Fetch players every 5 seconds
+        const intervalId = setInterval(() => {
+            loadPlayers();
+            loadProperties(); // Call loadProperties along with loadPlayers
+        }, 5000); // Fetch players and properties every 5 seconds
+    
         return () => clearInterval(intervalId); // Cleanup on unmount
-    }, [gameCode, userId]);
-
+    }, [gameCode, userId, gameId]);
     const loadPlayers = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
@@ -25,17 +28,37 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 </tr>`
             )).join(""); // Join the array of rows into a single string
 
+            const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameId}`);
+            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+
+
             const tableBody = document.getElementById("player_body");
             const land_div = document.getElementById("land");
             const buy_div = document.getElementById("buy");
             const buttons = document.getElementById("buttons");
             const end_div = document.getElementById("end");
             const roll = document.getElementById("roll_button");
+            const waitingDiv = document.getElementById("waiting_div");
 
             tableBody.innerHTML = tableRows;
             // document.getElementById("player_body").remove();
 
-            
+            const updateTurn = () => {
+                axios.post("http://localhost:8080/updateTurnOrder", {game_id: String(gameId)})
+
+                console.log("turnResponse!", gameResponse.data.numTurns);
+                roll.style.display = "none";
+                waitingDiv.style.display = "block";
+
+                if (userId === gameResponse.data.host) {
+                    // console.log("turnResponse ",gameResponse.data.numTurns + 1)
+                    axios.post("http://localhost:8080/updateNumTurns", {
+                        num_turns: String(gameResponse.data.numTurns + 1), 
+                        game_code: gameCode})
+                }
+
+            }
+
             document.getElementById("buy_yes").onclick = function() {
                 handleButtonClick();
                 handleButtonClickProp();
@@ -56,14 +79,14 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
             end_div.onclick = function() {
                 handleButtonClick();
                 handleButtonClickProp();
-                roll.style.display = "block";
+                updateTurn();
                 end_div.style.display = "none";
                 land_div.style.display = "none";
                 document.getElementById("broke_h1").style.display = "none";
                 document.getElementById("special_prop").style.display='none';
                 document.getElementById("land_prop").style.display='block';
-
                 // ADD UPDATE_TURN FUNCTION HERE
+                
 
             }
 
