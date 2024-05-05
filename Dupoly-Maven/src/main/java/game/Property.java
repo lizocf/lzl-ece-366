@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Arrays;
 
 // @SpringBootApplication
 // @RestController
@@ -78,33 +79,34 @@ class Property implements Space {
         owned_property.setGameId(gameId);
         owned_property.setPropertyName(propertyName);
 
-        // someone owns this and it is not you
-        if ((!(owned_property.getPropertyName() == null)) && (game.getPlayerTurn() != owned_property.getUserId()))
-        {
+        // // tax spaces
+        String tax[] = {"Tax_4", "Tax_26", "Tax_34", "Tax_56"};
 
-            System.out.println("You have payed rent");
-            owned_property = propertyDAO.findById(owned_property);
-            playerDAO.update_cash(player,-baseRent * (owned_property.getNumOfHotels() + 1));
+        // if property is a tax space
+// Check if the property is a tax space
+    if (Arrays.asList(tax).contains(owned_property.getPropertyName())) {
+        System.out.println("You have paid tax");
+        playerDAO.update_cash(player, -baseRent);
+    } else {
+        // Check property ownership
+        if (owned_property.getUserId() != 0 && game.getPlayerTurn() != owned_property.getUserId()) {
+                System.out.println("You have paid rent");
+                playerDAO.update_cash(player, -baseRent * (owned_property.getNumOfHotels() + 1));
 
-            PlayerDAO playerDAO2 = new PlayerDAO(connection);
-            // this needs to be fixed up
-            PlayerUtil tenant = new PlayerUtil();
-            tenant.setUserId(owned_property.getUserId());
-            tenant.setGameId(gameId);
-            tenant = playerDAO2.findById(tenant);
-            playerDAO.update_cash(tenant,baseRent * (owned_property.getNumOfHotels() + 1));
-            System.out.println(owned_property.getUserId());
-        }
-
-        if((owned_property.getPropertyName() == null) && (player.getCash() > baseCost))
-        {
-            // the property can be purchased and they choose to purchase it
-            if (game.getPurchaseable()) {
-                // update database (user has purchased a valid property)
+                // Update owner's cash
+                PlayerUtil tenant = new PlayerUtil();
+                tenant.setUserId(owned_property.getUserId());
+                tenant.setGameId(gameId);
+                tenant = playerDAO.findById(tenant);
+                playerDAO.update_cash(tenant, baseRent * (owned_property.getNumOfHotels() + 1));
+            } else if (owned_property.getUserId() == 0 && player.getCash() > baseCost) {
+                // The property is unowned and can be purchased
                 System.out.println("Property Purchased");
                 playerDAO.update_cash(player, -baseCost);
+
+                // Create a new owned property instance
                 OwnedPropertyUtil property = new OwnedPropertyUtil();
-                // set the other stuff
+                // Set other properties
                 property.setPropertyName(propertyName);
                 property.setNumOfHotels(0);
                 property.setSetName(setName);
@@ -115,7 +117,6 @@ class Property implements Space {
         }
     }
 }
-
 // //Logic to determine if they have set?
 // //Determine if houses are built or not and how many(how many is in the database)
 

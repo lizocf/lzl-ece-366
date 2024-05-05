@@ -52,14 +52,14 @@ public class Board {
         gameBoard[1] = new Property(20,10,20,60,"Burlington", "Vermont"); //need to input property name
         gameBoard[2] = new SpecialCard();
         gameBoard[3] = new Property(20,10,20,50,"Stowe", "Vermont");
-        gameBoard[4] = new Property(100,100,100,100,"Tax_4", "Florida");
+        gameBoard[4] = new Property(100,100,100,100,"Tax_4", "Florida"); // tax
         gameBoard[5] = new Property(100,100,100,100,"CLE", "Airports");
         gameBoard[6] = new Property(60,30,160,300,"Beavercreek", "Ohio");
         gameBoard[7] = new Property(80,35,180,350,"Cincinnati", "Ohio");
         gameBoard[8] = new SkullCard();
         gameBoard[9] = new Property(100,40,200,400,"Cleveland", "Ohio");
 
-        gameBoard[11] = new Property(60,30,160,300,"Rochester", "Massachusetts");
+        gameBoard[11] = new Property(60,30,160,300,"Rochester", "Michigan");
         gameBoard[12] = new Property(100,100,100,400,"Electric Company", "Utility");
         gameBoard[13] = new Property(80,35,180,350,"Flint", "Michigan");
         gameBoard[14] = new Property(100,40,200,400,"Detroit", "Michigan");
@@ -74,7 +74,7 @@ public class Board {
         gameBoard[23] = new Property(150,50,220,440,"Tampa", "Florida");
         gameBoard[24] = new Property(160,60,250,500,"Miami", "Florida");
         gameBoard[25] = new Property(100,100,100,100,"JFK", "Airports");
-        gameBoard[26] = new Property(100,100,100,100,"Tax_26", "New York");
+        gameBoard[26] = new Property(100,100,100,100,"Tax_26", "New York"); // tax
         gameBoard[27] = new Property(180,80,350,450,"Poughkeepskie", "New York");
         gameBoard[28] = new SkullCard();
         gameBoard[29] = new Property(200,100,400,500,"New York City", "New York");
@@ -82,7 +82,7 @@ public class Board {
         gameBoard[31] = new Property(200,100,400,500,"Los Angeles", "California");
         gameBoard[32] = new SpecialCard();
         gameBoard[33] = new Property(180,80,350,450,"San Francisco", "California");
-        gameBoard[34] = new Property(100,100,100,100,"Tax_34", "New York");
+        gameBoard[34] = new Property(100,100,100,100,"Tax_34", "New York"); // tax
         gameBoard[35] = new Property(100,100,100,100,"DTW", "Airports");
         gameBoard[36] = new Property(200,100,400,500,"Las Vegas", "Nevada");
         gameBoard[37] = new Property(160,60,180,350,"Henderson", "Nevada");
@@ -104,7 +104,7 @@ public class Board {
         gameBoard[53] = new Property(80,35,180,350,"Olympia", "Washington");
         gameBoard[54] = new Property(60,30,160,300,"Vancouver", "Washington");
         gameBoard[55] = new Property(100,100,100,100,"DCA", "Airports");
-        gameBoard[56] = new Property(100,100,100,100,"Tax_56", "New York");
+        gameBoard[56] = new Property(100,100,100,100,"Tax_56", "New York"); // tax
         gameBoard[57] = new Property(20,10,20,60,"Albuquerque", "New Mexico");
         gameBoard[58] = new SkullCard();
         gameBoard[59] = new Property(20,10,20,50,"Santa Fe", "New Mexico");

@@ -53,11 +53,11 @@ const JoinGame = ({userToken}) => {
                     navigate(`/game/${code}`);
                 } else {
                     console.log("Creating player in game...");
-                    axios.post("http://localhost:8080/createPlayerInGame", {
+                    await axios.post("http://localhost:8080/createPlayerInGame", {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
-                    axios.post("http://localhost:8080/addUserToTurnOrder", {
+                    await axios.post("http://localhost:8080/addUserToTurnOrder", {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
@@ -129,16 +129,18 @@ const Lobby = ({ userToken }) => {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
             await axios.post("http://localhost:8080/addUserToTurnOrder", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
 
-
-            
-
             navigate(`/game/${gameCode}`);
+
 
         } catch (error) {
             console.error('Error in creating game:', error);
@@ -270,7 +272,7 @@ const Game = ({ userToken }) => {
 
             if (turns === userId) { // its our user's turn!
 
-                if (numTurns === 0) { // is it THE first turn?
+                if (numTurns === 0 && userId === gameResponse.data.host) { // is it THE first turn?
                     axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                     user_id: String(userId),
                     game_code: gameCode
@@ -284,11 +286,19 @@ const Game = ({ userToken }) => {
                         waitingDiv.style.display = "none";
                     }
                 } else if(numTurns === 1) { // first player's turn
+                    axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+                        user_id: String(userId),
+                        game_code: gameCode
+                    });
                     directionDiv.style.display = "block";
                     updateDirDiv.style.display = "block";
                     ready_button.style.display = "none";
                     waitingDiv.style.display = "none";
                 } else if (numTurns > 1) { // no longer choose direction
+                    axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+                        user_id: String(userId),
+                        game_code: gameCode
+                    });
                     roll.style.display = "block";
                     waitingDiv.style.display = "none";
                     directionDiv.style.display = "none";
@@ -338,9 +348,10 @@ fetchEverything();
                 
                 <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
 
-                <div className="center" id="ready_button">
-                    <button className="button" onClick={() => beginGame()} style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>
 
+                <div className="center" id="ready_button" style={{display:"none"}}>
+                    <button className="button" onClick={() => beginGame()} style={{ margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>
+                    {/* <button className="button" style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button> */}
                 </div>
                 <div className="center" id="waiting_div" style={{display: "block"}}>
                     <h1>Waiting for players...</h1>
@@ -356,13 +367,15 @@ fetchEverything();
                 {/* </div> */}
             {/* </div> */}
 
-             <div>
-                 <UpdateBankrupt userId={userId} gameId={getGameId}/>
-             </div>
 
-             <div>
-                 <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/>
-             </div>
+            {/* <div className="container_left" style={{margin: "-2.5vh 123px"}}> */}
+                <UpdateBankrupt userId={userId} gameId={getGameId}/>
+            {/* </div> */}
+
+            <div>
+                <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/>
+            </div>
+
             <div className="container_left" style={{margin: "auto auto"}}>   
                 <main className="props-table" id="property_info" style={{background: "#fff5", borderRadius: "0.8rem"}}>
                     <section className="table__body">
@@ -405,10 +418,11 @@ fetchEverything();
 
 
   function App() {
-
     const { token, setToken } = useToken();
   
-    if(!token) {
+    const response = axios.get(`http://localhost:8080/getUserToken/${token}`);
+
+    if(!token || response.data === null) {
       return <Login setToken={setToken} />
     }
     return (

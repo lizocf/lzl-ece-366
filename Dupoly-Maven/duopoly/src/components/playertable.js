@@ -46,7 +46,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
             const updateTurn = () => {
                 axios.post("http://localhost:8080/updateTurnOrder", {game_id: String(gameId)})
 
-                console.log("turnResponse!", gameResponse.data.numTurns);
+                console.log("turnResponse!", gameResponse.data.lastPlayer);
                 roll.style.display = "none";
                 waitingDiv.style.display = "block";
 
@@ -148,6 +148,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
 
     const handleButtonClickProp = async () => {
         loadProperties(); // I needed to call getOwnedProperties three times to update the table ?? cant just do loadProperties() x3 either
+        let tax_space = ["Tax_4", "Tax_26", "Tax_36", "Tax_56"];
         try {
             const fake_response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`); 
             // console.log('Before', fake_response.data);

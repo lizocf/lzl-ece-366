@@ -166,9 +166,7 @@ const Roll = ({gameCode, userId, gameId}) => {
                 user_id: response.data.userId,
             });
     
-            var roll_button = document.getElementById("roll_button");
-            // var roll_div = document.getElementById("roll_div");
-            roll_button.style.display='none';
+
             // roll_div.style.display='none';
 
             console.log(`loadUpdate: Player has moved to position ${response.data.currentPosition}.`);
@@ -179,6 +177,8 @@ const Roll = ({gameCode, userId, gameId}) => {
 
     const nextPosition = async () => {
         try {
+            var roll_button = document.getElementById("roll_button");
+            roll_button.style.display='none';
             await axios.post("http://localhost:8080/updateRoll", {
                 user_id : String(userId),
                 game_id : String(gameId),
@@ -190,6 +190,7 @@ const Roll = ({gameCode, userId, gameId}) => {
                 game_id : String(gameId),
                 game_code: String(gameCode),
             });
+            
             loadUpdate(); // Reload player data after updating position
             loadProperty();
             loadAllPlayers();
