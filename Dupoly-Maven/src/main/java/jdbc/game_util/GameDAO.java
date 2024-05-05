@@ -53,7 +53,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
             while(rs.next()) {
                 game.setGameId(rs.getInt("game_id"));
                 game.setGameCode(rs.getString("game_code"));
-                game.setNumOfPlayers(rs.getInt("num_players"));
+//                game.setNumOfPlayers(rs.getInt("num_players"));
                 game.setDebtPot(rs.getInt("debt_pot"));
                 game.setRecentRoll(rs.getInt("roll_number"));
                 game.setPurchaseable(rs.getBoolean("purchaseable"));

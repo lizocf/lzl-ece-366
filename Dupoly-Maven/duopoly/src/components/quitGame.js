@@ -14,6 +14,8 @@ const QuitGame = ({gameCode,userId,gameId}) => {
                 game_id : String(gameId)
             })
 
+
+
             navigate('/');
         } catch (error) {
             console.error('Error deleting player:', error);

@@ -147,7 +147,6 @@ const Lobby = ({ userToken }) => {
 
             // delete game that user tried to create
             await axios.post("http://localhost:8080/deleteGame", {game_code: gameCode})
-            
         }
     };
 
@@ -357,13 +356,13 @@ fetchEverything();
                 {/* </div> */}
             {/* </div> */}
 
-            {/* <div className="container_left" style={{margin: "-2.5vh 123px"}}> */}
-                {/* <UpdateBankrupt userId={userId} gameId={getGameId}/> */}
-            {/* </div> */}
+             <div>
+                 <UpdateBankrupt userId={userId} gameId={getGameId}/>
+             </div>
 
-            {/* <div> */}
-                {/* <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/> */}
-            {/* </div> */}
+             <div>
+                 <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/>
+             </div>
             <div className="container_left" style={{margin: "auto auto"}}>   
                 <main className="props-table" id="property_info" style={{background: "#fff5", borderRadius: "0.8rem"}}>
                     <section className="table__body">
