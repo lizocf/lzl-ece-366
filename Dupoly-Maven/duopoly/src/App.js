@@ -44,10 +44,11 @@ const JoinGame = ({userToken}) => {
 
                 // check if player in game
                 const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
-
-                // if (checkUserInGameResponse.data.userName != null) {
-                //     navigate(`/game/${code}`);
-                // } else {
+                
+                console.log("Check player: ", checkUserInGameResponse.data)
+                if (checkUserInGameResponse.data.userName !== null) {
+                    navigate(`/game/${code}`);
+                } else {
                     console.log("Creating player in game...");
                     axios.post("http://localhost:8080/createPlayerInGame", {
                         user_id: String(userResponse.data.userId),
@@ -57,7 +58,7 @@ const JoinGame = ({userToken}) => {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
-                // }
+                }
                 
                 navigate(`/game/${code}`);
             }
