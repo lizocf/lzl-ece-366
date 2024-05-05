@@ -333,18 +333,49 @@ fetchEverything();
             <div id="update_dir_div" style={{display:"none"}}>
                 <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
-            <div className="container_left" style={{margin: "-10vh 58px", backgroundColor:"white"}}>
-                <div className="logs-table" style={{margin: "-9.3vh auto"}}>
+            {/* <div className="container_left" style={{margin: "-10vh 58px", backgroundColor:"white"}}> */}
+                {/* <div className="logs-table" style={{margin: "-9.3vh auto"}}> */}
                     <Chat/>
-                </div>
-            </div>
+                {/* </div> */}
+            {/* </div> */}
 
-            <div className="container_left" style={{margin: "-2.5vh 123px"}}>
-                <UpdateBankrupt userId={userId} gameId={getGameId}/>
-            </div>
+            {/* <div className="container_left" style={{margin: "-2.5vh 123px"}}> */}
+                {/* <UpdateBankrupt userId={userId} gameId={getGameId}/> */}
+            {/* </div> */}
 
-            <div>
-                <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/>
+            {/* <div> */}
+                {/* <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/> */}
+            {/* </div> */}
+            <div className="container_left" style={{margin: "auto auto"}}>   
+                <main className="props-table" id="property_info" style={{background: "#fff5", borderRadius: "0.8rem"}}>
+                    <section className="table__body">
+                        <h1>Property Info</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Property Name</th>
+                                    <th>Set Name</th>
+                                    <th>Number of Hotels</th>
+                                </tr>
+                            </thead>
+                            <tbody id="updated_props">
+                                {/* <tr>
+                                    <td>Property Name</td>
+                                    <td>Set Name</td>
+                                    <td>Number of Hotels</td>
+                                </tr> */}
+                            </tbody>
+                        </table>
+                    </section>
+                    <section className="table__body">
+                        <h1>Rent Information</h1>
+                        <table>
+                            <tbody id="rent">
+                            {/* RentTable */}
+                            </tbody>
+                        </table>
+                    </section>
+                </main>
             </div>
         </div>
     );

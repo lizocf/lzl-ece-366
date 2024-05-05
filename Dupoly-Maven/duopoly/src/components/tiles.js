@@ -83,37 +83,6 @@ const Tiles = ({gameId}) => {
 
     return (
         <>
-        <div className="container_left" style={{margin: "-21vh -67vh"}}>
-        <main className="props-table" id="property_info" style={{background: "#fff5", borderRadius: "0.8rem"}}>
-            <section className="table__body">
-                <h1>Property Info</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Property Name</th>
-                            <th>Set Name</th>
-                            <th>Number of Hotels</th>
-                        </tr>
-                    </thead>
-                    <tbody id="updated_props">
-                        {/* <tr>
-                            <td>Property Name</td>
-                            <td>Set Name</td>
-                            <td>Number of Hotels</td>
-                        </tr> */}
-                    </tbody>
-                </table>
-            </section>
-            <section className="table__body">
-                <h1>Rent Information</h1>
-                <table>
-                    <tbody id="rent">
-                    {/* RentTable */}
-                    </tbody>
-                </table>
-            </section>
-        </main>
-    </div>
         <div className="container_board">
             <table className="styled-table" id="top-east" style={{ top: "26.9%", left: "54.2%", transform: "rotate(28.4deg)" }}>
                 <tbody>

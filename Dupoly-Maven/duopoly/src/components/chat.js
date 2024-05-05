@@ -162,7 +162,8 @@ const Chat = () => {
     };
 
     return (
-        <div className="chat-container">
+        <>
+        <div className="chat-container" id="chat-container" style={{margin:"2vh auto"}} >
             <SockJsClient
                 url={SOCKET_URL}
                 topics={['/topic/message']}
@@ -176,24 +177,27 @@ const Chat = () => {
                 ))}
                 <div ref={messagesEndRef} />
             </div>
-
-            <div className="input-container">
-                <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            sendMessage();
-                        }
-                    }}
-                    placeholder="Type your message here..."
-                />
-                <button onClick={sendMessage}>
-                    <FaPaperPlane size={20} color="blue" />
-                </button>
-            </div>
         </div>
+
+        {/* <div className="chat-container" id="input-cont" style={{margin:"2vh auto"}} >     */}
+        <div className="input-container">
+            <input className='input' 
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                }}
+                placeholder="Type your message here..."
+            />
+            <button1 onClick={sendMessage} style={{top:"0vh"}}>
+                <FaPaperPlane size={15} color="blue" />
+            </button1>
+            </div>
+        {/* </div> */}
+        </>
     );
 };
 

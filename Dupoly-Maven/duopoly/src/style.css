@@ -18,6 +18,11 @@ Code written by:
 
 #props,
 #logs {
+    margin-bottom: 20px; /* Add margin between tables */   
+}
+
+#property_info,
+#chat-container {
     margin-bottom: 20px; /* Add margin between tables */
     
 }
@@ -121,11 +126,17 @@ body {
 }
 
 .container_left {
+    position: fixed; 
+    width: 22vw;
+    height: 50vh;
+    background: #fff5;
+    top: 2vh;
+    border-radius: .8rem;
     display: flex;
     flex-direction: column;
     float: left;
-    height: 50%
 
+    overflow: hidden;
 }
 
 .container_bottom_left{
@@ -294,7 +305,21 @@ table, th, td {
     box-shadow: 0 .4rem .8rem #0005;
     border-radius: .8rem;
 
-    overflow: hidden;
+    overflow: scroll;
+}
+
+.props-table {
+    position: fixed; 
+    width: 22vw;
+    height: 50vh;
+    background: #fff5;
+    top: 2vh;
+
+    backdrop-filter: blur(7px);
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: .8rem;
+    
+    overflow: scroll;
 }
 
 .styled-table {
@@ -482,6 +507,7 @@ main.table {
      overflow: scroll;
 }
 
+
 /*.logs-table {*/
 /*    width: 100%;*/
 /*    max-height: 300px; !* Adjust the max height as needed *!*/
@@ -543,44 +569,57 @@ main.table {
 /*}*/
 
 .chat-container {
-    position: relative;
-    width: 300px; /* Set a fixed width for the chat container */
-    max-height: 400px; /* Set a fixed max height for the chat container */
+    position: fixed;
+    width: 22vw; /* Set a fixed width for the chat container */
+    max-height: 80vh; /* Set a fixed max height for the chat container */
     overflow-y: auto; /* Enable vertical scrolling if needed */
-    background-color: #f5f5f5; /* Add a background color */
+    background-color: #f5f5f54f; /* Add a background color */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow for visual appeal */
+    bottom: 9vh;
+    display: flex;
+    flex-direction: column; 
 }
 
 .messages-container {
+    height: 33vh;
     padding: 10px;
+
 }
 
 .message {
     margin-bottom: 10px;
     padding: 8px 12px;
-    background-color: #d9edff;
+    background-color: #c3c4ff8e;
     border-radius: 8px;
 }
 
 .input-container {
+    position: absolute;
+    bottom: 6vh;
+    width: 22%; /* Occupy full width */
     display: flex;
+    height: 6vh;
+    flex-direction: row;
     align-items: center;
-    padding: 10px;
+    padding: 3px 4vh;
+    background-color: #ffffff;
     border-top: 1px solid #ddd;
 }
 
 .input-container input {
     flex: 1;
     padding: 8px;
+    background-color: #0001564d;
     border: 1px solid #ccc;
     border-radius: 5px;
+    color: white;
     outline: none;
 }
 
-.input-container button {
-    padding: 8px;
-    margin-left: 10px;
+.input-container button1 {
+    padding: 0.8vh;
+    margin-left: 1vh;
     background-color: #007bff;
     color: white;
     border: none;
@@ -589,8 +628,8 @@ main.table {
     outline: none;
 }
 
-.input-container button:hover {
-    background-color: #0056b3;
+.input-container button1:hover {
+    background-color: #93a7bd;
 }
 
 .table__header {
