@@ -177,6 +177,23 @@ const Chat = () => {
                 ))}
                 <div ref={messagesEndRef} />
             </div>
+
+            {/*<div className="input-container">*/}
+            {/*    <input*/}
+            {/*        type="text"*/}
+            {/*        value={inputMessage}*/}
+            {/*        onChange={(e) => setInputMessage(e.target.value)}*/}
+            {/*        onKeyDown={(e) => {*/}
+            {/*            if (e.key === 'Enter') {*/}
+            {/*                sendMessage();*/}
+            {/*            }*/}
+            {/*        }}*/}
+            {/*        placeholder="Type your message here..."*/}
+            {/*    />*/}
+            {/*    <button onClick={sendMessage}>*/}
+            {/*        <FaPaperPlane size={15} color="blue" />*/}
+            {/*    </button>*/}
+            {/*</div>*/}
         </div>
 
         {/* <div className="chat-container" id="input-cont" style={{margin:"2vh auto"}} >     */}

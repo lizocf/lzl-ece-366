@@ -121,16 +121,16 @@ const Lobby = ({ userToken }) => {
             // Create player in game
             const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
 
-            axios.post("http://localhost:8080/updateHost", {
+            await axios.post("http://localhost:8080/updateHost", {
                 host: String(userResponse.data.userId),
                 game_code: gameCode
             });
-            axios.post("http://localhost:8080/createPlayerInGame", {
+            await axios.post("http://localhost:8080/createPlayerInGame", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
         
-            axios.post("http://localhost:8080/addUserToTurnOrder", {
+            await axios.post("http://localhost:8080/addUserToTurnOrder", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
@@ -174,6 +174,8 @@ const Game = ({ userToken }) => {
     
 
     useEffect(() => {
+
+
         const fetchData = async () => {
             try {
                 const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
@@ -190,15 +192,32 @@ const Game = ({ userToken }) => {
         
         const fetchTurn = async () => {
             try {
+                const endGameDiv = document.getElementById("EndGame");
                 const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
                 const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
                 const filteredTurns = turnResponse.data.filter(turn => turn !== null).map(turns => ({ userId: turns.userId, turn: turns.turnNumber}));
                 // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
                 setTurns(filteredTurns[0].userId); // Update state with turn
+
                 setNumTurns(gameResponse.data.numTurns);
                 if (filteredTurns[filteredTurns.length - 1].userId > 0) {
                     axios.post("http://localhost:8080/updateLastPlayer", {last_player: String(filteredTurns[filteredTurns.length - 1].userId), game_code: gameCode});
                 }
+
+                setNumTurns(gameResponse.data.recentRoll)
+
+                // if((filteredTurns.length === 1))
+                // {
+
+                if((gameResponse.data.recentRoll > 0) && (filteredTurns.length === 1))
+                {
+                    endGameDiv.style.display = "block";
+                }
+                // console.log(filteredTurns.length)
+                console.log("The number of filtered turns is: " + filteredTurns.length);
+
+
+                // }
             } catch (error) {
                 console.error('Error fetching turn:', error);
         }}
@@ -234,6 +253,7 @@ const Game = ({ userToken }) => {
         }
         axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
         axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
+        axios.post("http://localhost:8080/")
 
     };
 
@@ -297,10 +317,7 @@ fetchEverything();
 
     // want to do something where we check the length of turns.
     // If its one or one player in the array then we know the game is over
-    // if(turns.turnNumber)
-    // {
-    //     return <Endscreen/>;
-    // }
+
 
 
     if (userId === null | getGameId === null | turns === null | numTurns === null) {
@@ -324,7 +341,7 @@ fetchEverything();
 
                 <div className="center" id="ready_button">
                     <button className="button" onClick={() => beginGame()} style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>
-                    {/* <button className="button" style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button> */}
+
                 </div>
                 <div className="center" id="waiting_div" style={{display: "block"}}>
                     <h1>Waiting for players...</h1>
@@ -335,6 +352,7 @@ fetchEverything();
             </div>
             {/* <div className="container_left" style={{margin: "-10vh 58px", backgroundColor:"white"}}> */}
                 {/* <div className="logs-table" style={{margin: "-9.3vh auto"}}> */}
+
                     <Chat/>
                 {/* </div> */}
             {/* </div> */}
@@ -377,6 +395,11 @@ fetchEverything();
                     </section>
                 </main>
             </div>
+            <div id="EndGame" style={{display: "none"}}>
+                <Endscreen/>;
+            </div>
+
+
         </div>
     );
 };

@@ -36,7 +36,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_RECENT_CARD = "UPDATE game_meta " + "SET recent_card = ? WHERE game_code = ? ";
     private static final String UPDATE_HOST = "UPDATE game_meta " + "SET host = ? WHERE game_code = ? ";
     private static final String UPDATE_LAST_PLAYER = "UPDATE game_meta " + "SET last_player = ? WHERE game_code = ? ";
-
+    private static final String UPDATE_NUM_PLAYERS = "UPDATE game_meta " + "SET num_players = ? WHERE game_code = ? ";
 
     // private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
     private static final String DELETE = "DELETE FROM game_meta WHERE game_code = ?";
@@ -53,7 +53,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
             while(rs.next()) {
                 game.setGameId(rs.getInt("game_id"));
                 game.setGameCode(rs.getString("game_code"));
-//                game.setNumOfPlayers(rs.getInt("num_players"));
+                game.setNumOfPlayers(rs.getInt("num_players"));
                 game.setDebtPot(rs.getInt("debt_pot"));
                 game.setRecentRoll(rs.getInt("roll_number"));
                 game.setPurchaseable(rs.getBoolean("purchaseable"));
@@ -110,7 +110,22 @@ public class GameDAO extends DataAccessObject<GameUtil>
         {
             //ResultSet rs = statement.executeQuery();
             //what about ?
-            statement.setInt(1,dto.getHost()); // can I get the current value then just add 50?
+            statement.setInt(1,dto.getHost());
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateNumofPlayers(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_NUM_PLAYERS);)
+        {
+            //ResultSet rs = statement.executeQuery();
+            //what about ?
+            statement.setInt(1,dto.getNumOfPlayers()); // can I get the current value then just add 50?
             statement.setString(2,dto.getGameCode());
             statement.execute();
 

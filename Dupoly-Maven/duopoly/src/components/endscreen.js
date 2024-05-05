@@ -41,8 +41,6 @@ const Endscreen = () => {
                 }} onClick={() => navigate("/")}>Back to Main Menu
                 </button>
             </div>
-
-
         </>
     )
 }
