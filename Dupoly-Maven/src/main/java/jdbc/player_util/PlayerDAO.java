@@ -158,6 +158,7 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
         }
     }
 
+
     public void update_cash(PlayerUtil dto, int newAmount) 
     {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_CASH);)

@@ -12,6 +12,9 @@ import Login from './components/Login/Login';
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import useToken from './components/useToken';
+import UpdateBankrupt from "./components/bankrupt";
+import QuitGame from "./components/quitGame";
+import Endscreen from "./components/endscreen";
 
 
 var username = "";
@@ -235,6 +238,14 @@ const Game = ({ userToken }) => {
 // if not first in turn order -> return "Waiting for <user_name>... "
 
 
+    // want to do something where we check the length of turns.
+    // If its one or one player in the array then we know the game is over
+    // if(turns.turnNumber)
+    // {
+    //     return <Endscreen/>;
+    // }
+
+
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
@@ -247,14 +258,25 @@ const Game = ({ userToken }) => {
                 <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
             <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
-            <div className="container_left" style={{bottom:"0", margin: "-22vh auto", backgroundColor:"rebeccapurple"}}>
-                <div className="logs-table">
+            <div className="container_left" style={{margin: "-10vh 58px", backgroundColor:"white"}}>
+                <div className="logs-table" style={{margin: "-9.3vh auto"}}>
                     <Chat/>
                 </div>
+            </div>
 
+            <div className="container_left" style={{margin: "-2.5vh 123px"}}>
+                <UpdateBankrupt userId={userId} gameId={getGameId}/>
+            </div>
+
+            <div>
+                <QuitGame gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
         </div>
     );
+
+
+
+
 };
 
   function App() {

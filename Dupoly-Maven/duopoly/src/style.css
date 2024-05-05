@@ -91,7 +91,7 @@ body {
 /* containers */
 
 .container_board {
-    /* background-color: rgba(135, 207, 235, 0.464); */
+     /*background-color: rgba(135, 207, 235, 0.464);*/
     /* left: 27%; */
     width: 97vh;
     height: 97vh;
@@ -101,6 +101,7 @@ body {
     transform: translate(-50%, -50%);
     /* border-radius: 50%; */
 }
+
 
 .container_middle {
     /* background-color: rgba(135, 207, 235, 0.464); */
@@ -123,16 +124,86 @@ body {
     display: flex;
     flex-direction: column;
     float: left;
+    height: 50%
+
+}
+
+.container_bottom_left{
+    display: flex;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 150px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ccc; /* Add a border */
+}
+
+/*.container_button {*/
+/*    !*background-color: rgba(135, 207, 235, 0.464);*!*/
+/*    !*display: flex;*!*/
+/*    width: 20vh;*/
+/*    height: 20vh;*/
+/*    !*position: relative;*!*/
+/*    text-align: center;*/
+/*    border-radius: 50%;*/
+/*}*/
+
+/*.container_button_back2menu {*/
+/*    !*background-color: rgba(135, 207, 235, 0.464);*!*/
+/*    !*display: flex;*!*/
+/*    width: 20vh;*/
+/*    height: 20vh;*/
+/*    position: relative; !* Keep position relative *!*/
+/*    text-align: center;*/
+/*    border-radius: 50%;*/
+/*}*/
+
+.container_button, .container_button_back2menu {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; /* Ensure buttons are above the game board */
 }
 
 .container_button {
-    background-color: rgba(135, 207, 235, 0.464);
-    width: 20vh;
-    height: 20vh;
-    position: relative;
-    text-align: center;
-    border-radius: 50%;
+    bottom: 10%;
+    left: 10%;
 }
+
+.container_button_back2menu {
+    bottom: 10%;
+    right: 10%;
+}
+
+
+
+
+/*.container_button {*/
+/*    !* Add background-color, display, and any other styles as needed *!*/
+/*    background-color: rgba(135, 207, 235, 0.464);*/
+/*    display: flex;*/
+/*    width: 20vw;*/
+/*    height: 20vw;*/
+/*    min-width: 100px;*/
+/*    min-height: 100px;*/
+/*    max-width: 200px;*/
+/*    max-height: 200px;*/
+/*    position: absolute;*/
+/*    top: 50%;*/
+/*    left: 50%;*/
+/*    transform: translate(-50%, -50%);*/
+/*    border-radius: 50%;*/
+/*}*/
+
+
+
+
+
+
+
 
 
 .center {
@@ -149,17 +220,7 @@ body {
     
   }
 
-.container_bottom_left{
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 200px;
-    height: 150px;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border: 1px solid #ccc; /* Add a border */
-}
+
 
 /* icons */
 .icon {
@@ -396,7 +457,7 @@ main.table {
 }
 
 
-/* logs table */
+/*!* logs table *!*/
 .logs-table {
     width: 20vw;
     height: 45vh;
@@ -406,9 +467,119 @@ main.table {
     box-shadow: 0 .4rem .8rem #0005;
     border-radius: .8rem;
 
-    /* overflow: scroll; */
+     overflow: scroll;
 }
 
+/*.logs-table {*/
+/*    width: 100%;*/
+/*    max-height: 300px; !* Adjust the max height as needed *!*/
+/*    overflow-y: auto; !* Add vertical scrollbar if content exceeds max height *!*/
+/*    background-color: rgba(255, 255, 255, 0.8);*/
+/*    backdrop-filter: blur(7px);*/
+/*    box-shadow: 0 .4rem .8rem #0005;*/
+/*    border-radius: .8rem;*/
+/*    padding: 10px;*/
+/*    margin: 0 auto; !* Center the chat horizontally *!*/
+/*}*/
+
+/*!* input-container *!*/
+/*.input-container {*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+/*!* chat-container *!*/
+/*.chat-container {*/
+/*    display: inline-flex;*/
+/*    align-items: center;*/
+/*}*/
+
+/*!* chat-input *!*/
+/*.chat-input {*/
+/*    flex: 1;*/
+/*    padding: 8px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 4px;*/
+/*    margin-right: 10px;*/
+/*}*/
+
+/*!* send-button *!*/
+/*.send-button {*/
+/*    width: 50px;*/
+/*    height: 40px;*/
+/*    background-color: #333;*/
+/*    color: #fff;*/
+/*    border: none;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    margin: -20vh;*/
+/*}*/
+
+/*!* logs-table *!*/
+/*.logs-table {*/
+/*    width: 100%;*/
+/*    max-height: 300px;*/
+/*    overflow-y: auto;*/
+/*    background-color: rgba(255, 255, 255, 0.8);*/
+/*    backdrop-filter: blur(7px);*/
+/*    box-shadow: 0 .4rem .8rem #0005;*/
+/*    border-radius: .8rem;*/
+/*    padding: 10px;*/
+/*    !*margin: -10vh;*!*/
+/*}*/
+
+.chat-container {
+    position: relative;
+    width: 300px; /* Set a fixed width for the chat container */
+    max-height: 400px; /* Set a fixed max height for the chat container */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    background-color: #f5f5f5; /* Add a background color */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow for visual appeal */
+}
+
+.messages-container {
+    padding: 10px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background-color: #d9edff;
+    border-radius: 8px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.input-container input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.input-container button {
+    padding: 8px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+.input-container button:hover {
+    background-color: #0056b3;
+}
 
 .table__header {
     width: 100%;

@@ -20,7 +20,7 @@ import static java.lang.Math.abs;
 
 @SpringBootApplication
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class Player extends Account {
     public int game_id, cash, currSpace;
     public boolean afk, current_direction;
@@ -148,7 +148,7 @@ public class Player extends Account {
             player.setUserId(Integer.valueOf(inputMap.get("user_id")));
             player.setGameId(Integer.valueOf(inputMap.get("game_id")));
             player = playerDAO.findById(player);
-            playerDAO.update(player);
+            playerDAO.update_dead(player);
             System.out.println(player);
         }
         catch(SQLException e) {
@@ -267,10 +267,6 @@ public class Player extends Account {
                 gameDAO.update_debt_pot(game,false);
             }
 
-
-
-
-
             System.out.println(player);
         }
         catch(SQLException e) {
@@ -304,6 +300,32 @@ public class Player extends Account {
         return player;
     }
 
+    @PostMapping("/delPlayer")
+    public void DelPlayer(@RequestBody String json) throws JsonProcessingException{
+        System.out.println(json);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        PlayerUtil player = new PlayerUtil();
+
+        try {
+            Connection connection = dcm.getConnection();
+            PlayerDAO playerDAO = new PlayerDAO(connection);
+            player.setUserId(Integer.valueOf(inputMap.get("user_id")));
+            player.setGameId(Integer.valueOf(inputMap.get("game_id")));
+            player = playerDAO.findById(player);
+            System.out.println(player.getUserId());
+            playerDAO.delete(player);
+            System.out.println(player);
+
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     @GetMapping("/getAllPlayersInGame/{gameId}")
     public PlayerUtil[] getAllPlayersInGame(@PathVariable("gameId") int gameId) {
         System.out.println(gameId);
@@ -324,6 +346,8 @@ public class Player extends Account {
         }
         return players;
     }
+
+
 
     public int getGame_id() {
         return game_id;
