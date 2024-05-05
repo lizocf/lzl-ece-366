@@ -20,7 +20,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
     // TODO: add purchaseable boolean to findById
-    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host " +
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host, last_player " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -35,6 +35,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_PURCHASEABLE = "UPDATE game_meta " + "SET purchaseable = ? WHERE game_code = ? ";
     private static final String UPDATE_RECENT_CARD = "UPDATE game_meta " + "SET recent_card = ? WHERE game_code = ? ";
     private static final String UPDATE_HOST = "UPDATE game_meta " + "SET host = ? WHERE game_code = ? ";
+    private static final String UPDATE_LAST_PLAYER = "UPDATE game_meta " + "SET last_player = ? WHERE game_code = ? ";
 
 
     // private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
@@ -60,7 +61,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setNumTurns(rs.getInt("num_turns"));
                 game.setRecent_card(rs.getString("recent_card"));
                 game.setHost(rs.getInt("host"));
-//                game.setJoinable(rs.getBoolean("joinable"));
+                game.setLastPlayer(rs.getInt("last_player"));
             }
 
         }catch (SQLException e){
@@ -110,6 +111,21 @@ public class GameDAO extends DataAccessObject<GameUtil>
             //ResultSet rs = statement.executeQuery();
             //what about ?
             statement.setInt(1,dto.getHost()); // can I get the current value then just add 50?
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateLastPlayer(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_LAST_PLAYER);)
+        {
+            //ResultSet rs = statement.executeQuery();
+            //what about ?
+            statement.setInt(1,dto.getLastPlayer()); // can I get the current value then just add 50?
             statement.setString(2,dto.getGameCode());
             statement.execute();
 

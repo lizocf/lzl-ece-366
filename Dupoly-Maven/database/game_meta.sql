@@ -11,8 +11,10 @@ CREATE TABLE game_meta (
     purchaseable boolean DEFAULT TRUE,
     recent_card varchar(50) DEFAULT NULL,
     host int DEFAULT NULL, -- foreign key to user_id
+    last_player int DEFAULT NULL, -- foreign key to user_id
     PRIMARY KEY (game_id),
     FOREIGN KEY (which_player_turn) REFERENCES accounts(user_id),
     FOREIGN KEY (recent_card) REFERENCES all_cards(card_name),
-    FOREIGN KEY (host) REFERENCES accounts(user_id)
+    FOREIGN KEY (host) REFERENCES accounts(user_id),
+    FOREIGN KEY (last_player) REFERENCES accounts(user_id)
 );

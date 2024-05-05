@@ -195,7 +195,10 @@ const Game = ({ userToken }) => {
                 const filteredTurns = turnResponse.data.filter(turn => turn !== null).map(turns => ({ userId: turns.userId, turn: turns.turnNumber}));
                 // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
                 setTurns(filteredTurns[0].userId); // Update state with turn
-                setNumTurns(gameResponse.data.numTurns)
+                setNumTurns(gameResponse.data.numTurns);
+                if (filteredTurns[filteredTurns.length - 1].userId > 0) {
+                    axios.post("http://localhost:8080/updateLastPlayer", {last_player: String(filteredTurns[filteredTurns.length - 1].userId), game_code: gameCode});
+                }
             } catch (error) {
                 console.error('Error fetching turn:', error);
         }}
@@ -215,12 +218,12 @@ const Game = ({ userToken }) => {
         let directionDiv = document.getElementById("direction_div");
         let updateDirDiv = document.getElementById("update_dir_div");
         let waitingDiv = document.getElementById("waiting_div");
-        if (directionDiv) {
-            directionDiv.style.display = "block";
-        }
-        if (updateDirDiv) {
-            updateDirDiv.style.display = "block";
-        }
+        // if (directionDiv) {
+        //     directionDiv.style.display = "block";
+        // }
+        // if (updateDirDiv) {
+        //     updateDirDiv.style.display = "block";
+        // }
 
         if (ready_button) {
             ready_button.style.display = "none";
@@ -247,18 +250,17 @@ const Game = ({ userToken }) => {
             console.log("(numTurns)",gameResponse.data.numTurns)
 
             if (turns === userId) { // its our user's turn!
+
                 if (numTurns === 0) { // is it THE first turn?
                     axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                     user_id: String(userId),
                     game_code: gameCode
-
                 });
                     readyButton.style.display = "block";
-
                     readyButton.onclick = function() {
                         axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
-                        directionDiv.style.display = "block";
-                        updateDirDiv.style.display = "block";
+                        // directionDiv.style.display = "block";
+                        // updateDirDiv.style.display = "block";
                         ready_button.style.display = "none";
                         waitingDiv.style.display = "none";
                     }
@@ -267,17 +269,7 @@ const Game = ({ userToken }) => {
                     updateDirDiv.style.display = "block";
                     ready_button.style.display = "none";
                     waitingDiv.style.display = "none";
-                } else if (numTurns === 2) { // other users choose direction
-                    if (userId !== gameResponse.data.host) {
-                        directionDiv.style.display = "block";
-                        updateDirDiv.style.display = "block";
-                        ready_button.style.display = "none";
-                        waitingDiv.style.display = "none";
-                    }   else {axios.post("http://localhost:8080/updateNumTurns", { // technically first player's turn but +1 to go to next if
-                            num_turns: String(gameResponse.data.numTurns + 1), 
-                            game_code: gameCode
-                        });
-                }} else if (numTurns > 2) { // no longer choose direction
+                } else if (numTurns > 1) { // no longer choose direction
                     roll.style.display = "block";
                     waitingDiv.style.display = "none";
                     directionDiv.style.display = "none";
@@ -295,7 +287,6 @@ const Game = ({ userToken }) => {
             console.error('Error fetching data:', error);
         }            
     };
-    
 
 
 fetchEverything();
@@ -312,8 +303,10 @@ fetchEverything();
     // }
 
 
-    if (userId === null | getGameId === null | turns === null) {
+    if (userId === null | getGameId === null | turns === null | numTurns === null) {
+
         console.log('Loading...')
+        return <div>Loading...</div>;
     }
 
 
@@ -331,6 +324,7 @@ fetchEverything();
 
                 <div className="center" id="ready_button">
                     <button className="button" onClick={() => beginGame()} style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>
+                    {/* <button className="button" style={{margin: " auto", backgroundColor:"maroon"}}>ready? :D</button> */}
                 </div>
                 <div className="center" id="waiting_div" style={{display: "block"}}>
                     <h1>Waiting for players...</h1>
@@ -339,7 +333,6 @@ fetchEverything();
             <div id="update_dir_div" style={{display:"none"}}>
                 <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
-            <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
             <div className="container_left" style={{margin: "-10vh 58px", backgroundColor:"white"}}>
                 <div className="logs-table" style={{margin: "-9.3vh auto"}}>
                     <Chat/>

@@ -15,6 +15,15 @@ public class GameUtil implements DataTransferObject
     private int diceRoll;
     private boolean purchaseable;
     private int host;
+    private int lastPlayer;
+
+    public int getLastPlayer() {
+        return lastPlayer;
+    }
+
+    public void setLastPlayer(int lastPlayer) {
+        this.lastPlayer = lastPlayer;
+    }
 
     public int getHost() {
         return host;

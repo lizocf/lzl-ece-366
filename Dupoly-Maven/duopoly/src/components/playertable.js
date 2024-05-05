@@ -50,7 +50,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 roll.style.display = "none";
                 waitingDiv.style.display = "block";
 
-                if (userId === gameResponse.data.host) {
+                if (userId === gameResponse.data.lastPlayer) {
                     // console.log("turnResponse ",gameResponse.data.numTurns + 1)
                     axios.post("http://localhost:8080/updateNumTurns", {
                         num_turns: String(gameResponse.data.numTurns + 1), 
@@ -198,7 +198,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                     </table>
                 </section>
             </main>
-            <main className="trans-table" id="transactions">
+            {/* <main className="trans-table" id="transactions">
             <section className="table__body">
             <h1>Transactions</h1>
                 <table>
@@ -211,7 +211,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                     </tbody>
                 </table>
             </section>
-        </main>
+        </main> */}
             <main className="owned-table" id="owned_table">
                 <section className="table__body">
                     <h1>Owned Properties</h1>
