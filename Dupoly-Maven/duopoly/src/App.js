@@ -129,11 +129,6 @@ const Lobby = ({ userToken }) => {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
-<<<<<<< Updated upstream
-        
-=======
-
->>>>>>> Stashed changes
             await axios.post("http://localhost:8080/addUserToTurnOrder", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
@@ -172,8 +167,8 @@ const Game = ({ userToken }) => {
     const [turns, setTurns] = useState(null); // State to hold turn
     const { gameCode } = useParams();
     const [numTurns, setNumTurns] = useState(null); // State to hold number of turns
+    const [roll, setRoll] = useState(null);
     
-
     useEffect(() => {
 
 
@@ -197,15 +192,11 @@ const Game = ({ userToken }) => {
                 const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
                 const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
                 const filteredTurns = turnResponse.data.filter(turn => turn !== null).map(turns => ({ userId: turns.userId, turn: turns.turnNumber}));
+
                 // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
-                setTurns(filteredTurns[0].userId); // Update state with turn
-
+                setTurns(filteredTurns); // Update state with turn
                 setNumTurns(gameResponse.data.numTurns);
-                if (filteredTurns[filteredTurns.length - 1].userId > 0) {
-                    axios.post("http://localhost:8080/updateLastPlayer", {last_player: String(filteredTurns[filteredTurns.length - 1].userId), game_code: gameCode});
-                }
-
-                setNumTurns(gameResponse.data.recentRoll)
+                setRoll(gameResponse.data.recentRoll);
 
                 // if((filteredTurns.length === 1))
                 // {
@@ -233,14 +224,16 @@ const Game = ({ userToken }) => {
     console.log('turns:', turns);
     console.log('numTurns:', numTurns);
 
+    if (userId === null | getGameId === null | turns === null | numTurns === null) {
+
+        console.log('Loading...')
+        return <div>Loading...</div>;
+    }
+
     const beginGame = () => {
         var ready_button = document.getElementById("ready_button");
-        let directionDiv = document.getElementById("direction_div");
         let updateDirDiv = document.getElementById("update_dir_div");
         let waitingDiv = document.getElementById("waiting_div");
-        // if (directionDiv) {
-        //     directionDiv.style.display = "block";
-        // }
         // if (updateDirDiv) {
         //     updateDirDiv.style.display = "block";
         // }
@@ -254,23 +247,24 @@ const Game = ({ userToken }) => {
         }
         axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
         axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
-        axios.post("http://localhost:8080/")
 
+        
     };
 
     const fetchEverything = async () => {
         try {
             const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+            const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
+
             const readyButton = document.getElementById("ready_button");
             const ready_button = document.getElementById("ready_button");
-            const directionDiv = document.getElementById("direction_div");
             const updateDirDiv = document.getElementById("update_dir_div");
             const waitingDiv = document.getElementById("waiting_div");
             const roll = document.getElementById("roll_button");
 
             console.log("(numTurns)",gameResponse.data.numTurns)
 
-            if (turns === userId) { // its our user's turn!
+            if (turns[0].userId === userId) { // its our user's turn!
 
                 if (numTurns === 0 && userId === gameResponse.data.host) { // is it THE first turn?
                     axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
@@ -279,39 +273,41 @@ const Game = ({ userToken }) => {
                 });
                     readyButton.style.display = "block";
                     readyButton.onclick = function() {
-                        axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
-                        // directionDiv.style.display = "block";
-                        // updateDirDiv.style.display = "block";
                         ready_button.style.display = "none";
                         waitingDiv.style.display = "none";
+                        axios.post("http://localhost:8080/updateLastPlayer", {last_player: String(turns[turns.length-1].userId), game_code: gameCode})
+                        axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
+                        axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
+                        // directionDiv.style.display = "block";
+                        // updateDirDiv.style.display = "block";
                     }
                 } else if(numTurns === 1) { // first player's turn
                     axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                         user_id: String(userId),
                         game_code: gameCode
                     });
-                    directionDiv.style.display = "block";
                     updateDirDiv.style.display = "block";
                     ready_button.style.display = "none";
                     waitingDiv.style.display = "none";
-                } else if (numTurns > 1) { // no longer choose direction
+                } else if (numTurns >  1) { // no longer choose direction
                     axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                         user_id: String(userId),
                         game_code: gameCode
                     });
-                    roll.style.display = "block";
+                    console.log("(CLICKED!)", gameResponse.data.clicked)
+                    if (!gameResponse.data.clicked) {
+                        roll.style.display = "block";
+                    } else {roll.style.display = "none";}
                     waitingDiv.style.display = "none";
-                    directionDiv.style.display = "none";
                     updateDirDiv.style.display = "none";
                     ready_button.style.display = "none";
-                } else { // not our user's turn
+                } 
+            } else { // not our user's turn
                 waitingDiv.style.display = "block";
-                directionDiv.style.display = "none";
                 updateDirDiv.style.display = "none";
                 ready_button.style.display = "none";
                 roll.style.display = "none";
                 }
-            }
          } catch (error) {
             console.error('Error fetching data:', error);
         }            
@@ -328,26 +324,13 @@ fetchEverything();
     // If its one or one player in the array then we know the game is over
 
 
-
-    if (userId === null | getGameId === null | turns === null | numTurns === null) {
-
-        console.log('Loading...')
-        return <div>Loading...</div>;
-    }
-
-
     return (
         <div>
             <div className="container_right" style={{margin: "-20vh auto"}}>
                 <PlayerTable gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
             <div className="container_middle">
-                <div className="center" id="direction_div" style={{display: "none"}}>
-                    <h1>Choose a direction!</h1>
-                </div>
-                
                 <Roll gameCode={gameCode} userId={userId} gameId={getGameId}/>
-
 
                 <div className="center" id="ready_button" style={{display:"none"}}>
                     <button className="button" onClick={() => beginGame()} style={{ margin: " auto", backgroundColor:"maroon"}}>ready? :D</button>

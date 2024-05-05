@@ -20,7 +20,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
     // TODO: add purchaseable boolean to findById
-    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host, last_player " +
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host, last_player, clicked " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -37,6 +37,8 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_HOST = "UPDATE game_meta " + "SET host = ? WHERE game_code = ? ";
     private static final String UPDATE_LAST_PLAYER = "UPDATE game_meta " + "SET last_player = ? WHERE game_code = ? ";
     private static final String UPDATE_NUM_PLAYERS = "UPDATE game_meta " + "SET num_players = ? WHERE game_code = ? ";
+    private static final String UPDATE_CLICKED = "UPDATE game_meta " + "SET clicked = ? WHERE game_code = ? ";
+
 
     // private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
     private static final String DELETE = "DELETE FROM game_meta WHERE game_code = ?";
@@ -62,6 +64,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setRecent_card(rs.getString("recent_card"));
                 game.setHost(rs.getInt("host"));
                 game.setLastPlayer(rs.getInt("last_player"));
+                game.setClicked(rs.getBoolean("clicked"));
             }
 
         }catch (SQLException e){
@@ -184,6 +187,20 @@ public class GameDAO extends DataAccessObject<GameUtil>
             throw new RuntimeException(e);
         }
     }
+
+    public void update_clicked(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_CLICKED);)
+        {
+            statement.setBoolean(1,dto.isClicked());
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     // Not sure about this one neecs to be looked into
     public void updatePlayerTurn(PlayerUtil player, GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_TURN);)

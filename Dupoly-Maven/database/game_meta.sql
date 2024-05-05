@@ -9,6 +9,7 @@ CREATE TABLE game_meta (
     debt_pot int DEFAULT 0,
     roll_number int DEFAULT 0,
     purchaseable boolean DEFAULT TRUE,
+    clicked boolean DEFAULT FALSE,
     recent_card varchar(50) DEFAULT NULL,
     host int DEFAULT NULL, -- foreign key to user_id
     last_player int DEFAULT NULL, -- foreign key to user_id

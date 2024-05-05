@@ -163,8 +163,8 @@ public class DuopolyApplication {
         }
         return property;
     }
-
-	// get name of property via ANY position
+    
+    	// get name of property via ANY position
     @GetMapping("/getNamesByPos/{pos}")
     public OwnedPropertyUtil getNamesByPos(@PathVariable("pos") int pos)
     {

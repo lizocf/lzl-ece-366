@@ -51,7 +51,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 waitingDiv.style.display = "block";
 
                 if (userId === gameResponse.data.lastPlayer) {
-                    // console.log("turnResponse ",gameResponse.data.numTurns + 1)
+                    console.log("turnResponse ",gameResponse.data.numTurns + 1)
                     axios.post("http://localhost:8080/updateNumTurns", {
                         num_turns: String(gameResponse.data.numTurns + 1), 
                         game_code: gameCode})
@@ -80,6 +80,10 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 handleButtonClick();
                 handleButtonClickProp();
                 updateTurn();
+                axios.post("http://localhost:8080/updateClicked", {
+                    clicked : "false",
+                    game_code: String(gameCode),
+                });
                 end_div.style.display = "none";
                 land_div.style.display = "none";
                 document.getElementById("broke_h1").style.display = "none";

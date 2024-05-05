@@ -137,14 +137,6 @@ const Chat = () => {
         scrollToBottom();
     }, [messages]);
 
-    const welcomeUser = async () => {
-        try{
-
-        }catch (error){
-            const response = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
-        }
-
-    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

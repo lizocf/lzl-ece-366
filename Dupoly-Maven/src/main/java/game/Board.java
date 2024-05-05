@@ -22,7 +22,7 @@ import static java.lang.Math.abs;
 
 @SpringBootApplication
 @RestController
-@CrossOrigin
+@CrossOrigin(origins ="*")
 public class Board {
     // insert stuff here
     // 59 spaces
@@ -299,6 +299,7 @@ public class Board {
         }
     }
 
+
     @PostMapping("/updateHost")
     public void updateHost(@RequestBody String json) throws JsonProcessingException
     {
@@ -350,6 +351,34 @@ public class Board {
             e.printStackTrace();
         }
     }
+
+    // CLICKED
+    @PostMapping("/updateClicked")
+    public void updateClicked(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        GameUtil game = new GameUtil(); //needs to be changed to whatever has game meta
+        try {
+            Connection connection = dcm.getConnection();
+            GameDAO gameDAO = new GameDAO(connection);
+
+            //------
+            game.setGameCode((inputMap.get("game_code")));
+            //------------
+
+            game.setClicked(Boolean.valueOf(inputMap.get("clicked")));
+            gameDAO.update_clicked(game);
+            System.out.println(game);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 //    @PostMapping("/updateCardName")
 //    public void updateCardName(@RequestBody String json) throws JsonProcessingException
