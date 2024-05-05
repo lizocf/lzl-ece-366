@@ -20,7 +20,7 @@ public class GameDAO extends DataAccessObject<GameUtil>
     }
 
     // TODO: add purchaseable boolean to findById
-    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, recent_card " +
+    private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host " +
             " FROM game_meta WHERE game_code=?";
 
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
@@ -30,10 +30,11 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String UPDATE_DEBT = "UPDATE game_meta " + "SET debt_pot = ? WHERE game_code = ? ";
     private static final String UPDATE_JOIN = "UPDATE game_meta " + "SET joinable = ? WHERE game_code = ? ";
     private static final String UPDATE_TURN = "UPDATE game_meta " + "SET which_player_turn = ?  WHERE game_code = ? ";
+    private static final String UPDATE_NUM_TURNS = "UPDATE game_meta " + "SET num_turns = ?  WHERE game_code = ? ";
     private static final String UPDATE_ROLL = "UPDATE game_meta " + "SET roll_number = ?  WHERE game_code = ? ";
     private static final String UPDATE_PURCHASEABLE = "UPDATE game_meta " + "SET purchaseable = ? WHERE game_code = ? ";
-
     private static final String UPDATE_RECENT_CARD = "UPDATE game_meta " + "SET recent_card = ? WHERE game_code = ? ";
+    private static final String UPDATE_HOST = "UPDATE game_meta " + "SET host = ? WHERE game_code = ? ";
 
 
     // private static final String DELETE = "DELETE FROM game_meta WHERE game_id = ?";
@@ -56,7 +57,9 @@ public class GameDAO extends DataAccessObject<GameUtil>
                 game.setRecentRoll(rs.getInt("roll_number"));
                 game.setPurchaseable(rs.getBoolean("purchaseable"));
                 game.setPlayerTurn(rs.getInt("which_player_turn"));
+                game.setNumTurns(rs.getInt("num_turns"));
                 game.setRecent_card(rs.getString("recent_card"));
+                game.setHost(rs.getInt("host"));
 //                game.setJoinable(rs.getBoolean("joinable"));
             }
 
@@ -101,6 +104,20 @@ public class GameDAO extends DataAccessObject<GameUtil>
         }
     }
 
+    public void updateHost(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_HOST);)
+        {
+            //ResultSet rs = statement.executeQuery();
+            //what about ?
+            statement.setInt(1,dto.getHost()); // can I get the current value then just add 50?
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
     public void update_debt_pot(GameUtil dto,boolean reset) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_DEBT);)
@@ -149,6 +166,20 @@ public class GameDAO extends DataAccessObject<GameUtil>
             throw new RuntimeException(e);
         }
     }
+
+    public void update_num_turns(GameUtil dto) {
+        try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_NUM_TURNS);)
+        {
+            statement.setInt(1,dto.getNumTurns()); // this needs to be an actual player id.
+            statement.setString(2,dto.getGameCode());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void update_dice_roll(GameUtil dto) {
         try(PreparedStatement statement = this.connection.prepareStatement(UPDATE_ROLL);)

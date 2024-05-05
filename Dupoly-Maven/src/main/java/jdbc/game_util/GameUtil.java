@@ -10,10 +10,20 @@ public class GameUtil implements DataTransferObject
     private int playerTurn;
     private int debtPot;
     private int numOfPlayers;
+    private int numTurns;
     private boolean joinable;
-
     private int diceRoll;
     private boolean purchaseable;
+    private int host;
+
+    public int getHost() {
+        return host;
+    }
+
+    public void setHost(int host) {
+        this.host = host;
+    }
+
 
     public String getRecent_card() {
         return recent_card;
@@ -102,6 +112,14 @@ public class GameUtil implements DataTransferObject
 
     public void setNumOfPlayers(int numOfPlayers) {
         this.numOfPlayers = numOfPlayers;
+    }
+
+    public int getNumTurns() {
+        return numTurns;
+    }
+
+    public void setNumTurns(int numTurns) {
+        this.numTurns = numTurns;
     }
 
     public boolean isJoinable() {

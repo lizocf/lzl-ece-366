@@ -18,6 +18,21 @@ const Roll = ({gameCode, userId, gameId}) => {
     let not_purchaseable = [0,2,4,8,10,16,20,22,26,28,30,32,34,38,40,44,50,52,56,58];
     let skullsurprise = [2,8,16,22,28,32,38,44,52,58];
 
+    
+    const loadAllPlayers = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
+            setPlayers(response.data);
+            console.log("Loaded players: ", response.data);
+        } catch (error) {
+            console.error('Error fetching players:', error);
+        }
+    };
+
+    useEffect(() => {
+        loadAllPlayers();  // Load all player data when the component mounts
+    }, [gameId]);
+
     const loadPlayer = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
@@ -177,6 +192,7 @@ const Roll = ({gameCode, userId, gameId}) => {
             });
             loadUpdate(); // Reload player data after updating position
             loadProperty();
+            loadAllPlayers();
 
         } catch (error) {
             console.error('Error updating roll number:', error);
@@ -188,80 +204,139 @@ const Roll = ({gameCode, userId, gameId}) => {
 
     useEffect(() => {
         loadPlayer(); // Load player data when the component mounts
+        loadAllPlayers();
         // loadProperty();
-    }, []);
+    }, [players]);
 
+
+    if (!players) {
+        return <div>Loading players...</div>;
+    }
+
+
+    console.log("All players!!", players)
     return (
         <>
-            <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
-                    display:"block", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                {/* lime */}
+                <div className="container_board"> 
+                    <div className="icon" id="player_icon_lime" 
+                        style={{
+                            ...players[0] ? parseStyle(propData.space[players[0].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "lime", 
+                            boxShadow: "0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
+                {/* pink */}
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon_pink" 
+                        style={{
+                            ...players[1] ? parseStyle(propData.space[players[1].currentPosition]) : {display:"none"}, // Ensure the correct use of player index and current position
+                            // display: "block", 
+                            // backgroundColor: "lime", 
+                            // boxShadow: "0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
+                {/* light blue */}
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
-                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon_blue" 
+                        style={{
+                            ...players[2] ? parseStyle(propData.space[players[2].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "rgb(76, 201, 255)", 
+                            boxShadow: "0.4vh 0.4vh rgb(10, 75, 103), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
+                {/* red */}
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
-                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon_red" 
+                        style={{
+                            ...players[3] ? parseStyle(propData.space[players[3].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "rgb(190, 0, 0)", 
+                            boxShadow: "0.4vh 0.4vh rgb(79, 6, 6), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
+                {/* purple */}
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}, {
-                    display:"none", backgroundColor:"lime", boxShadow:"0.4vh 0.4vh rgb(12, 87, 13), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon_purple" 
+                        style={{
+                            ...players[4] ? parseStyle(propData.space[players[4].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "rgb(102, 0, 255)",
+                            boxShadow: "0.4vh 0.4vh rgb(27, 0, 67), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
-                {/* <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
-                        </div>
-                    </div>
-                </div>
+                {/* orange */}
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon_orange" 
+                        style={{
+                            ...players[5] ? parseStyle(propData.space[players[5].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "rgb(255, 128, 0)", 
+                            boxShadow: "0.4vh 0.4vh rgb(94, 53, 0), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
                 </div>
+                {/* yellow */}
                 <div className="container_board">
-                <div className="icon" id="player_icon" style={player && player ? parseStyle(propData.space[player.cur_pos]) : {}}>
-                    <div className="eyes">
-                    <div className="eye"></div>
-                    <div className="eye"></div>
+                    <div className="icon" id="player_icon_yellow" 
+                        style={{
+                            ...players[6] ? parseStyle(propData.space[players[6].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "gold", 
+                            boxShadow: "0.4vh 0.4vh rgb(97, 84, 12), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
                         </div>
                     </div>
-                </div> */}
-                
+                </div>
+                {/* gray */}
+                <div className="container_board">
+                    <div className="icon" id="player_icon_gray" 
+                        style={{
+                            ...players[7] ? parseStyle(propData.space[players[7].currentPosition]) : {display:"none"},
+                            // display: "block", 
+                            backgroundColor: "rgb(114, 114, 114)", 
+                            boxShadow: "0.4vh 0.4vh rgb(55, 55, 55), 0.8vh 0.8vh 0.8vh rgba(0, 0, 0, 0.557)"
+                        }}>
+                        <div className="eyes">
+                            <div className="eye"></div>
+                            <div className="eye"></div>
+                        </div>
+                    </div>
+                </div>
                 <Tiles gameId={gameId}/>
                 
             <div className="center" id="roll_button" style={{ display: "none", margin:"auto auto" }}>

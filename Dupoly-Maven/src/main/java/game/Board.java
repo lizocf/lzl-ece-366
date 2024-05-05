@@ -217,6 +217,33 @@ public class Board {
 
     }
 
+    @PostMapping("/updateNumTurns")
+    public void updateNumTurns(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        GameUtil game = new GameUtil(); //needs to be changed to whatever has game meta
+        try {
+            Connection connection = dcm.getConnection();
+            GameDAO gameDAO = new GameDAO(connection);
+
+            //------
+            game.setGameCode((inputMap.get("game_code")));
+            game.setNumTurns(Integer.valueOf(inputMap.get("num_turns")));
+            //------------
+
+            gameDAO.update_num_turns(game);
+            System.out.println(game);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     
     @PostMapping("/updatePurchaseable")
     public void updatePurchaseable(@RequestBody String json) throws JsonProcessingException
@@ -244,6 +271,33 @@ public class Board {
             e.printStackTrace();
         }
     }
+
+    @PostMapping("/updateHost")
+    public void updateHost(@RequestBody String json) throws JsonProcessingException
+    {
+        System.out.println(json);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map <String, String> inputMap = objectMapper.readValue(json, Map.class);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        GameUtil game = new GameUtil(); //needs to be changed to whatever has game meta
+        try {
+            Connection connection = dcm.getConnection();
+            GameDAO gameDAO = new GameDAO(connection);
+
+            //------
+            game.setGameCode((inputMap.get("game_code")));
+            game.setHost(Integer.valueOf(inputMap.get("host")));
+            //------------
+
+            gameDAO.updateHost(game);
+            System.out.println(game);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 //    @PostMapping("/updateCardName")
 //    public void updateCardName(@RequestBody String json) throws JsonProcessingException
