@@ -2,9 +2,9 @@ CREATE TABLE turn_orders (
     id SERIAL PRIMARY KEY,
     game_id INT NOT NULL,
     user_id INT NOT NULL,
-    FOREIGN KEY (game_id) REFERENCES game_meta(game_id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id, user_id) REFERENCES player_in_game(game_id, user_id) ON DELETE CASCADE
     -- FOREIGN KEY (user_id) REFERENCES accounts(user_id) ON DELETE CASCADE
-    FOREIGN KEY (user_id) REFERENCES player_in_game(user_id) ON DELETE CASCADE
+--     FOREIGN KEY (user_id) REFERENCES player_in_game(user_id) ON DELETE CASCADE
 );
 
 -- HOW TO GET TURN ORDER OF GAME:
