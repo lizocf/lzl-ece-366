@@ -4,6 +4,7 @@
 
 
 # ECE-366: Software Engineering (Spring 2024)
+### **_Duopoly!_**
 _Developed by Lizelle Ocfemia, Isaiah Rivera, and Nicholas Storniolo. \
 Created under the instruction of Professor Christopher Hong at the Cooper Union during the Spring 2024 semester._
 
