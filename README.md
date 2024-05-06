@@ -34,7 +34,7 @@ What sets Duopoly apart? It's the exhilarating new features that enhance the gam
 
 ## Requirements
 To build and run this project, the following are required:
-* [Docker Compose](https://docs.docker.com/compose/install/linux/)
+* [Docker](https://docs.docker.com/compose/install/linux/)
 * [React](https://react.dev/)
 * [postgreSQL](https://www.postgresql.org/)
 
