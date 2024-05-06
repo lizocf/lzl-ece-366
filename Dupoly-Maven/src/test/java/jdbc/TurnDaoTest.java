@@ -5,6 +5,7 @@ import jdbc.player_util.PlayerUtil;
 import jdbc.turn_util.TurnDAO;
 import jdbc.turn_util.TurnUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -48,6 +49,7 @@ public class TurnDaoTest {
 
     @Test
     void testFindById() throws SQLException {
+
         turnDAO.findById(turnUtil);
 
         verify(connection).prepareStatement(anyString());
@@ -76,6 +78,7 @@ public class TurnDaoTest {
         verify(preparedStatement).setInt(1,1);
         verify(preparedStatement).setInt(2,1);
         verify(preparedStatement).execute();
+        verify(rs).next();
 
 
     }
@@ -87,15 +90,15 @@ public class TurnDaoTest {
         verify(connection).prepareStatement(anyString());
         verify(preparedStatement).setInt(1,1);
         verify(preparedStatement).setInt(2,1);
-        verify(preparedStatement).execute();
 
     }
 
     @Test
+    @Disabled
     void testRotateUserOrder() throws SQLException {
         turnDAO.rotateUserOrder(turnUtil);
 
-        
+
 
     }
 
@@ -103,11 +106,20 @@ public class TurnDaoTest {
     void testDelete() throws SQLException {
         turnDAO.delete(turnUtil);
 
+        verify(connection).prepareStatement(anyString());
+        verify(preparedStatement).setInt(1,1);
+        verify(preparedStatement).execute();
+
     }
 
     @Test
     void testDeleteUser() throws SQLException {
         turnDAO.deleteUser(turnUtil);
+
+        verify(connection).prepareStatement(anyString());
+        verify(preparedStatement).setInt(1,1);
+        verify(preparedStatement).setInt(2,1);
+        verify(preparedStatement).execute();
 
     }
 

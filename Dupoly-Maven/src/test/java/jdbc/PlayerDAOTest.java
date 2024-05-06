@@ -80,6 +80,34 @@ public class PlayerDAOTest
     }
 
     @Test
+    void TestFindByUserId() throws SQLException {
+        playerDAO.findByUserId(playerUtil);
+
+        verify(preparedStatement).setInt(1,1);
+        verify(preparedStatement).executeQuery();
+        verify(rs,times(1)).next();
+    }
+
+    @Test
+    void TestFindByGameId() throws SQLException {
+        playerDAO.findByGameId(playerUtil);
+
+        verify(preparedStatement).setInt(1,0);
+        verify(preparedStatement).executeQuery();
+        verify(rs,times(1)).next();
+
+    }
+
+    @Test
+    void TestCreateInstance() throws SQLException {
+        playerDAO.createInstance(playerUtil);
+
+        verify(preparedStatement).setInt(1,0);
+        verify(preparedStatement).setInt(2,1);
+        verify(preparedStatement).execute();
+    }
+
+    @Test
     void testUpdateCash() throws SQLException
     {
         playerDAO.update_cash(playerUtil,100);
