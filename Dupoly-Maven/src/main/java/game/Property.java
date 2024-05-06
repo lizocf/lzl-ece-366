@@ -64,6 +64,7 @@ class Property implements Space {
         OwnedPropertyDAO propertyDAO = new OwnedPropertyDAO(connection);
         GameDAO gameDAO = new GameDAO(connection);
         PlayerDAO playerDAO = new PlayerDAO(connection);
+        PlayerDAO playerDAO_2 = new PlayerDAO(connection);
 
         GameUtil game = new GameUtil();
         game.setGameCode(gamecode);
@@ -83,11 +84,11 @@ class Property implements Space {
         String tax[] = {"Tax_4", "Tax_26", "Tax_34", "Tax_56"};
 
         // if property is a tax space
-// Check if the property is a tax space
-    if (Arrays.asList(tax).contains(owned_property.getPropertyName())) {
-        System.out.println("You have paid tax");
-        playerDAO.update_cash(player, -baseRent);
-    } else {
+    // Check if the property is a tax space
+        if (Arrays.asList(tax).contains(owned_property.getPropertyName())) {
+            System.out.println("You have paid tax");
+            playerDAO.update_cash(player, -baseRent);
+        } else {
         // Check property ownership
         if (owned_property.getUserId() != 0 && game.getPlayerTurn() != owned_property.getUserId()) {
                 System.out.println("You have paid rent");
@@ -97,8 +98,9 @@ class Property implements Space {
                 PlayerUtil tenant = new PlayerUtil();
                 tenant.setUserId(owned_property.getUserId());
                 tenant.setGameId(gameId);
-                tenant = playerDAO.findById(tenant);
-                playerDAO.update_cash(tenant, baseRent * (owned_property.getNumOfHotels() + 1));
+                tenant = playerDAO_2.findById(tenant);
+                playerDAO_2.update_cash(tenant, baseRent * (owned_property.getNumOfHotels() + 1));
+            
             } else if (owned_property.getUserId() == 0 && player.getCash() > baseCost) {
                 // The property is unowned and can be purchased
                 System.out.println("Property Purchased");

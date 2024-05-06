@@ -14,8 +14,18 @@ public class GameUtil implements DataTransferObject
     private boolean joinable;
     private int diceRoll;
     private boolean purchaseable;
+    private boolean clicked;
     private int host;
     private int lastPlayer;
+
+
+    public boolean isClicked() {
+        return clicked;
+    }
+    
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
 
     public int getLastPlayer() {
         return lastPlayer;

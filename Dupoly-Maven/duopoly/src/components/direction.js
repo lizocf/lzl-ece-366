@@ -41,7 +41,6 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
         direction_div.style.display='none';
         console.log(`Player has chosen to go left.`);
         loadPlayer();
-
     }
     
     function UpdateRight() {
@@ -66,9 +65,9 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
     
     return (
       <>
-        {/* <div className="center" id="direction_div">
+        <div className="center" id="direction_div" style={{margin: "-10vh auto"}}>
             <h1>Choose a direction!</h1>
-        </div> */}
+        </div>
         <div className="center" style={{margin: "5vh auto"}}>
             <div className="arrow" id="left"
                  onClick={() => UpdateLeft()}></div>

@@ -25,6 +25,7 @@ const Chat = ({userToken}) => {
         };
     }, []);
 
+
     const scrollToBottom = () => {
         console.log("SO FrF");
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -77,9 +78,6 @@ const Chat = ({userToken}) => {
                     onConnect={handleOnConnect}
                     // debug={false}
                 />
-
-
-
 
                 <div className="messages-container">
                     {messages.map((message, index) => (
