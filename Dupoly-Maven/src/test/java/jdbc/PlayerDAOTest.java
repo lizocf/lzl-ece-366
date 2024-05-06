@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -25,6 +26,8 @@ public class PlayerDAOTest
 {
     private Connection connection;
     private PreparedStatement preparedStatement;
+    private ResultSet rs;
+
     private PlayerDAO playerDAO;
     private PlayerUtil playerUtil;
     private GameDAO gameDAO;
@@ -36,8 +39,13 @@ public class PlayerDAOTest
         // Mock the Connection and PreparedStatement objects
         connection = mock(Connection.class);
         preparedStatement = mock(PreparedStatement.class);
+        rs = mock(ResultSet.class);
 
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeQuery()).thenReturn(rs);
+        when(rs.getString(anyString())).thenReturn("test");
+        when(rs.getInt(anyString())).thenReturn(1);
+
 
         playerDAO = new PlayerDAO(connection);
         playerUtil = new PlayerUtil();
@@ -46,16 +54,28 @@ public class PlayerDAOTest
         gameUtil = new GameUtil();
 
         playerUtil.setUserId(1);
-        playerUtil.setCash(1000);
+        playerUtil.setCash(1);
         playerUtil.setCurrentPosition(1);
-        playerUtil.setCurrentDirection("LEFT");
+        playerUtil.setCurrentDirection("test");
 
-        gameUtil.setGameCode("AS123");
-        gameUtil.setDebtPot(100);
+        gameUtil.setGameCode("test");
+        gameUtil.setDebtPot(1);
         gameUtil.setGameId(1);
-        gameUtil.setRecent_card("Bankrupt");
-        gameUtil.setRecentRoll(4);
+        gameUtil.setRecent_card("test");
+        gameUtil.setRecentRoll(1);
 
+
+    }
+
+    @Test
+    void TestFindById() throws SQLException {
+        when(rs.next()).thenReturn(true,true,true,true,true,true,true,true,true,false);
+
+        playerDAO.findById(playerUtil);
+        verify(preparedStatement).setInt(2,1);
+        verify(preparedStatement).executeQuery();
+        verify(rs,times(10)).next();
+        assertEquals(playerUtil.getGameId(),0);
 
     }
 
@@ -63,14 +83,14 @@ public class PlayerDAOTest
     void testUpdateCash() throws SQLException
     {
         playerDAO.update_cash(playerUtil,100);
-        verify(preparedStatement).setInt(1, 1100);
+        verify(preparedStatement).setInt(1, 101);
     }
 
     @Test
     void testUpdatePositonLeft() throws SQLException
     {
         playerDAO.update_position(playerUtil,gameUtil);
-        assertEquals(57,playerUtil.getCurrentPosition());
+        assertEquals(60,playerUtil.getCurrentPosition());
 
     }
 
@@ -79,7 +99,7 @@ public class PlayerDAOTest
     {
         playerUtil.setCurrentDirection("right");
         playerDAO.update_position(playerUtil,gameUtil);
-        assertEquals(5,playerUtil.getCurrentPosition());
+        assertEquals(2,playerUtil.getCurrentPosition());
     }
 
     @Test

@@ -27,11 +27,11 @@ class AccountDAOTest {
 
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         when(preparedStatement.executeQuery(anyString())).thenReturn(rs);
-//
-//        rs = mock(ResultSet.class);
-//        when(rs.next()).thenReturn(true, true, true, true, true, true);
-//        when(rs.getString(anyString())).thenReturn("test");
-//        when(rs.getInt(anyString())).thenReturn(1);
+
+        rs = mock(ResultSet.class);
+        when(rs.next()).thenReturn(true, true, true, true, true, true);
+        when(rs.getString(anyString())).thenReturn("test");
+        when(rs.getInt(anyString())).thenReturn(1);
 
 
         accountDAO = new AccountDAO(connection);
@@ -45,8 +45,8 @@ class AccountDAOTest {
         accountUtil.setNumLosses(1);
         accountUtil.setEloRating("test");
         accountUtil.setDuoPoints(1);
-//
-//        rs = preparedStatement.executeQuery();
+
+        rs = preparedStatement.executeQuery();
 //        while(rs.next())
 //        rs.getInt("user_id");
 //        rs.getString("user_name");
@@ -59,16 +59,17 @@ class AccountDAOTest {
 
     }
 
-//    @Test
-//    void testFindbyId() throws SQLException {
-//        accountDAO.findById(accountUtil);
-//
-//        verify(rs,times(8)).next();
-//        verify(rs).getString(anyString());
-//
-//
-//    }
-//
+    @Test
+    @Disabled
+    void testFindById() throws SQLException {
+        accountDAO.findById(accountUtil);
+
+        verify(rs,times(7)).next();
+        verify(rs).getString(anyString());
+
+
+    }
+
 //    @Test
 //    void testFindByToken() throws SQLException {
 //        accountDAO.findByToken(accountUtil);
