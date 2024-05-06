@@ -5,7 +5,7 @@ Created under the instruction of Professor Christopher Hong at the Cooper Union 
     
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lizocf/ECE-366-Duopoly/dev/Dupoly-Maven/duopoly/src/images/DUOPOLY_logo_bg.png">
+  <img src="https://raw.githubusercontent.com/lizocf/ECE-366-Duopoly/dev/Dupoly-Maven/duopoly/src/images/DUOPOLY_logo_bg_cropped.png">
 </p>
 
 
