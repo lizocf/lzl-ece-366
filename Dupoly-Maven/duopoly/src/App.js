@@ -33,9 +33,9 @@ const JoinGame = ({userToken}) => {
 
         // check if code exists in database
         try {
-            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${code}`);
-            const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
-            const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
+            const gameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfo/${code}`);
+            const userResponse = await axios.get(`http://18.191.154.84:8080/getUserToken/${userToken}`);
+            const checkUserInGameResponse = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
             console.log(gameResponse.data);
 
             if (gameResponse.data.gameCode == null) {
@@ -57,11 +57,11 @@ const JoinGame = ({userToken}) => {
                 } else {
                     console.log("Creating player in game...");
                     try {
-                    await axios.post("http://localhost:8080/createPlayerInGame", {
+                    await axios.post("http://18.191.154.84:8080/createPlayerInGame", {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
-                    await axios.post("http://localhost:8080/addUserToTurnOrder", {
+                    await axios.post("http://18.191.154.84:8080/addUserToTurnOrder", {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
@@ -102,9 +102,9 @@ const Lobby = ({ userToken }) => {
 
     const welcomeUser = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
-            const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGameByUserId/${response.data.userId}`);
-            const getGameResponse = await axios.get(`http://localhost:8080/getGameInfoById/${checkUserInGameResponse.data.gameId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getUserToken/${userToken}`);
+            const checkUserInGameResponse = await axios.get(`http://18.191.154.84:8080/getPlayerInGameByUserId/${response.data.userId}`);
+            const getGameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfoById/${checkUserInGameResponse.data.gameId}`);
             console.log(`(welcomeUser) ${response.data.userName}.`);
             const welcome_h1 = document.getElementById("welcome_h1");
             if (welcome_h1) {
@@ -124,28 +124,28 @@ const Lobby = ({ userToken }) => {
         const gameCode = (Math.random() + 1).toString(36).substring(4, 10);
         try {
             // Create new game
-            await axios.post("http://localhost:8080/createNewGame", {
+            await axios.post("http://18.191.154.84:8080/createNewGame", {
                 game_code: gameCode // make this randomized
             });
 
             console.log('Game has been created. Game Code: ' + gameCode);
 
             // Fetch game information (presumably to get game_id)
-            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+            const gameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfo/${gameCode}`);
 
             // Create player in game
-            const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+            const userResponse = await axios.get(`http://18.191.154.84:8080/getUserToken/${userToken}`);
 
-            await axios.post("http://localhost:8080/updateHost", {
+            await axios.post("http://18.191.154.84:8080/updateHost", {
                 host: String(userResponse.data.userId),
                 game_code: gameCode
             });
-            await axios.post("http://localhost:8080/createPlayerInGame", {
+            await axios.post("http://18.191.154.84:8080/createPlayerInGame", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
 
-            await axios.post("http://localhost:8080/addUserToTurnOrder", {
+            await axios.post("http://18.191.154.84:8080/addUserToTurnOrder", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
@@ -159,7 +159,7 @@ const Lobby = ({ userToken }) => {
             welcome_h1.innerHTML = "You're in a game already! Join that one >:(";
 
             // delete game that user tried to create
-            await axios.post("http://localhost:8080/deleteGame", {game_code: gameCode})
+            await axios.post("http://18.191.154.84:8080/deleteGame", {game_code: gameCode})
         }
     };
 
@@ -189,11 +189,11 @@ const Game = ({ userToken }) => {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+                const userResponse = await axios.get(`http://18.191.154.84:8080/getUserToken/${userToken}`);
                 setUserId(userResponse.data.userId); // Update state with userId
                 console.log(`(getUser) ${userResponse.data.userId}`);
                 
-                const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+                const gameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfo/${gameCode}`);
                 setGameId(gameResponse.data.gameId); // Update state with gameId
                 console.log(`(gameResponse) ${gameResponse.data.gameId}`);
             } catch (error) {
@@ -204,8 +204,8 @@ const Game = ({ userToken }) => {
         const fetchTurn = async () => {
             try {
                 const endGameDiv = document.getElementById("EndGame");
-                const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
-                const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
+                const gameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfo/${gameCode}`);
+                const turnResponse = await axios.get(`http://18.191.154.84:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
                 const filteredTurns = turnResponse.data.filter(turn => turn !== null).map(turns => ({ userId: turns.userId, turn: turns.turnNumber}));
 
                 // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
@@ -262,14 +262,14 @@ const Game = ({ userToken }) => {
         if (waitingDiv) {
             waitingDiv.style.display = "none";
         }
-        axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
-        axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
+        axios.post("http://18.191.154.84:8080/updateJoinable", {joinable: "false", game_code: gameCode});
+        axios.post("http://18.191.154.84:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
     };
 
     const fetchEverything = async () => {
         try {
-            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
-            const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
+            const gameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfo/${gameCode}`);
+            const turnResponse = await axios.get(`http://18.191.154.84:8080/getGameTurnOrder/${gameResponse.data.gameId}`);
 
             const readyButton = document.getElementById("ready_button");
             const ready_button = document.getElementById("ready_button");
@@ -282,7 +282,7 @@ const Game = ({ userToken }) => {
             if (turns[0].userId === userId) { // its our user's turn!
 
                 if (numTurns === 0 && userId === gameResponse.data.host && turns.length > 1) { // is it THE first turn?
-                    axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+                    axios.post("http://18.191.154.84:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                     user_id: String(userId),
                     game_code: gameCode
                 });
@@ -290,14 +290,14 @@ const Game = ({ userToken }) => {
                     readyButton.onclick = function() {
                         ready_button.style.display = "none";
                         waitingDiv.style.display = "none";
-                        axios.post("http://localhost:8080/updateLastPlayer", {last_player: String(turns[turns.length-1].userId), game_code: gameCode})
-                        axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
-                        axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
+                        axios.post("http://18.191.154.84:8080/updateLastPlayer", {last_player: String(turns[turns.length-1].userId), game_code: gameCode})
+                        axios.post("http://18.191.154.84:8080/updateJoinable", {joinable: "false", game_code: gameCode});
+                        axios.post("http://18.191.154.84:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
                         // directionDiv.style.display = "block";
                         // updateDirDiv.style.display = "block";
                     }
                 } else if(numTurns === 1) { // first player's turn
-                    axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+                    axios.post("http://18.191.154.84:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                         user_id: String(userId),
                         game_code: gameCode
                     });
@@ -305,7 +305,7 @@ const Game = ({ userToken }) => {
                     ready_button.style.display = "none";
                     waitingDiv.style.display = "none";
                 } else if (numTurns >  1) { // no longer choose direction
-                    axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
+                    axios.post("http://18.191.154.84:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                         user_id: String(userId),
                         game_code: gameCode
                     });
@@ -416,7 +416,7 @@ fetchEverything();
   function App() {
     const { token, setToken } = useToken();
   
-    const response = axios.get(`http://localhost:8080/getUserToken/${token}`);
+    const response = axios.get(`http://18.191.154.84:8080/getUserToken/${token}`);
 
     if(!token || response.data === null) {
       return <Login setToken={setToken} />

@@ -3,8 +3,8 @@ import { FaPaperPlane } from 'react-icons/fa';
 import SockJsClient from 'react-stomp';
 import axios from 'axios';
 
-const SOCKET_URL = 'http://localhost:8080/ws-message';
-const SEND_ENDPOINT = 'http://localhost:8080/send';
+const SOCKET_URL = 'http://18.191.154.84:8080/ws-message';
+const SEND_ENDPOINT = 'http://18.191.154.84:8080/send';
 
 const Chat = ({userToken}) => {
     const [inputMessage, setInputMessage] = useState('');
@@ -33,7 +33,7 @@ const Chat = ({userToken}) => {
 
     const sendMessage = async () => {
         try {
-            const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+            const userResponse = await axios.get(`http://18.191.154.84:8080/getUserToken/${userToken}`);
             console.log("USER NAME: " + userResponse.data.userName);
             const d = userResponse.data.userName + ": ";
 

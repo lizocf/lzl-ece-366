@@ -11,7 +11,7 @@ const UpdateBankrupt = ({userId,gameId}) =>{
 
     const loadPlayer = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${userId}`);
 
             // we want to modify that they are "dead" when bankrupt
             setPlayer(
@@ -28,7 +28,7 @@ const UpdateBankrupt = ({userId,gameId}) =>{
     // not sure if I need this for a delete
     // const loadTurnOrder = async () => {
     //     try{
-    //         const response = await axios.get('http://localhost:8080/getGameTurnOrder/${gameId}/${userId}');
+    //         const response = await axios.get('http://18.191.154.84:8080/getGameTurnOrder/${gameId}/${userId}');
     //
     //         setTurnOrder(
     //             {
@@ -46,12 +46,12 @@ const UpdateBankrupt = ({userId,gameId}) =>{
 
         // something here to get the id of the bankrupt button
         // var bankrupt_button = document.getElementById("bankrupt")
-        // axios.post("http://localhost:8080/updateDead", {
+        // axios.post("http://18.191.154.84:8080/updateDead", {
         //     user_id : String(userId),
         //     game_id : String(gameId)
         // })
 
-        axios.post("http://localhost:8080/delPlayer",{
+        axios.post("http://18.191.154.84:8080/delPlayer",{
             user_id : String(userId),
             game_id : String(gameId)
         })

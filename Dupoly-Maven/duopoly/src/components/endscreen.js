@@ -16,7 +16,7 @@ const Endscreen = ({gameCode,userId,gameId}) => {
     const backToMenu = async () => {
         try {
             // Perform Axios POST request to delete a player
-            axios.post("http://localhost:8080/delPlayer",{
+            axios.post("http://18.191.154.84:8080/delPlayer",{
                 user_id : String(userId),
                 game_id : String(gameId)
             })

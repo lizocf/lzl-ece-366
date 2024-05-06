@@ -12,7 +12,7 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
 
     const loadPlayer = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${userId}`);
             setPlayer({
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
@@ -29,7 +29,7 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
         // var roll_div = document.getElementById("roll_div");
         var roll_button = document.getElementById("roll_button");
         var direction_div = document.getElementById("direction_div");
-        axios.post("http://localhost:8080/updateDir", {
+        axios.post("http://18.191.154.84:8080/updateDir", {
             user_id : String(userId),
             game_id : String(gameId),
             direction : "left"
@@ -49,7 +49,7 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
         var direction_div = document.getElementById("direction_div");
         // var roll_div = document.getElementById("roll_div");
         var roll_button = document.getElementById("roll_button");
-        axios.post("http://localhost:8080/updateDir", {
+        axios.post("http://18.191.154.84:8080/updateDir", {
             user_id : String(userId),
             game_id : String(gameId),
             direction : "right"

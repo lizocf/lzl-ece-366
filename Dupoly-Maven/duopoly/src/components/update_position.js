@@ -21,7 +21,7 @@ const Roll = ({gameCode, userId, gameId}) => {
     
     const loadAllPlayers = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getAllPlayersInGame/${gameId}`);
             setPlayers(response.data);
             console.log("Loaded players: ", response.data);
         } catch (error) {
@@ -35,7 +35,7 @@ const Roll = ({gameCode, userId, gameId}) => {
 
     const loadPlayer = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${userId}`);
             setPlayer({
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
@@ -50,7 +50,7 @@ const Roll = ({gameCode, userId, gameId}) => {
     // get property name from space
     const loadProperty = async () => {
         try {
-            const player_response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`); // how do we make this a funciton??
+            const player_response = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${userId}`); // how do we make this a funciton??
             setPlayer({
                 cur_pos: player_response.data.currentPosition,
                 cur_dir: player_response.data.currentDirection,
@@ -59,7 +59,7 @@ const Roll = ({gameCode, userId, gameId}) => {
                 
             });
             
-            const name_response = await axios.get(`http://localhost:8080/getNames/${player_response.data.gameId}/${player_response.data.userId}`);
+            const name_response = await axios.get(`http://18.191.154.84:8080/getNames/${player_response.data.gameId}/${player_response.data.userId}`);
             setProperty({
                 set_name: name_response.data.setName,
                 property_name: name_response.data.propertyName,
@@ -67,7 +67,7 @@ const Roll = ({gameCode, userId, gameId}) => {
             console.log(`loadProperty: Player has landed on ${name_response.data.propertyName} of the ${name_response.data.setName} set.`);
 
             // check if already owned through /getOwnedProperty
-            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/${player_response.data.gameId}/${name_response.data.propertyName}`);
+            const prop_response = await axios.get(`http://18.191.154.84:8080/getOwnedProperty/${player_response.data.gameId}/${name_response.data.propertyName}`);
             setOwnedProperty({
                 user_id: prop_response.data.userId,
                 property_name: prop_response.data.propertyName
@@ -92,14 +92,14 @@ const Roll = ({gameCode, userId, gameId}) => {
                 buy_div.style.display='none';
                 buttons.style.display='none';
 
-                await axios.post("http://localhost:8080/gameMove", {
+                await axios.post("http://18.191.154.84:8080/gameMove", {
                     user_id : String(userId),
                     game_id : String(gameId),
                     game_code: String(gameCode),
                     space: String(player_response.data.currentPosition)
                 })
                 
-                const card_response = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+                const card_response = await axios.get(`http://18.191.154.84:8080/getGameInfo/${gameCode}`);
                 setGame({
                     recent_card: card_response.data.recent_card
                 })
@@ -125,21 +125,21 @@ const Roll = ({gameCode, userId, gameId}) => {
 
     const purchaseProperty = async () => {
         try {
-            await axios.post("http://localhost:8080/updatePurchaseable", {
+            await axios.post("http://18.191.154.84:8080/updatePurchaseable", {
                 game_code: String(gameCode),
                 purchase: "true"
             });
 
-            await axios.post("http://localhost:8080/gameMove", {
+            await axios.post("http://18.191.154.84:8080/gameMove", {
                 user_id : String(userId),
                 game_id : String(gameId),
                 game_code: String(gameCode),
                 space: String(player.cur_pos)
             });
 
-            const name_response = await axios.get(`http://localhost:8080/getNames/${gameId}/${userId}`);
+            const name_response = await axios.get(`http://18.191.154.84:8080/getNames/${gameId}/${userId}`);
 
-            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/${gameId}/${name_response.data.propertyName}`);
+            const prop_response = await axios.get(`http://18.191.154.84:8080/getOwnedProperty/${gameId}/${name_response.data.propertyName}`);
 
             if (prop_response.data.propertyName === null) {
                 console.log(`You're broke！`);
@@ -158,7 +158,7 @@ const Roll = ({gameCode, userId, gameId}) => {
     
     const loadUpdate = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${userId}`);
             setPlayer({
                 cur_pos: response.data.currentPosition,
                 cur_dir: response.data.currentDirection,
@@ -178,19 +178,19 @@ const Roll = ({gameCode, userId, gameId}) => {
     const nextPosition = async () => {
         try {
             var roll_button = document.getElementById("roll_button");
-            await axios.post("http://localhost:8080/updateRoll", {
+            await axios.post("http://18.191.154.84:8080/updateRoll", {
                 user_id : String(userId),
                 game_id : String(gameId),
                 game_code: String(gameCode),
             });
 
-            await axios.post("http://localhost:8080/updatePos", {
+            await axios.post("http://18.191.154.84:8080/updatePos", {
                 user_id : String(userId),
                 game_id : String(gameId),
                 game_code: String(gameCode),
             });
             
-            await axios.post("http://localhost:8080/updateClicked", {
+            await axios.post("http://18.191.154.84:8080/updateClicked", {
                 clicked : "true",
                 game_code: String(gameCode),
             });

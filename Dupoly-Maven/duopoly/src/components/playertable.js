@@ -19,7 +19,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
     }, [gameCode, userId, gameId]);
     const loadPlayers = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getAllPlayersInGame/${gameId}`);
             const filteredPlayers = response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash }));
             setPlayers(filteredPlayers);
             console.log('loadPlayers: Players have been loaded:', filteredPlayers);
@@ -30,9 +30,9 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 </tr>`
             )).join(""); // Join the array of rows into a single string
 
-            const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameId}`);
-            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
-            const playerResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
+            const turnResponse = await axios.get(`http://18.191.154.84:8080/getGameTurnOrder/${gameId}`);
+            const gameResponse = await axios.get(`http://18.191.154.84:8080/getGameInfo/${gameCode}`);
+            const playerResponse = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${userId}`);
 
 
             const tableBody = document.getElementById("player_body");
@@ -47,20 +47,20 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
             // document.getElementById("player_body").remove();
 
             const updateTurn = () => {
-                axios.post("http://localhost:8080/updateTurnOrder", {game_id: String(gameId)})
+                axios.post("http://18.191.154.84:8080/updateTurnOrder", {game_id: String(gameId)})
 
                 console.log("turnResponse!", gameResponse.data.lastPlayer);
                 roll.style.display = "none";
                 waitingDiv.style.display = "block";
                 if (userId === gameResponse.data.lastPlayer) {
                     console.log("turnResponse ",gameResponse.data.numTurns + 1)
-                    axios.post("http://localhost:8080/updateNumTurns", {
+                    axios.post("http://18.191.154.84:8080/updateNumTurns", {
                         num_turns: String(gameResponse.data.numTurns + 1), 
                         game_code: gameCode})
                 }
 
                 if (playerResponse.data.cash <= 0) {
-                    axios.post("http://localhost:8080/delPlayer",{
+                    axios.post("http://18.191.154.84:8080/delPlayer",{
                         user_id : String(userId),
                         game_id : String(gameId)
                     })
@@ -94,7 +94,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 handleButtonClick();
                 handleButtonClickProp();
                 updateTurn();
-                axios.post("http://localhost:8080/updateClicked", {
+                axios.post("http://18.191.154.84:8080/updateClicked", {
                     clicked : "false",
                     game_code: String(gameCode),
                 });
@@ -114,7 +114,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
     };
     const loadProperties = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`); // gameId and userId are hardcoded
+            const response = await axios.get(`http://18.191.154.84:8080/getAllOwnedProperties/${gameId}/${userId}`); // gameId and userId are hardcoded
             // console.log('Here!!!', response.data);
             const filteredProperties = response.data.filter(property => property !== null).map(property => ({ 
                 property_name: property.propertyName, 
@@ -144,8 +144,8 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
     const handleButtonClick = async () => {
         loadPlayers(); // need to load twice to make update
         try {
-            const fake_response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`); 
-            const response = await axios.get(`http://localhost:8080/getAllPlayersInGame/${gameId}`);
+            const fake_response = await axios.get(`http://18.191.154.84:8080/getAllPlayersInGame/${gameId}`); 
+            const response = await axios.get(`http://18.191.154.84:8080/getAllPlayersInGame/${gameId}`);
             const filteredPlayers = response.data.filter(player => player !== null).map(player => ({ userName: player.userName, cash: player.cash }));
             setPlayers(filteredPlayers);
             // console.log('Button: Players have been loaded:', filteredPlayers);
@@ -168,9 +168,9 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
         loadProperties(); // I needed to call getOwnedProperties three times to update the table ?? cant just do loadProperties() x3 either
         let tax_space = ["Tax_4", "Tax_26", "Tax_36", "Tax_56"];
         try {
-            const fake_response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`); 
+            const fake_response = await axios.get(`http://18.191.154.84:8080/getAllOwnedProperties/${gameId}/${userId}`); 
             // console.log('Before', fake_response.data);
-            const response = await axios.get(`http://localhost:8080/getAllOwnedProperties/${gameId}/${userId}`);
+            const response = await axios.get(`http://18.191.154.84:8080/getAllOwnedProperties/${gameId}/${userId}`);
             const filteredProperties = response.data.filter(property => property !== null).map(property => ({ 
                 property_name: property.propertyName, 
                 set_name: property.setName,

@@ -17,7 +17,7 @@ const Tiles = ({gameId}) => {
     const loadProperty = async (clicked_id) => {
         try {
             console.log('current id: ', clicked_id);
-            const name_response = await axios.get(`http://localhost:8080/getNamesByPos/${clicked_id}`);
+            const name_response = await axios.get(`http://18.191.154.84:8080/getNamesByPos/${clicked_id}`);
             setProperty({
                 set_name: name_response.data.setName,
                 property_name: name_response.data.propertyName,
@@ -27,7 +27,7 @@ const Tiles = ({gameId}) => {
             console.log(propData.costPrice[clicked_id]);
 
             // check if already owned through /getOwnedProperty
-            const prop_response = await axios.get(`http://localhost:8080/getOwnedProperty/${gameId}/${name_response.data.propertyName}`);
+            const prop_response = await axios.get(`http://18.191.154.84:8080/getOwnedProperty/${gameId}/${name_response.data.propertyName}`);
             setOwnedProperty({
                 user_id: prop_response.data.userId,
                 property_name: prop_response.data.propertyName
@@ -37,7 +37,7 @@ const Tiles = ({gameId}) => {
             if (owned_player === 0) {
                 var owned = "Not yet purchased."
             } else {
-                const response = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${owned_player}`);
+                const response = await axios.get(`http://18.191.154.84:8080/getPlayerInGame/${gameId}/${owned_player}`);
                 var owned = response.data.userName;
             }
 

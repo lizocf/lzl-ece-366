@@ -5,7 +5,7 @@ import axios from 'axios';
 import {useNavigate, useParams, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 async function loginUser(credentials) {
- return fetch('http://localhost:8090/login', {
+ return fetch('http://18.191.154.84:8090/login', {
    method: 'POST',
    headers: {
      'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ export default function Login({ setToken }) {
     setToken(token);
     console.log(token.token)
     try {
-      const response = await axios.post("http://localhost:8080/createToken", {
+      const response = await axios.post("http://18.191.154.84:8080/createToken", {
         token : token.token,
         user_name : username
     })
@@ -48,7 +48,7 @@ export default function Login({ setToken }) {
   const createUser = async () => {   
     try {
         var create_h1 = document.getElementById("create_h1");
-        const acc_response = await axios.post("http://localhost:8080/createNewAccount", {
+        const acc_response = await axios.post("http://18.191.154.84:8080/createNewAccount", {
         user_name : document.getElementById("username").value,
         user_pw : document.getElementById("password").value
     })
@@ -78,7 +78,7 @@ const logUser = async () => {
     // password = password === "" ? null : password;
 
     // Fetch user data from the server
-    const log_response = await axios.get(`http://localhost:8080/getUserName/${username}`);
+    const log_response = await axios.get(`http://18.191.154.84:8080/getUserName/${username}`);
     const userData = log_response.data;
 
     // Check if the username exists
