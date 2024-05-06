@@ -129,11 +129,7 @@ const Lobby = ({ userToken }) => {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
             });
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
             await axios.post("http://localhost:8080/addUserToTurnOrder", {
                 user_id: String(userResponse.data.userId),
                 game_id: String(gameResponse.data.gameId),
@@ -205,7 +201,7 @@ const Game = ({ userToken }) => {
                     axios.post("http://localhost:8080/updateLastPlayer", {last_player: String(filteredTurns[filteredTurns.length - 1].userId), game_code: gameCode});
                 }
 
-                setNumTurns(gameResponse.data.recentRoll)
+                // setNumTurns(gameResponse.data.recentRoll)
 
                 // if((filteredTurns.length === 1))
                 // {
@@ -254,7 +250,7 @@ const Game = ({ userToken }) => {
         }
         axios.post("http://localhost:8080/updateJoinable", {joinable: "false", game_code: gameCode});
         axios.post("http://localhost:8080/updateNumTurns", {num_turns: "1", game_code: gameCode});
-        axios.post("http://localhost:8080/")
+        // axios.post("http://localhost:8080/")
 
     };
 
@@ -360,12 +356,9 @@ fetchEverything();
             <div id="update_dir_div" style={{display:"none"}}>
                 <UpdateDirection gameCode={gameCode} userId={userId} gameId={getGameId}/>
             </div>
-            {/* <div className="container_left" style={{margin: "-10vh 58px", backgroundColor:"white"}}> */}
-                {/* <div className="logs-table" style={{margin: "-9.3vh auto"}}> */}
 
-                    <Chat/>
-                {/* </div> */}
-            {/* </div> */}
+            <Chat userToken={userToken}/>
+
 
 
             {/* <div className="container_left" style={{margin: "-2.5vh 123px"}}> */}
@@ -408,7 +401,7 @@ fetchEverything();
                 </main>
             </div>
             <div id="EndGame" style={{display: "none"}}>
-                <Endscreen/>;
+                <Endscreen gameCode={gameCode} userId={userId} gameId={getGameId}/>;
             </div>
 
 

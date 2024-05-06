@@ -6,16 +6,29 @@ import "../style.css";
 import "./update_position";
 
 
-const Endscreen = () => {
+const Endscreen = ({gameCode,userId,gameId}) => {
     const navigate = useNavigate();
 
     // end screen that drops down when one player is not bankrupt. This might happen in app.js
 
     // need to implement a back to main menu function
 
-    function backToMenu(){
-        console.log("Back to Menu")
-    }
+    const backToMenu = async () => {
+        try {
+            // Perform Axios POST request to delete a player
+            axios.post("http://localhost:8080/delPlayer",{
+                user_id : String(userId),
+                game_id : String(gameId)
+            })
+
+
+
+            navigate('/');
+        } catch (error) {
+            console.error('Error deleting player:', error);
+        }
+    };
+
 
     return(
         <>
@@ -27,7 +40,8 @@ const Endscreen = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                zIndex: 9999
             }}>
                 <h1 style={{color: 'white'}}>GAME OVER</h1>
                 <button className="main_menu_button" style={{
@@ -38,7 +52,7 @@ const Endscreen = () => {
                     borderRadius: '10px',
                     border: 'none',
                     cursor: 'pointer'
-                }} onClick={() => navigate("/")}>Back to Main Menu
+                }} onClick={backToMenu}>Back to Main Menu
                 </button>
             </div>
         </>
