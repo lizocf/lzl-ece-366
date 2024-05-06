@@ -1,7 +1,8 @@
 services:
   db:
-    image: postgres
+    image: duopolyacr.azurecr.io/postgres
     build: database
+
     # volumes:
     #   - $HOME/srv/postgres:/var/lib/postgresql/data
     #   - ./database:/database
@@ -18,6 +19,8 @@ services:
     restart: always
   app:
     build: .
+    image: duopolyacr.azurecr.io/app
+    container_name: app
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=password
@@ -31,6 +34,8 @@ services:
       - db
   ui:
     build: duopoly/.
+    image: duopolyacr.azurecr.io/ui
+    container_name: ui
     expose:
       # - 8080:8080
       # - "8080"
