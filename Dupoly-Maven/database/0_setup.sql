@@ -1,0 +1,2 @@
+CREATE DATABASE duopoly;
+GRANT ALL PRIVILEGES ON DATABASE duopoly TO postgres;

@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE all_property (
     property_name varchar(50) UNIQUE NOT NULL,
     PRIMARY KEY (property_name)

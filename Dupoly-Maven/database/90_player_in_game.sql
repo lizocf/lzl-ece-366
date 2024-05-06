@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE player_in_game (
     game_id int NOT NULL,
     user_id int NOT NULL,

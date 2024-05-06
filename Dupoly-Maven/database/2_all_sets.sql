@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE all_sets (
     set_name varchar(50) UNIQUE NOT NULL,
     PRIMARY KEY (set_name)

@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE turn_orders (
     id SERIAL PRIMARY KEY,
     game_id INT NOT NULL,

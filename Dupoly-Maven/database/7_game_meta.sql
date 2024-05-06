@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE game_meta (
     game_id SERIAL UNIQUE,
     game_code varchar(6) UNIQUE DEFAULT NULL, -- how to make random char sequence unique

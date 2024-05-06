@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE owned_property (
     game_id int NOT NULL,
     user_id int NOT NULL,

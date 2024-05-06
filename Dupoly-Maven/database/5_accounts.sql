@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE accounts (
     user_id SERIAL UNIQUE,
     user_name VARCHAR(10) NOT NULL UNIQUE,

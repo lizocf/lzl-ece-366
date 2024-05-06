@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE all_cards (
     card_name varchar(50) UNIQUE NOT NULL,
     PRIMARY KEY (card_name)

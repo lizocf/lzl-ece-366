@@ -1,3 +1,5 @@
+\c duopoly
+
 CREATE TABLE full_property (
     space int UNIQUE NOT NULL,
     property_name varchar(50) NOT NULL,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
 const PlayerTable = ({gameCode, userId, gameId}) => {
@@ -63,6 +64,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                         user_id : String(userId),
                         game_id : String(gameId)
                     })
+                    
                     navigate('/');
                 }
             }
