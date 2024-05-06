@@ -23,6 +23,9 @@ public class GameDAO extends DataAccessObject<GameUtil>
     private static final String GET_ONE = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host, last_player, clicked " +
             " FROM game_meta WHERE game_code=?";
 
+    private static final String GET_ONE_BY_ID = "SELECT game_id, game_code,  debt_pot, roll_number, purchaseable, which_player_turn, num_turns, recent_card, host, last_player, clicked " +
+            " FROM game_meta WHERE game_id=?";
+
     private static final String INSERT = "INSERT INTO game_meta (game_code) " +
             " VALUES (?)";
 
@@ -50,6 +53,36 @@ public class GameDAO extends DataAccessObject<GameUtil>
         {
 
             statement.setString(1, dto.getGameCode());
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+                game.setGameId(rs.getInt("game_id"));
+                game.setGameCode(rs.getString("game_code"));
+//                game.setNumOfPlayers(rs.getInt("num_players"));
+                game.setDebtPot(rs.getInt("debt_pot"));
+                game.setRecentRoll(rs.getInt("roll_number"));
+                game.setPurchaseable(rs.getBoolean("purchaseable"));
+                game.setPlayerTurn(rs.getInt("which_player_turn"));
+                game.setNumTurns(rs.getInt("num_turns"));
+                game.setRecent_card(rs.getString("recent_card"));
+                game.setHost(rs.getInt("host"));
+                game.setLastPlayer(rs.getInt("last_player"));
+                game.setClicked(rs.getBoolean("clicked"));
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return game;
+    }
+
+    public GameUtil findByGameId(GameUtil dto) {
+        GameUtil game = new GameUtil();
+        try(PreparedStatement statement = this.connection.prepareStatement(GET_ONE_BY_ID);)
+        {
+
+            statement.setInt(1, dto.getGameId());
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {

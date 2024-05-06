@@ -41,7 +41,6 @@ const UpdateDirection = ({gameCode, userId, gameId}) => {
         direction_div.style.display='none';
         console.log(`Player has chosen to go left.`);
         loadPlayer();
-
     }
     
     function UpdateRight() {

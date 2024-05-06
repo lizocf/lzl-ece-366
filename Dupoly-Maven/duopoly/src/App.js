@@ -29,30 +29,34 @@ const JoinGame = ({userToken}) => {
         var code = document.getElementById("code").value;
         console.log("Joining game with code: " + code);
         var join_h1 = document.getElementById("join_h1");
-        
+
+
         // check if code exists in database
         try {
-            const response = await axios.get('http://localhost:8080/getGameInfo/' + code);
-            console.log(response.data);
-            if (response.data.gameCode == null) {
+            const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${code}`);
+            const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+            const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
+            console.log(gameResponse.data);
+
+            if (gameResponse.data.gameCode == null) {
                 console.log("Game does not exist. Please try again.")
                 join_h1.innerHTML = "Game does not exist! Try again :(";
+            } else if (checkUserInGameResponse.data.gameId !== gameResponse.data.gameId && checkUserInGameResponse.data.gameId !== 0) {
+                console.log("Already in another game. Please leave that game first.")
+                join_h1.innerHTML = "You're already in a game! Leave that game first >:(";
             } else {
                 // if code exists, navigate to game
                 console.log("Game exists. Joining game...")
-                const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${code}`);
-
-                // Create player in game
-                const userResponse = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
-
                 // check if player in game
-                const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameResponse.data.gameId}/${userResponse.data.userId}`);
-                
                 console.log("Check player: ", checkUserInGameResponse.data)
-                if (checkUserInGameResponse.data.userName !== null) {
+                if (checkUserInGameResponse.data.userId !== 0) {
                     navigate(`/game/${code}`);
+                } else if (gameResponse.data.joinable === true) {
+                    // console.log("(joinable)" + !gameResponse.data.joinable);
+                    join_h1.innerHTML = "Game has already started! :(";
                 } else {
                     console.log("Creating player in game...");
+                    try {
                     await axios.post("http://localhost:8080/createPlayerInGame", {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
@@ -61,12 +65,16 @@ const JoinGame = ({userToken}) => {
                         user_id: String(userResponse.data.userId),
                         game_id: String(gameResponse.data.gameId),
                     });
+                    navigate(`/game/${code}`);
+                    } catch (error) {
+                        join_h1.innerHTML = "This game is full already! :(";
+                    }
                 }
                 
-                navigate(`/game/${code}`);
             }
         } catch (error) {
-            console.error('Error fetching game:', error);
+            console.error('Error in joining game:', error);
+
         }}
 
     
@@ -95,10 +103,17 @@ const Lobby = ({ userToken }) => {
     const welcomeUser = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getUserToken/${userToken}`);
+            const checkUserInGameResponse = await axios.get(`http://localhost:8080/getPlayerInGameByUserId/${response.data.userId}`);
+            const getGameResponse = await axios.get(`http://localhost:8080/getGameInfoById/${checkUserInGameResponse.data.gameId}`);
             console.log(`(welcomeUser) ${response.data.userName}.`);
             const welcome_h1 = document.getElementById("welcome_h1");
             if (welcome_h1) {
                 welcome_h1.innerHTML = `Welcome ${response.data.userName}!`;
+            }
+            if (response.data.userName === null) {
+                navigate(`/`);
+            } else if (checkUserInGameResponse.data.gameId !== 0 && getGameResponse.data.gameCode !== null) {
+                navigate(`/game/${getGameResponse.data.gameCode}`);
             }
         } catch (error) {
             console.error('Error fetching user account:', error);
@@ -167,7 +182,6 @@ const Game = ({ userToken }) => {
     const [turns, setTurns] = useState(null); // State to hold turn
     const { gameCode } = useParams();
     const [numTurns, setNumTurns] = useState(null); // State to hold number of turns
-    const [roll, setRoll] = useState(null);
     
     useEffect(() => {
 
@@ -196,7 +210,6 @@ const Game = ({ userToken }) => {
                 // console.log(`(fetchTurn) ${filteredTurns[0].userId}`);
                 setTurns(filteredTurns); // Update state with turn
                 setNumTurns(gameResponse.data.numTurns);
-                setRoll(gameResponse.data.recentRoll);
 
                 // if((filteredTurns.length === 1))
                 // {
@@ -266,7 +279,7 @@ const Game = ({ userToken }) => {
 
             if (turns[0].userId === userId) { // its our user's turn!
 
-                if (numTurns === 0 && userId === gameResponse.data.host) { // is it THE first turn?
+                if (numTurns === 0 && userId === gameResponse.data.host && turns.length > 1) { // is it THE first turn?
                     axios.post("http://localhost:8080/updatePlayerTurn", { // updates which_player_turn NOT turn_order
                     user_id: String(userId),
                     game_code: gameCode
@@ -302,6 +315,7 @@ const Game = ({ userToken }) => {
                     updateDirDiv.style.display = "none";
                     ready_button.style.display = "none";
                 } 
+
             } else { // not our user's turn
                 waitingDiv.style.display = "block";
                 updateDirDiv.style.display = "none";

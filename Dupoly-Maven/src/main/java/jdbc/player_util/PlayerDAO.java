@@ -19,6 +19,11 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
 
     private static final String GET_ONE = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, previous_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=? AND user_id=?";
+
+
+    private static final String GET_BY_ID = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, previous_position, jail, afk, dead " +
+            "FROM player_in_game WHERE user_id=?";
+
     
     private static final String GET_GAME = "SELECT game_id, user_id, user_name, cash, current_direction, current_position, previous_position, jail, afk, dead " +
             "FROM player_in_game WHERE game_id=? ORDER BY user_id";
@@ -49,6 +54,32 @@ public class PlayerDAO extends DataAccessObject<PlayerUtil>
         {
             statement.setInt(1, dto.getGameId());
             statement.setInt(2, dto.getUserId());
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+                player.setGameId(rs.getInt("game_id"));
+                player.setUserId(rs.getInt("user_id")); // need userId as another search parameter instead
+                player.setUserName(rs.getString("user_name"));
+                player.setCash(rs.getInt("cash"));
+                player.setCurrentDirection(rs.getString("current_direction"));
+                player.setCurrentPosition(rs.getInt("current_position"));
+                player.setPreviousPosition(rs.getInt("previous_position"));
+                player.setJail(rs.getBoolean("jail"));
+                player.setAfk(rs.getBoolean("afk"));
+                player.setDead(rs.getBoolean("dead"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return player;
+    }
+
+    public PlayerUtil findByUserId(PlayerUtil dto) {
+        PlayerUtil player = new PlayerUtil();
+        try(PreparedStatement statement = this.connection.prepareStatement(GET_BY_ID);)
+        {
+            statement.setInt(1, dto.getUserId());
             ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {

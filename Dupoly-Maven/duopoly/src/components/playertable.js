@@ -4,6 +4,7 @@ import axios from 'axios';
 const PlayerTable = ({gameCode, userId, gameId}) => {
     const [players, setPlayers] = useState([]);
     const [properties, setProperties] = useState([]);
+    const navigate = useNavigate();
 
     console.log("(PlayerTable) Game Code: " + gameCode + " User ID: " + userId + " Game ID: " + gameId);
 
@@ -30,6 +31,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
 
             const turnResponse = await axios.get(`http://localhost:8080/getGameTurnOrder/${gameId}`);
             const gameResponse = await axios.get(`http://localhost:8080/getGameInfo/${gameCode}`);
+            const playerResponse = await axios.get(`http://localhost:8080/getPlayerInGame/${gameId}/${userId}`);
 
 
             const tableBody = document.getElementById("player_body");
@@ -49,7 +51,6 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 console.log("turnResponse!", gameResponse.data.lastPlayer);
                 roll.style.display = "none";
                 waitingDiv.style.display = "block";
-
                 if (userId === gameResponse.data.lastPlayer) {
                     console.log("turnResponse ",gameResponse.data.numTurns + 1)
                     axios.post("http://localhost:8080/updateNumTurns", {
@@ -57,8 +58,16 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                         game_code: gameCode})
                 }
 
+                if (playerResponse.data.cash <= 0) {
+                    axios.post("http://localhost:8080/delPlayer",{
+                        user_id : String(userId),
+                        game_id : String(gameId)
+                    })
+                    navigate('/');
+                }
             }
 
+            // buy_yes button
             document.getElementById("buy_yes").onclick = function() {
                 handleButtonClick();
                 handleButtonClickProp();
@@ -69,6 +78,8 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 buy_div.style.display = "none";
                 buttons.style.display = "none";
             }
+            
+            // buy_no button
             document.getElementById("buy_no").onclick = function() {
                 end_div.style.display = "block";
                 land_div.style.display = "none";
@@ -76,6 +87,7 @@ const PlayerTable = ({gameCode, userId, gameId}) => {
                 buttons.style.display = "none";
             }
 
+            // end button
             end_div.onclick = function() {
                 handleButtonClick();
                 handleButtonClickProp();

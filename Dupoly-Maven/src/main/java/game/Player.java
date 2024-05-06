@@ -103,6 +103,28 @@ public class Player extends Account {
         return player;
     }
 
+    @GetMapping("/getPlayerInGameByUserId/{userId}")
+    public PlayerUtil getPlayerInGameByUserId(@PathVariable("userId") int userId) {
+        System.out.println(userId);
+        DatabaseConnectionManager dcm = new DatabaseConnectionManager("db",
+                "duopoly", "postgres", "password");
+        PlayerUtil player = new PlayerUtil();
+        player.setUserId(userId);
+        try {
+            Connection connection = dcm.getConnection();
+            PlayerDAO playerDAO = new PlayerDAO(connection);
+
+            player = playerDAO.findByUserId(player);
+            System.out.println(player);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            
+        }
+        return player;
+    }
+
+
     @PostMapping("/createPlayerInGame")
     public PlayerUtil createPlayerInGame(@RequestBody String json) throws JsonProcessingException
     {
